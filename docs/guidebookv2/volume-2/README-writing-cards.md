@@ -34,6 +34,17 @@ updated: 2026-04-06
 1. 卷二主循环总流程图
 2. 一次请求进入主循环的总图
 
+### 需要参考的老文档（绝对路径）
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/02-full-agent-turn.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/01-from-query-to-tool-call.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/README.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebookv2/volume-1/03-how-a-request-becomes-an-agent-turn.md`
+
+### 需要参考的源代码文件（绝对路径）
+- `/Users/haha/.openclaw/workspace/cc/src/QueryEngine.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/utils/messages.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/constants/messages.ts`
+
 ### 对后文的导流
 - 第 2 篇进入输入预处理前站
 - 第 3 篇正式进入 QueryEngine 入口
@@ -62,6 +73,18 @@ updated: 2026-04-06
 ### Mermaid 主图
 1. 输入预处理图
 2. 输入归并并进入运行时的示意图
+
+### 需要参考的老文档（绝对路径）
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/05-process-user-input.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/06-get-attachment-messages.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/07-messages-normalization.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/13-system-user-contexts.md`
+
+### 需要参考的源代码文件（绝对路径）
+- `/Users/haha/.openclaw/workspace/cc/src/utils/messages.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/constants/messages.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/constants/prompts.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/commands/session/session.tsx`
 
 ### 对后文的导流
 - 第 3 篇进入真正的主循环入口
@@ -92,6 +115,16 @@ updated: 2026-04-06
 1. 请求进入 QueryEngine 的入口图
 2. QueryEngine 在卷二主线里的位置图
 
+### 需要参考的老文档（绝对路径）
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/03-queryengine-entry.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/01-from-query-to-tool-call.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/11-queryengine-example-walkthrough.md`
+
+### 需要参考的源代码文件（绝对路径）
+- `/Users/haha/.openclaw/workspace/cc/src/QueryEngine.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/utils/messages.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/services/api/sessionIngress.ts`
+
 ### 对后文的导流
 - 第 4 篇解释当前 query 如何被组织起来
 - 第 5 篇解释当前决策如何形成
@@ -120,6 +153,17 @@ updated: 2026-04-06
 ### Mermaid 主图
 1. 当前 query 构成图
 2. messages / system prompt / current query 关系图
+
+### 需要参考的老文档（绝对路径）
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/08-system-prompt-and-context.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/13-system-user-contexts.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/04-query-main-loop.md`
+
+### 需要参考的源代码文件（绝对路径）
+- `/Users/haha/.openclaw/workspace/cc/src/QueryEngine.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/constants/prompts.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/context/promptOverlayContext.tsx`
+- `/Users/haha/.openclaw/workspace/cc/src/services/PromptSuggestion/promptSuggestion.ts`
 
 ### 对后文的导流
 - 第 5 篇从当前工作面进入当前决策
@@ -150,6 +194,17 @@ updated: 2026-04-06
 1. 直接回答 vs 触发能力 的决策分流图
 2. 当前判断走向执行层的桥接图
 
+### 需要参考的老文档（绝对路径）
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/04-query-main-loop.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/11-queryengine-example-walkthrough.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebookv2/volume-1/04-how-intent-becomes-execution.md`
+
+### 需要参考的源代码文件（绝对路径）
+- `/Users/haha/.openclaw/workspace/cc/src/QueryEngine.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/tools/ToolSearchTool/prompt.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/tools/BashTool/prompt.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/tools/FileReadTool/prompt.ts`
+
 ### 对后文的导流
 - 第 6 篇解释结果如何回到当前 turn
 - 卷三继续接执行能力层
@@ -178,6 +233,17 @@ updated: 2026-04-06
 ### Mermaid 主图
 1. `tool_use -> execution -> tool_result -> turn continuation` 图
 2. 结果回流主循环示意图
+
+### 需要参考的老文档（绝对路径）
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/01-from-query-to-tool-call.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/11-queryengine-example-walkthrough.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebookv2/volume-1/03-how-a-request-becomes-an-agent-turn.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebookv2/volume-1/04-how-intent-becomes-execution.md`
+
+### 需要参考的源代码文件（绝对路径）
+- `/Users/haha/.openclaw/workspace/cc/src/QueryEngine.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/utils/messages.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/constants/messages.ts`
 
 ### 对后文的导流
 - 第 7 篇解释为什么有些 turn 继续，有些 turn 收口
@@ -208,6 +274,16 @@ updated: 2026-04-06
 1. continue / stop 决策图
 2. turn 边界图
 
+### 需要参考的老文档（绝对路径）
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/04-query-main-loop.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/02-full-agent-turn.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebookv2/volume-1/03-how-a-request-becomes-an-agent-turn.md`
+
+### 需要参考的源代码文件（绝对路径）
+- `/Users/haha/.openclaw/workspace/cc/src/QueryEngine.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/utils/messages.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/constants/messages.ts`
+
 ### 对后文的导流
 - 第 8 篇把整条运行图压成稳定模型
 - 卷四继续解释长期持续工作能力
@@ -236,6 +312,18 @@ updated: 2026-04-06
 ### Mermaid 主图
 1. 卷二最终主循环总图
 2. 卷二 → 卷三 / 卷四 导流图
+
+### 需要参考的老文档（绝对路径）
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/02-full-agent-turn.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-2/README.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-3/01-main-loop-glossary.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebookv2/volume-1/index.md`
+
+### 需要参考的源代码文件（绝对路径）
+- `/Users/haha/.openclaw/workspace/cc/src/QueryEngine.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/utils/messages.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/constants/messages.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/commands/session/session.tsx`
 
 ### 对后文的导流
 - 卷三：执行能力层如何真正落地
