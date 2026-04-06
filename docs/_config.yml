@@ -1,0 +1,4 @@
+title: Claude Code 源码导读手册
+description: A public-facing source guide for understanding Claude Code internals
+markdown: kramdown
+theme: minima
