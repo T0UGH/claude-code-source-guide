@@ -15,7 +15,7 @@ tags:
 - **上一篇**：[上一篇：compact 是怎么把长会话压成可继续运行的新上下文的](./05-compact.md)
 - **下一篇**：[下一篇：什么时候会触发 compact，什么时候会触发 microCompact](./07-compact-vs-microcompact.md)
 
-这一篇和 compact 紧邻，但职责不同：它不是重复讲压缩，而是专门解释 microCompact 为什么是另一层机制，而不是 compact 的缩小版。
+这一篇和 compact 紧邻，但职责很明确：它不重复讲 compact 本体，而是专门解释 microCompact 为什么是另一层机制，而不是 compact 的缩小版。
 
 ---
 

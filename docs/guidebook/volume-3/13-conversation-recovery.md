@@ -15,7 +15,7 @@ tags:
 - **上一篇**：[上一篇：从 59 篇里归纳 20 条 agent 层设计](./12-twenty-agent-design-takes.md)
 - **下一篇**：[下一篇：sessionRestore 是把恢复包真正接回当前 runtime 的落地层](./14-session-restore.md)
 
-从这里开始，卷三正式转入恢复链。conversationRecovery 先回答 resume 流程从哪里重新接回运行时。
+从这里开始，卷三正式转入恢复链。这一篇先处理恢复入口：resume 流程究竟从哪里重新接回运行时。
 
 ---
 
@@ -33,7 +33,7 @@ tags:
 
 - `src/utils/conversationRecovery.ts`
 
-这次我主要看了：
+这篇主看的是：
 
 - `conversationRecovery.ts`
 - `sessionRestore.ts`

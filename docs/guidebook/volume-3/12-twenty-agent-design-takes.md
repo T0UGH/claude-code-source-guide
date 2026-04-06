@@ -15,7 +15,7 @@ tags:
 - **上一篇**：[上一篇：上下文管理四种形态并排例子](./11-four-context-forms-side-by-side.md)
 - **下一篇**：[下一篇：conversationRecovery 是 resume 把会话重新接回 runtime 的恢复入口](./13-conversation-recovery.md)
 
-这一篇更像卷三里的总结与提升。它不再继续拆单个实现，而是把前面的上下文管理例子往 agent 设计原则上提升。
+这一篇更像卷三里的总结与提升。它不再继续拆单个实现，而是把前面的上下文治理与恢复例子往 agent 设计原则上提升。
 
 ---
 

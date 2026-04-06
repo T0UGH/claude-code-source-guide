@@ -15,7 +15,7 @@ tags:
 - **上一篇**：[上一篇：cache_edits 是什么，以及和 content replacement 有什么区别](./09-cache-edits-and-content-replacement.md)
 - **下一篇**：[下一篇：上下文管理四种形态并排例子](./11-four-context-forms-side-by-side.md)
 
-这一篇回到 snip，但不重复讲它是什么，而是直接落到裁剪对象本身：snip 到底裁掉了什么、保住了什么。
+这一篇回到 snip，但不重复讲它在治理链里的角色，而是直接落到裁剪对象本身：snip 到底裁掉了什么、保住了什么。
 
 ---
 

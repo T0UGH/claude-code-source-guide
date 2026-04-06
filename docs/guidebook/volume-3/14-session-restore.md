@@ -15,7 +15,7 @@ tags:
 - **上一篇**：[上一篇：conversationRecovery 是 resume 把会话重新接回 runtime 的恢复入口](./13-conversation-recovery.md)
 - **下一篇**：[下一篇：session 线收尾：Claude Code 怎么把会话存下来、读回来、再接着跑](./15-session-line-conclusion.md)
 
-这一篇承接恢复入口，继续往下落到真正的恢复落地层：sessionRestore 如何把恢复包接回当前 runtime。
+这一篇承接恢复入口，继续往下落到真正的恢复落地层：sessionRestore 如何把恢复包接回当前 runtime。它不再重复讲“怎么读旧会话”，而是只讲“怎么把恢复包接活”。
 
 ---
 
@@ -39,7 +39,7 @@ tags:
 
 - `src/utils/sessionRestore.ts`
 
-这次我重点看了：
+这篇主看的是：
 
 - `sessionRestore.ts`
 - 它和 `conversationRecovery.ts` 的接口边界

@@ -15,13 +15,11 @@ tags:
 - **上一篇**：[上一篇：什么时候会触发 compact，什么时候会触发 microCompact](./07-compact-vs-microcompact.md)
 - **下一篇**：[下一篇：cache_edits 是什么，以及和 content replacement 有什么区别](./09-cache-edits-and-content-replacement.md)
 
-这一篇进入另一类更轻量的上下文治理手段：snip。重点不是大规模改写会话，而是主循环怎样先做局部剪枝，尽量延缓更重的 compact。
+这一篇进入另一类更轻量的上下文治理手段：snip。它只处理 snip 的架构角色：主循环怎样先做局部剪枝，尽量延缓更重的 compact。
 
 ---
 
-> 校正说明（2026-04-05）：第 56 篇主要回答的是 snip 在治理链里的**架构角色**。如果你更关心“它具体裁掉了什么”，请接着看第 58 篇《snip 到底裁掉了什么》，那篇补充了 model-facing 视图过滤、snipped messages、UI scrollback 与 resume 的关系。
-
-# Claude Code 源码共读笔记 56：snip 是主循环里的轻量剪枝层
+> 校正说明（2026-04-05）：这一篇主要回答的是 snip 在治理链里的**架构角色**。如果你更关心“它具体裁掉了什么”，请接着看后面的《snip 到底裁掉了什么》，那篇会补 model-facing 视图过滤、snipped messages、UI scrollback 与 resume 的关系。
 
 ## 这篇看什么
 

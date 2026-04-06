@@ -15,7 +15,7 @@ tags:
 - **上一篇**：[上一篇：sessionStorage 是会话状态落盘与恢复的汇合点](./04-session-storage.md)
 - **下一篇**：[下一篇：microCompact 为什么不是小号 compact，而是另一层治理机制](./06-microcompact.md)
 
-这一篇进入卷三的核心机制之一：compact。它关心的不是泛泛的“压缩”，而是 Claude Code 如何把过长会话压成仍可继续运行的新上下文。
+这一篇进入卷三的核心机制之一：compact。它只处理 compact 本体：Claude Code 如何把过长会话压成仍可继续运行的新上下文。microCompact 的边界和两者触发顺序，留给后两篇再讲。
 
 ---
 
@@ -29,7 +29,7 @@ tags:
 - resume 时还要重建 compact 之后的链
 
 但说实话，到昨天为止，我们其实一直在“借它解释别的东西”，
-却没有真正把它本人单独拎出来拆。
+却还没有真正把 compact 本体单独拎出来拆。
 
 这会有个明显的问题：
 
@@ -37,12 +37,12 @@ tags:
 
 这篇就专门补这个坑。
 
-我这次重点看的是：
+这篇主看的是：
 
 - `src/services/compact/compact.ts`
 - 它在 `query.ts` 里的接入点
 
-我要回答的不是抽象问题“compact 是不是压缩”，而是几个更具体的问题：
+这篇不再回答抽象问题“compact 是不是压缩”，而是只回答几个更具体的问题：
 
 1. `compactConversation(...)` 的输入输出到底是什么
 2. full compact 和 partial compact 各自做了什么
@@ -643,4 +643,4 @@ flowchart LR
 
 如果只选一个，我会更倾向 **方向 A**。
 
-因为你这次就是专门跳回来补 compact，那下一步自然就是把它旁边最容易混的 `microCompact.ts` 一起补掉。
+因为 compact 本体已经立住了，接下来最容易混的就是它旁边的 `microCompact.ts`。
