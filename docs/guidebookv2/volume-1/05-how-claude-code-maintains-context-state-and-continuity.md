@@ -16,7 +16,7 @@ tags:
 - **所属卷**：卷一：Claude Code 系统全景导论
 - **卷内位置**：05 / 06
 - **上一篇**：[上一篇：Claude Code 怎么把模型意图落成执行能力](./04-how-intent-becomes-execution.md)
-- **下一篇**：Claude Code 怎么长出更多能力
+- **下一篇**：[下一篇：Claude Code 怎么长出更多能力](./06-how-claude-code-grows-new-capabilities.md)
 
 前四篇已经解释了三件事：Claude Code 是一套 runtime；一次请求会被组织成 agent turn；模型意图还能被落成真实执行动作。
 

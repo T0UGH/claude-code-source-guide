@@ -14,7 +14,7 @@ tags:
 
 - **所属卷**：卷一：Claude Code 系统全景导论
 - **卷内位置**：06 / 06
-- **上一篇**：Claude Code 怎么维持上下文、状态与持续工作
+- **上一篇**：[上一篇：Claude Code 怎么维持上下文、状态与持续工作](./05-how-claude-code-maintains-context-state-and-continuity.md)
 - **下一篇**：卷二起，分别进入主循环、工具系统、上下文系统与扩展系统等专题卷
 
 卷一前面几篇，已经把 Claude Code 的几层基础骨架立了起来：

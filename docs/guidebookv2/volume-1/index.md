@@ -14,5 +14,5 @@ status: draft
 2. [02｜Claude Code 由哪些核心对象组成](./02-what-are-the-core-objects.md)
 3. [03｜一次请求是怎么跑成一次 Agent Turn 的](./03-how-a-request-becomes-an-agent-turn.md)
 4. [04｜Claude Code 怎么把模型意图落成执行能力](./04-how-intent-becomes-execution.md)
-5. 05｜Claude Code 怎么维持上下文、状态与持续工作
-6. 06｜Claude Code 怎么长出更多能力
+5. [05｜Claude Code 怎么维持上下文、状态与持续工作](./05-how-claude-code-maintains-context-state-and-continuity.md)
+6. [06｜Claude Code 怎么长出更多能力](./06-how-claude-code-grows-new-capabilities.md)

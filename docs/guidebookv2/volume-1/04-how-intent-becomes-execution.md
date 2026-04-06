@@ -15,7 +15,7 @@ tags:
 - **所属卷**：卷一：Claude Code 系统全景导论
 - **卷内位置**：04 / 06
 - **上一篇**：[上一篇：一次请求是怎么跑成一次 Agent Turn 的](./03-how-a-request-becomes-an-agent-turn.md)
-- **下一篇**：Claude Code 怎么维持上下文、状态与持续工作
+- **下一篇**：[下一篇：Claude Code 怎么维持上下文、状态与持续工作](./05-how-claude-code-maintains-context-state-and-continuity.md)
 
 上一篇把 Claude Code 的动态主线立住了：一次请求不会天然停在首条回复，而是沿着“判断 → 执行 → 结果回流 → 再判断”的闭环继续推进。
 
