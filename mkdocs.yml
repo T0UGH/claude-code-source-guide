@@ -1,0 +1,184 @@
+site_name: Claude Code 源码导读手册
+site_description: A public-facing source guide for understanding Claude Code internals
+site_url: https://t0ugh.github.io/claude-code-source-guide/
+repo_url: https://github.com/T0UGH/claude-code-source-guide
+repo_name: T0UGH/claude-code-source-guide
+
+docs_dir: docs
+site_dir: site
+
+use_directory_urls: true
+
+theme:
+  name: material
+  language: zh
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: white
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: 切换到深色模式
+    - scheme: slate
+      primary: black
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: 切换到浅色模式
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+
+exclude_docs: |
+  guidebook/README.md
+  guidebook/volume-2/README.md
+  guidebook/volume-3/README.md
+  guidebook/volume-4/README.md
+  guidebook/volume-5/README.md
+  guidebook/volume-6/README.md
+  notes/*
+  superpowers/*
+  guidebook/00-mapping-table-v2.md
+  guidebook/01-volume-one-runtime-foundation.md
+
+validation:
+  omitted_files: ignore
+  absolute_links: warn
+  unrecognized_links: warn
+
+extra_javascript:
+  - javascripts/mermaid-init.js
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+
+nav:
+  - 首页: index.md
+  - Guidebook 总览: guidebook/index.md
+  - 卷一｜运行时底座:
+      - 导读: guidebook/volume-1/index.md
+      - 01 Tool 总图与 BashTool 入口: guidebook/volume-1/01-tool-overview-and-bash-entry.md
+      - 02 Tool 体系总览: guidebook/volume-1/02-tool-system-overview.md
+      - 03 BashTool 不是跑 shell 这么简单: guidebook/volume-1/03-bashtool-is-not-just-shell.md
+      - 04 FileReadTool: guidebook/volume-1/04-filereadtool.md
+      - 05 FileEditTool: guidebook/volume-1/05-fileedittool.md
+      - 06 FileWriteTool: guidebook/volume-1/06-filewritetool.md
+      - 07 GrepTool: guidebook/volume-1/07-greptool.md
+      - 08 ToolSearchTool: guidebook/volume-1/08-toolsearchtool.md
+      - 09 主循环里 tool 怎么被接住: guidebook/volume-1/09-how-tools-enter-runtime.md
+      - 10 AgentTool: guidebook/volume-1/10-agenttool.md
+      - 11 runAgent 装配线: guidebook/volume-1/11-runagent-assembly-line.md
+      - 12 forkSubagent: guidebook/volume-1/12-forksubagent.md
+      - 13 loadAgentsDir: guidebook/volume-1/13-loadagentsdir.md
+      - 14 builtInAgents: guidebook/volume-1/14-builtinagents.md
+      - 15 SkillTool 桥位: guidebook/volume-1/15-skilltool-bridge.md
+      - 16 loadSkillsDir: guidebook/volume-1/16-loadskillsdir.md
+      - 17 SkillTool 执行入口: guidebook/volume-1/17-skilltool-execution-entry.md
+      - 18 forkedAgent: guidebook/volume-1/18-forkedagent.md
+      - 19 runAgent 接 skill 主干: guidebook/volume-1/19-runagent-skill-mainline.md
+      - 20 processPromptSlashCommand: guidebook/volume-1/20-processpromptslashcommand.md
+      - 21 skill frontmatter 字段速查: guidebook/volume-1/21-skill-frontmatter-fields.md
+      - 22 frontmatter 是运行时接口: guidebook/volume-1/22-frontmatter-runtime-interface.md
+      - 23 什么样的 skill 才成立: guidebook/volume-1/23-good-runtime-skill.md
+      - 24 skillify: guidebook/volume-1/24-skillify.md
+      - 25 verify: guidebook/volume-1/25-verify.md
+      - 26 debug: guidebook/volume-1/26-debug.md
+      - 27 skills 结语: guidebook/volume-1/27-skills-conclusion.md
+      - 28 name / description 何时暴露: guidebook/volume-1/28-skill-name-description.md
+      - 29 when_to_use vs description: guidebook/volume-1/29-when-to-use-vs-description.md
+      - 30 skill vs agent: guidebook/volume-1/30-skill-vs-agent.md
+      - 31 prompt 指令层: guidebook/volume-1/31-prompt-as-instruction-layer.md
+  - 卷二｜请求主链:
+      - 导读: guidebook/volume-2/index.md
+      - 01 从 query 到 tool.call 的连接处: guidebook/volume-2/01-from-query-to-tool-call.md
+      - 02 主循环在编排一次完整 agent 回合: guidebook/volume-2/02-full-agent-turn.md
+      - 03 QueryEngine 总入口: guidebook/volume-2/03-queryengine-entry.md
+      - 04 query(...) 主循环: guidebook/volume-2/04-query-main-loop.md
+      - 05 processUserInput: guidebook/volume-2/05-process-user-input.md
+      - 06 getAttachmentMessages: guidebook/volume-2/06-get-attachment-messages.md
+      - 07 messages.ts: guidebook/volume-2/07-messages-normalization.md
+      - 08 system prompt 和 context: guidebook/volume-2/08-system-prompt-and-context.md
+      - 09 旧消息压缩切边投影: guidebook/volume-2/09-collapse-keeps-working.md
+      - 10 context collapse: guidebook/volume-2/10-context-collapse-read-time-projection.md
+      - 11 例子串主链: guidebook/volume-2/11-queryengine-example-walkthrough.md
+      - 12 通俗解释主链: guidebook/volume-2/12-queryengine-example-plain.md
+      - 13 system / user / context 三分: guidebook/volume-2/13-system-user-contexts.md
+  - 卷三｜长上下文与恢复:
+      - 导读: guidebook/volume-3/index.md
+      - 01 主循环术语表: guidebook/volume-3/01-main-loop-glossary.md
+      - 02 主循环时序图版: guidebook/volume-3/02-main-loop-sequence-diagram.md
+      - 03 长上下文每轮都重算吗: guidebook/volume-3/03-does-long-context-recompute-every-turn.md
+      - 04 sessionStorage: guidebook/volume-3/04-session-storage.md
+      - 05 compact: guidebook/volume-3/05-compact.md
+      - 06 microCompact: guidebook/volume-3/06-microcompact.md
+      - 07 compact vs microCompact: guidebook/volume-3/07-compact-vs-microcompact.md
+      - 08 snip: guidebook/volume-3/08-snip.md
+      - 09 cache_edits / content replacement: guidebook/volume-3/09-cache-edits-and-content-replacement.md
+      - 10 snip 到底裁掉了什么: guidebook/volume-3/10-what-snip-removes.md
+      - 11 四种上下文形态并排: guidebook/volume-3/11-four-context-forms-side-by-side.md
+      - 12 20 条 agent 层设计: guidebook/volume-3/12-twenty-agent-design-takes.md
+      - 13 conversationRecovery: guidebook/volume-3/13-conversation-recovery.md
+      - 14 sessionRestore: guidebook/volume-3/14-session-restore.md
+      - 15 session 线收尾: guidebook/volume-3/15-session-line-conclusion.md
+  - 卷四｜扩展体系:
+      - 导读: guidebook/volume-4/index.md
+      - 01 MCP 接入 runtime: guidebook/volume-4/01-mcp-runtime-entry.md
+      - 02 MCPTool 调用链: guidebook/volume-4/02-mcptool-call-chain.md
+      - 03 CLI + skill vs MCP: guidebook/volume-4/03-cli-plus-skill-vs-many-mcp.md
+      - 04 MCP 认证状态机: guidebook/volume-4/04-mcp-auth-state-machine.md
+      - 05 MCP 权限边界: guidebook/volume-4/05-mcp-permission-boundary.md
+      - 06 hooks 总入口: guidebook/volume-4/06-hooks-runtime-entry.md
+      - 07 PreToolUse / PostToolUse: guidebook/volume-4/07-pretooluse-posttooluse-hooks.md
+      - 08 SessionStart / Stop hooks: guidebook/volume-4/08-sessionstart-stop-hooks.md
+      - 09 hooks 收尾: guidebook/volume-4/09-hooks-conclusion.md
+      - 10 plugin 能力面: guidebook/volume-4/10-plugin-capability-surface.md
+      - 11 pluginLoader: guidebook/volume-4/11-plugin-loader.md
+      - 12 plugin 接入面: guidebook/volume-4/12-plugin-attachment-points.md
+      - 13 validate / schema / policy: guidebook/volume-4/13-plugin-validate-schema-policy.md
+      - 14 install / marketplace: guidebook/volume-4/14-plugin-cli-install-marketplace.md
+      - 15 plugin 收口: guidebook/volume-4/15-plugin-conclusion.md
+  - 卷五｜权限边界:
+      - 导读: guidebook/volume-5/index.md
+      - 01 权限系统总图: guidebook/volume-5/01-permission-system-overview.md
+      - 02 tool execution 和 permission decision: guidebook/volume-5/02-tool-execution-and-permission-decision.md
+      - 03 BashTool 权限模型: guidebook/volume-5/03-bashtool-permission-model.md
+      - 04 路径权限与持久化: guidebook/volume-5/04-path-permissions-and-persistence.md
+      - 05 policy limits: guidebook/volume-5/05-policy-limits.md
+      - 06 权限系统收口: guidebook/volume-5/06-permission-system-conclusion.md
+  - 卷六｜多 agent 协作:
+      - 导读: guidebook/volume-6/index.md
+      - 01 team / teammate runtime 位置: guidebook/volume-6/01-team-runtime-position.md
+      - 02 team 生命周期: guidebook/volume-6/02-team-lifecycle.md
+      - 03 InProcessTeammateTask: guidebook/volume-6/03-inprocess-teammate-task.md
+      - 04 mailbox / idle / shutdown: guidebook/volume-6/04-mailbox-idle-shutdown.md
+      - 05 Local / Remote / teammate 边界: guidebook/volume-6/05-local-remote-teammate-boundaries.md
+      - 06 swarm 收口: guidebook/volume-6/06-team-runtime-conclusion.md

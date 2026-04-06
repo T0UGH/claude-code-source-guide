@@ -170,8 +170,8 @@ change. That's where you observe.
 
 | Change reaches | Surface | You |
 |---|---|---|
-| CLI / TUI | terminal | type the command, capture the pane — [example](examples/cli.md) |
-| Server / API | socket | send the request, capture the response — [example](examples/server.md) |
+| CLI / TUI | terminal | type the command, capture the pane — [example](#examplesclimd) |
+| Server / API | socket | send the request, capture the response — [example](#examplesservermd) |
 | GUI | pixels | drive it under xvfb/Playwright, screenshot |
 | Library | package boundary | sample code through the public export — `import pkg`, not `import ./src/...` |
 | Prompt / agent config | the agent | run the agent, capture its behavior |
