@@ -15,7 +15,7 @@ tags:
 - **上一篇**：[上一篇：QueryEngine 是一次用户请求进入运行时主链路的总入口](./03-queryengine-entry.md)
 - **下一篇**：[下一篇：processUserInput 是怎么分流 slash、attachment 和普通文本的](./05-process-user-input.md)
 
-这一篇承接 QueryEngine 入口，直接进入真正的闭环驱动器：`query(...)`。它回答的不是“请求从哪进来”，而是“进来之后，这条主链到底怎么持续跑起来”。
+这一篇承接 QueryEngine 入口，直接进入真正的闭环驱动器：`query(...)`。上一篇解决的是“请求从哪进来”，这一篇只继续回答下一步：进来之后，这条主链到底怎么持续跑起来。
 
 ---
 
@@ -39,7 +39,7 @@ tags:
 - 一轮结束和继续下一轮的边界到底在哪里
 - Claude Code 为什么能把“模型输出”和“工具执行”串成一个稳定的循环，而不是一堆松散事件
 
-这次我主要回看了：
+这篇主看的是：
 
 - `src/query.ts`
 - `src/services/tools/toolOrchestration.ts`
@@ -302,7 +302,7 @@ flowchart TD
 
 ## 第五层：tool_use 不是散着跑的，`runTools(...)` 会先分批，再决定并发还是串行
 
-这层是我这次觉得特别漂亮的地方。
+这一层特别漂亮，也很能说明这套 runtime 的成熟度。
 
 工具执行不是一个个硬跑，而是走：
 

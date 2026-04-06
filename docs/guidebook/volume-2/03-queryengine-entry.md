@@ -15,7 +15,7 @@ tags:
 - **上一篇**：[上一篇：主循环在编排一次完整 agent 回合](./02-full-agent-turn.md)
 - **下一篇**：[下一篇：query(...) 是怎么驱动模型、工具、消息主循环的](./04-query-main-loop.md)
 
-从这一篇开始，卷二正式进入 QueryEngine 主链本体。重点不再是零散机制，而是主线程的一次用户请求究竟从哪里进入 runtime，又是怎样被装配成可持续推进的一轮交互。
+从这一篇开始，卷二正式进入 QueryEngine 主链本体。这一篇先处理总入口问题：主线程的一次用户请求究竟从哪里进入 runtime，又是怎样被装配成可持续推进的一轮交互。真正的闭环驱动逻辑，留到下一篇 `query(...)` 再展开。
 
 ---
 
@@ -38,7 +38,7 @@ tags:
 - `src/utils/processUserInput/processTextPrompt.ts`
 - `src/constants/prompts.ts` 里 system prompt / env details 那段
 
-看完之后，我现在会直接给一个很稳的结论：
+看完之后，可以先把结论收成一句话：
 
 > **如果说 `runAgent(...)` 是 agent/subagent 那条执行支线的主干，那 `QueryEngine.submitMessage(...)` 就是一次主线程用户请求进入 Claude Code runtime 的总入口。**
 
