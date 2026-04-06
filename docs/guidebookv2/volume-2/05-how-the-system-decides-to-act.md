@@ -1,10 +1,21 @@
 ---
 title: 卷二 05｜系统怎么决定这一轮要不要调用能力
-status: draft
-updated: 2026-04-06
+date: 2026-04-06
+tags:
+  - Claude Code
+  - tool_use
+  - 当前决策
+  - Agent Turn
 ---
 
 # 卷二 05｜系统怎么决定这一轮要不要调用能力
+
+## 导读
+
+- **所属卷**：卷二：用户输入怎么变成一次完整的 agent turn
+- **卷内位置**：05 / 08
+- **上一篇**：[卷二 04｜当前 query 是怎么被组织起来的](./04-how-the-current-query-is-organized.md)
+- **下一篇**：[卷二 06｜tool use / action 之后，结果怎么重新回到当前 turn](./06-how-results-return-to-the-current-turn.md)
 
 ## 这篇要回答的问题
 

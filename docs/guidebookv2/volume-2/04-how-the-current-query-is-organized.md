@@ -1,10 +1,21 @@
 ---
-title: 04｜当前 query 是怎么被组织起来的
-status: draft
-updated: 2026-04-06
+title: 卷二 04｜当前 query 是怎么被组织起来的
+date: 2026-04-06
+tags:
+  - Claude Code
+  - current query
+  - 主循环
+  - Agent Turn
 ---
 
-# 04｜当前 query 是怎么被组织起来的
+# 卷二 04｜当前 query 是怎么被组织起来的
+
+## 导读
+
+- **所属卷**：卷二：用户输入怎么变成一次完整的 agent turn
+- **卷内位置**：04 / 08
+- **上一篇**：[卷二 03｜请求是怎么进入 QueryEngine 的](./03-how-a-request-enters-queryengine.md)
+- **下一篇**：[卷二 05｜系统怎么决定这一轮要不要调用能力](./05-how-the-system-decides-to-act.md)
 
 到了这一篇，卷二要往前再推半步。
 

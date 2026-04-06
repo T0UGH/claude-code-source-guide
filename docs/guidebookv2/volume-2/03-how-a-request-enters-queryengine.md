@@ -1,10 +1,21 @@
 ---
-title: 03｜请求是怎么进入 QueryEngine 的
-status: draft
-updated: 2026-04-06
+title: 卷二 03｜请求是怎么进入 QueryEngine 的
+date: 2026-04-06
+tags:
+  - Claude Code
+  - QueryEngine
+  - 主循环
+  - Agent Turn
 ---
 
-# 03｜请求是怎么进入 QueryEngine 的
+# 卷二 03｜请求是怎么进入 QueryEngine 的
+
+## 导读
+
+- **所属卷**：卷二：用户输入怎么变成一次完整的 agent turn
+- **卷内位置**：03 / 08
+- **上一篇**：[卷二 02｜用户输入在进入运行时之前经历了什么](./02-what-happens-before-user-input-enters-runtime.md)
+- **下一篇**：[卷二 04｜当前 query 是怎么被组织起来的](./04-how-the-current-query-is-organized.md)
 
 到了这一篇，卷二才算真正从“输入前站”迈进主循环入口。
 

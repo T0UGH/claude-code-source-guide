@@ -14,8 +14,8 @@ tags:
 
 - **所属卷**：卷二：用户输入怎么变成一次完整的 agent turn
 - **卷内位置**：07 / 08
-- **上一篇**：[上一篇：tool use / action 之后，结果怎么重新回到当前 turn](./06-tool-use-action-results-return-to-current-turn.md)
-- **下一篇**：[下一篇：把整条主循环重新压成一张稳定运行图](./08-stable-main-loop-map.md)
+- **上一篇**：[卷二 06｜tool use / action 之后，结果怎么重新回到当前 turn](./06-how-results-return-to-the-current-turn.md)
+- **下一篇**：[卷二 08｜把整条主循环重新压成一张稳定运行图](./08-stable-main-loop-map.md)
 
 到第 6 篇为止，卷二已经把一条关键动态线拉出来了：
 
