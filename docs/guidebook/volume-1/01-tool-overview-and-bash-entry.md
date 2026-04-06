@@ -17,36 +17,46 @@ tags:
 - **上一篇**：无
 - **下一篇**：[下一篇：Tool 体系总览](./02-tool-system-overview.md)
 
-这一篇是卷一的正文入口。它先不急着讲主循环，而是先把 Claude Code 的 tool 层立起来：tool 在系统里到底是什么、为什么 BashTool 会成为理解整套工具体系的最好入口，以及工具不是零散功能，而是 runtime 里的正式执行对象。
+很多人第一次看 Claude Code 源码时，注意力会先被主循环、消息流、上下文压缩这些更显眼的部分吸走。但如果想真正理解这个系统是怎么把“模型能力”落成“可执行能力”的，tool 体系其实更适合作为卷一入口。
+
+这一篇要回答两个问题：**为什么卷一先讲 tool，而不是先讲主循环；为什么 BashTool 会成为理解整套工具体系的最好入口。** 顺着这两个问题往下看，tool 就不会再是“有很多工具目录”的散点印象，而会变成一条清楚的 runtime 执行链。
 
 ---
 
 ## 这篇看什么
 
-这一篇是卷一正文入口，目标不是把 `Tool.ts` 讲成制度手册，而是先给读者一个能站住的入口：为什么卷一要从 tool 起手，以及为什么 BashTool 会成为理解整套工具体系的最好切口。
+这一篇的目标不是把 `Tool.ts` 讲成制度手册，而是先把读者带到一个能站住的位置：Claude Code 里的 tool 到底是什么、它在 runtime 里处在哪一层、模型产出的 `tool_use` 又是怎么一路落成真实的 `tool.call(...)`。
 
 大概顺序是：
 
-1. 先看 `src/Tool.ts`，弄清楚 tool 在 Claude Code 里到底是什么
-2. 再看 `src/utils/processUserInput/processUserInput.ts`，看主循环入口怎么分流输入
-3. 接着追“tools 到底在哪里真正被调用”，把连接处一路追到
+1. 先看 `src/Tool.ts`，建立 tool 的低分辨率总图
+2. 再看 `src/utils/processUserInput/processUserInput.ts`，厘清这层负责什么、不负责什么
+3. 接着追“tool 到底在哪里被真正调用”，把主链一路追到
    - `src/query.ts`
    - `src/services/tools/toolOrchestration.ts`
    - `src/services/tools/toolExecution.ts`
    - 最终的 `tool.call(...)`
-4. 最后开始看一个具体工具：`src/tools/BashTool/BashTool.tsx`
+4. 最后落到一个最重的具体样本：`src/tools/BashTool/BashTool.tsx`
 
-这一轮结束后，tool 体系至少已经不是“有很多工具目录”这种散点印象了，而是能看清楚一条主链。
+这一轮结束后，tool 体系至少会从“工具很多”变成“执行链清楚”。
 
 ---
 
-## 1. Tool 在 Claude Code 里是什么
+## 1. 先建立一个总图：Tool 在 Claude Code 里到底是什么
 
-`src/Tool.ts` 读下来，最重要的结论是：
+如果先不看细节，很多人会把 Claude Code 的 tool 直觉地理解成“模型可以调用的一组函数”。这个理解不能说全错，但远远不够。
 
-> **tool 不是一个函数，而是一个带完整类型、执行逻辑、权限逻辑和 UI 渲染能力的对象。**
+真正把 `src/Tool.ts` 读下来，更准确的判断是：
 
-核心感受有几条：
+> **tool 不是函数清单，而是 runtime 里的正式执行对象。**
+
+它不只是负责“做事”，还同时带着输入校验、权限判断、执行约束，以及给 UI 展示 tool 使用过程和结果的协议。
+
+这一层最值得先改掉的直觉不是“Claude Code 有很多工具”，而是：
+
+> **tool 在这里并不是零散功能，而是一类可被 runtime 调度、校验、执行、展示的标准对象。**
+
+核心感受有几条。
 
 ### 1.1 tool 不只是执行单元，也是 UI 单元
 
@@ -68,7 +78,7 @@ tags:
 - 默认不是破坏性操作
 - 默认权限检查放行到通用权限系统继续处理
 
-这能保证调用方拿到的永远是完整 Tool 对象，不用四处写 `?.()`。
+这样调用方拿到的永远是完整 Tool 对象，不用在外围到处补默认逻辑。
 
 ### 1.3 `ToolUseContext` 很重
 
@@ -86,11 +96,11 @@ tags:
 
 ---
 
-## 2. `processUserInput.ts` 不是 tool 执行层
+## 2. 一个关键误区：`processUserInput.ts` 不是 tool 执行层
 
-一开始看 `processUserInput.ts` 时，很容易误以为“主循环应该就在这里调 tool”。
+如果顺着主循环入口往下读，很容易先盯上 `processUserInput.ts`，然后误以为“tool 应该就在这里被调起来”。
 
-但读下来更准确的理解是：
+但更准确的理解是：
 
 > **`processUserInput.ts` 是输入编排层，不是 tool 执行层。**
 
@@ -119,15 +129,15 @@ tags:
 
 但**不是**工具最终怎么执行。
 
+这一步之所以重要，是因为它把“人类输入进入系统”和“runtime 真正执行 tool”这两层分开了。前者解决的是入口分流，后者解决的是模型已经决定调用工具之后，系统怎么把 `tool_use` 变成真实执行。
+
 ---
 
-## 3. 真正的连接处：从 query 到 tool.call
+## 3. 真正的主链：从 `tool_use` 到 `tool.call(...)`
 
-今天最关键的收获其实在这里。
+这一篇最关键的问题其实在这里：
 
-因为前面一直在看输入和抽象，真正的疑问是：
-
-> tool 到底在哪里被真正调用？
+> **tool 到底在哪里被真正调用？**
 
 答案不在 `processUserInput.ts`，而在下面这条链：
 
@@ -138,16 +148,18 @@ query.ts
   -> tool.call(...)
 ```
 
+这一条链立起来之后，tool 系统才真正从“抽象定义”和“输入入口”变成 runtime 里的执行路径。
+
 ### 3.1 `query.ts`
 
 `query.ts` 在模型返回 assistant message 后，会抽取 `tool_use blocks`，然后交给 `runTools(...)`。
 
-关键点在于：
+这里有一个很关键的边界：
 
 - `processUserInput.ts` 处理的是“人类输入”
 - `query.ts` 处理的是“模型输出”
 
-tool 系统真正开始启动，是在模型已经决定要发起 `tool_use` 之后。
+所以 tool 系统真正开始启动，不是在用户刚输入时，而是在模型已经决定要发起 `tool_use` 之后。
 
 ### 3.2 `toolOrchestration.ts`
 
@@ -158,7 +170,7 @@ tool 系统真正开始启动，是在模型已经决定要发起 `tool_use` 之
 - 并发安全的并发跑
 - 不并发安全的串行跑
 
-也就是说，这层是 scheduler，不是 executor。
+也就是说，这层更像 scheduler，不是 executor。
 
 ### 3.3 `toolExecution.ts`
 
@@ -178,21 +190,32 @@ findToolByName(toolUseContext.options.tools, toolName)
 - `checkPermissions`
 - `tool.call(...)`
 
-所以今天最清晰的结论是：
+所以这一层最清晰的结论是：
 
 > **Claude Code 不是主循环直接调工具，而是模型先产出结构化 `tool_use`，runtime 再把它翻译成真实的 `tool.call(...)`。**
 
-这层边界很清楚。
+这也解释了为什么 tool 系统在源码里看起来不像“函数注册表”。它真正承接的，是模型输出和执行系统之间的翻译层。
 
 ---
 
-## 4. BashTool 读下来的第一印象
+## 4. 为什么 BashTool 是理解整套 tool 体系的最好入口
 
-今天后半段开始看 `src/tools/BashTool/BashTool.tsx`。
+如果只是想找一个“具体工具”来读，Claude Code 里其实有很多候选。但 BashTool 之所以适合作为卷一第一篇的入口，不是因为它最常见，而是因为它最能暴露整个 tool runtime 的重量。
 
-这部分最重要的感觉是：
+更直接地说：
 
-> **BashTool 不是“跑个 shell”这么简单，它已经是一套小型执行系统。**
+> **BashTool 不是普通工具样本，而是 Claude Code tool 体系里压强最大的一类基础设施型工具。**
+
+它同时碰到了：
+
+- 执行策略
+- 安全策略
+- 并发策略
+- 长任务与后台任务
+- 输出组织
+- UI 呈现
+
+也就是说，读 BashTool，不只是读一个 shell 工具，而是在看 Claude Code 怎样把“模型调用工具”做成一套真正的运行时执行系统。
 
 ### 4.1 并发安全直接建立在只读判断上
 
@@ -209,13 +232,13 @@ isConcurrencySafe(input) {
 - 只读 bash → 更容易并发
 - 非只读 bash → 更谨慎
 
-Claude Code 没给 bash 再单独造一套并发规则，而是把它直接挂在只读判断上。
+Claude Code 没给 bash 单独再造一套并发规则，而是把并发策略直接挂在只读判断上。
 
 ### 4.2 `isReadOnly()` 不是表面文章
 
 它背后接的是 `checkReadOnlyConstraints(...)`，而不是简单看命令前缀。
 
-这也解释了为什么 `readOnlyValidation.ts` 会很大。BashTool 的很多运行策略都绕不过这层判断。
+这也解释了为什么 `readOnlyValidation.ts` 会很大。BashTool 的很多运行策略，实际上都绕不过这层判断。
 
 ### 4.3 输入输出 schema 很重
 
@@ -237,7 +260,7 @@ BashTool 的输入不只是 `command`，还有：
 - `persistedOutputPath`
 - `persistedOutputSize`
 
-也就是说，BashTool 返回的不是“命令结果”，而是“命令结果 + runtime 元信息 + UI 所需信息”。
+所以 BashTool 返回的并不是“命令结果”，而是“命令结果 + runtime 元信息 + UI 所需信息”。
 
 ### 4.4 它从一开始就不是“一次性返回结果”设计
 
@@ -251,7 +274,7 @@ BashTool 的输入不只是 `command`，还有：
 
 ### 4.5 它承担了很多产品级判断
 
-这部分最像 Claude Code 的“产品哲学”：
+这部分最能看出 Claude Code 的产品哲学：
 
 - 检测阻塞型 `sleep N`，引导用后台任务或 Monitor
 - 长任务可以自动 background
@@ -265,7 +288,7 @@ BashTool 的输入不只是 `command`，还有：
 
 ## 5. 目前这轮对 tool 体系的整体判断
 
-如果把今天的收获压成几句话，我会记成下面这样：
+如果把这一轮的收获压成几句话，可以记成下面这样。
 
 ### 5.1 tool 体系是五层结构，不是一团实现
 
@@ -299,7 +322,9 @@ BashTool 的输入不只是 `command`，还有：
 
 ## 6. 后面最值得继续读的 tool
 
-今天还顺手列了一遍 `src/tools/` 下的工具目录。接下来如果要继续构建整体心智模型，我会优先看这几类：
+这一篇先把 tool 体系的总图立起来。顺着这条线继续往下，最值得补的不是“再找一个复杂工具随机看”，而是把 BashTool 周边的关键判断和本地文件能力线接上。
+
+接下来优先级最高的几类是：
 
 ### 文件与搜索类
 - `FileReadTool`
@@ -319,15 +344,15 @@ BashTool 的输入不只是 `command`，还有：
 - `WebSearchTool`
 - `LSPTool`
 
-如果按当前热度往下接，我觉得最自然的是两条线：
+如果按当前这篇的主线继续推进，最自然的是两条线：
 
 1. 继续深读 `readOnlyValidation.ts`
 2. 补 `FileReadTool` / `FileEditTool`
 
-前者能补清 BashTool 的核心判断；后者能补完整“本地文件操作”那条主能力线。
+前者能补清 BashTool 最核心的运行判断；后者能把“本地文件操作”这条主能力线补完整。
 
 ---
 
 ## 一句话收口
 
-> 这一轮之后，tool 体系终于从“很多工具目录”变成了一条清楚的链：用户输入进主循环，模型产出 `tool_use`，runtime 调度并执行，最后再把结果包装回模型能继续理解的 `tool_result`。而 BashTool 是这条链上最重、最像执行内核的那个工具。
+> Claude Code 的 tool 体系，本质上不是“模型直接调用一组函数”，而是模型先产出结构化 `tool_use`，runtime 再把它翻译成可调度、可校验、可执行、可展示的正式执行流程。BashTool 之所以适合作为卷一入口，不是因为它只是最常见的工具，而是因为它最完整地暴露了这套运行时设计。
