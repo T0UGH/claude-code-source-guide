@@ -15,7 +15,7 @@ tags:
 - **上一篇**：[上一篇：plugin 的各能力接入面是怎么挂上去的](./12-plugin-attachment-points.md)
 - **下一篇**：[下一篇：plugin CLI / install / marketplace 是怎么把 plugin 变成产品级生态对象的](./14-plugin-cli-install-marketplace.md)
 
-这一篇把 plugin 主线推进到正式约束层：validate、schema、policy 为什么说明 plugin 不是松散目录，而是正式能力包。
+这一篇把 plugin 主线推进到正式约束层：validate、schema、policy 为什么说明 plugin 不是松散目录，而是正式能力包。它的职责是解释“为什么敢接”，而不是再重复讲“怎么装、怎么挂”。
 
 ---
 
@@ -515,26 +515,3 @@ Claude Code 没把“runtime 尽量稳健”和“作者侧尽量严格”混成
 - 治理边界
 
 四层都串起来了。
-
-## 下一步最顺怎么接
-
-我觉得 76 写完之后，接下来最顺的方向已经开始从 runtime / 治理层，往产品生态层切了。
-
-所以我会建议下一篇写：
-
-### 77：plugin CLI / install / marketplace 是怎么把 plugin 变成产品级生态对象的
-
-重点去看：
-
-- `src/cli/handlers/plugins.ts`
-- `src/services/plugins/pluginCliCommands.ts`
-- `PluginInstallationManager.ts`
-- marketplace 相关工具
-
-核心问题会是：
-
-- plugin 为什么不只是 runtime 抽象，而是完整产品对象
-- install / uninstall / update / list / marketplace 这些动作是怎么落地的
-- Claude Code 的 plugin 为什么已经开始像一个小生态，而不只是本地扩展体系
-
-如果继续顺着这条线写，这会是非常自然的一步。

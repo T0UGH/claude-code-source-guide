@@ -15,13 +15,13 @@ tags:
 - **上一篇**：[上一篇：hooks 主线收尾：为什么 Claude Code 的 hooks 本质上是 runtime 编排层](./09-hooks-conclusion.md)
 - **下一篇**：[下一篇：pluginLoader 是怎么把插件装配成运行时能力包的](./11-plugin-loader.md)
 
-卷四从这里转入 plugin 主线。第一篇先不急着讲装配细节，而是先看 plugin 系统到底在提供什么能力面。
+卷四从这里转入 plugin 主线。第一篇先不急着讲装配细节，而是先把 plugin 系统到底在提供什么能力面立住。
 
 ---
 
 ## 这篇看什么
 
-hooks 主线刚收完，下一步最自然的问题其实不是“再看一个 hook 细节”，而是：
+hooks 主线刚收完，卷四接上的问题不再是“再看一个 hook 细节”，而是：
 
 > 这些可插拔能力，到底是以什么单位被打包、发现、装载、治理的？
 
@@ -625,39 +625,3 @@ Claude Code 用 plugin 把这两层对齐了。
 - plugin：把这些能力打成正式可治理扩展单元的封装层
 
 这一步补上以后，整个 Claude Code 的扩展架构会顺很多。
-
-## 下一步最顺怎么接
-
-这篇把 plugin 的总定位立住之后，下一步最顺的不是继续讲 marketplace，也不是先讲安装命令，而是去看：
-
-> 这个统一能力包，具体是怎么被装配成 `LoadedPlugin` 的？
-
-所以我觉得下一篇最自然就是：
-
-### 方向 A：直接进 `pluginLoader.ts`
-
-题目可以是：
-
-**Claude Code 源码共读笔记 74：pluginLoader 是怎么把插件装配成运行时能力包的**
-
-重点回答：
-
-- 不同来源怎么统一
-- manifest / path / source 怎么标准化
-- 组件内容怎么被装进去
-- enable / disable / duplicate / error 是怎么一起处理的
-
-这是最顺的一步。
-
-### 方向 B：拆“接入面”
-
-如果想更强调 plugin 和 hooks / command / agent / MCP 的边界，也可以下一篇直接看：
-
-- `loadPluginHooks.ts`
-- `loadPluginCommands.ts`
-- `loadPluginAgents.ts`
-- `mcpPluginIntegration.ts`
-
-但我还是更倾向先走方向 A。
-
-因为总图之后，先补装配主线，读者心里会更稳。

@@ -15,7 +15,7 @@ tags:
 - **上一篇**：[上一篇：Claude Code 的 plugin 系统到底在提供什么能力面](./10-plugin-capability-surface.md)
 - **下一篇**：[下一篇：plugin 的各能力接入面是怎么挂上去的](./12-plugin-attachment-points.md)
 
-这一篇承接 plugin 能力面，正式进入装配层：pluginLoader 怎样把插件装成运行时能力包。
+这一篇承接 plugin 能力面，正式进入装配层：pluginLoader 怎样把插件装成运行时能力包。它的职责很明确：只讲装配，不重复讲 plugin 作为能力面的总定位。
 
 ---
 
@@ -27,7 +27,7 @@ tags:
 - plugin 也不是一个普通目录
 - 它是 Claude Code 的统一能力包和统一治理包
 
-那下一步最自然的问题就是：
+顺着上一篇往下，最自然的问题就是：
 
 > 这个“统一能力包”，在代码里到底是怎么被真正装起来的？
 
@@ -520,26 +520,3 @@ Claude Code 没走极端。
 - 74：再看 pluginLoader 这条装配主线
 
 再往后，最自然的就是继续拆它的“组件接入位”。
-
-## 下一步最顺怎么接
-
-我觉得 74 写完之后，下一步最顺的不是继续留在 `pluginLoader.ts` 里抠缓存细节，而是把“装配线”上最关键的几个组件接入位拆开看。
-
-也就是：
-
-### 75：plugin 的各能力接入面是怎么挂上去的
-
-重点可以直接看：
-
-- `loadPluginHooks.ts`
-- `loadPluginCommands.ts`
-- `loadPluginAgents.ts`
-- `mcpPluginIntegration.ts`
-
-核心问题会变成：
-
-- plugin 提供的不同能力面，分别以什么方式进入 runtime
-- 为什么 hooks、commands、agents、MCP 虽然都属于 plugin，但接入方式并不一样
-- 哪些能力是装配时直接挂上的，哪些能力是后续 lazy load 的
-
-这会比继续在 74 里深挖 marketplace 更顺，也更符合源码共读的节奏。

@@ -21,7 +21,7 @@ tags:
 
 ## 这篇看什么
 
-session 线刚收完，下一条最自然的主线其实就是 MCP。
+session 线刚收完，卷四接上的第一条主线就是 MCP。
 
 因为前面我们讲清的是：
 
@@ -41,7 +41,7 @@ Claude Code 给出的一个核心答案，就是 MCP。
 
 > **Claude Code 是怎么把一堆外部 MCP server，翻译成当前 runtime 里模型真的能调用的 tools / commands / resources 的？**
 
-这次我主要看了：
+这篇主看的是：
 
 - `src/services/mcp/types.ts`
 - `src/services/mcp/config.ts`

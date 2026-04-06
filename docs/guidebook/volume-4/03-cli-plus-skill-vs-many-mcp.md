@@ -15,7 +15,7 @@ tags:
 - **上一篇**：[上一篇：MCPTool 调用链：外部 tool 是怎么被包装、调用、重试和治理结果的](./02-mcptool-call-chain.md)
 - **下一篇**：[下一篇：MCP 认证状态机：为什么 needs-auth 不是补丁，而是正式能力层](./04-mcp-auth-state-machine.md)
 
-这一篇不是再拆一层实现，而是回到能力边界判断：在 Claude Code 里，为什么 CLI + skill 往往比大量 MCP 更实用。
+这一篇不是再拆一层实现，而是回到能力边界判断：在 Claude Code 里，为什么 `CLI + skill` 往往比大量 MCP 更实用。它的职责不是重复解释 MCP 调用链，而是专门回答“什么时候没必要继续堆 MCP”。
 
 ---
 

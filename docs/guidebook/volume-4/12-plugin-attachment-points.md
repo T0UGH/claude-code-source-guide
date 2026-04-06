@@ -15,7 +15,7 @@ tags:
 - **上一篇**：[上一篇：pluginLoader 是怎么把插件装配成运行时能力包的](./11-plugin-loader.md)
 - **下一篇**：[下一篇：validate / schema / policy 为什么说明 plugin 不是随便加载的目录，而是正式能力包](./13-plugin-validate-schema-policy.md)
 
-这一篇继续沿 plugin 主线往下，但重点从装配转到挂接：plugin 的各能力接入面是怎么进入系统的。
+这一篇继续沿 plugin 主线往下，但重点从装配转到挂接：plugin 的各能力接入面是怎么进入系统的。它不再解释插件怎么被装出来，而是只讲装好之后如何挂到各条 runtime 链上。
 
 ---
 
@@ -29,7 +29,7 @@ tags:
 - 怎么被装成 `LoadedPlugin`
 - 为什么它更像装配线而不是读取器
 
-那接下来最自然的问题就是：
+顺着这条线，问题就会变成：
 
 > 插件已经被装出来了，但它里面那些不同的能力，到底是怎么真正挂进 Claude Code runtime 的？
 
@@ -523,40 +523,3 @@ plugin agent 可以定义角色，但不能在 agent markdown 里偷带 `permiss
 > plugin 虽然是统一封装层，但 runtime 不是“一键统一注册”的。
 
 它是统一边界、分面接入。
-
-## 下一步最顺怎么接
-
-我觉得 75 写完之后，下一步可以有两个方向。
-
-### 方向 A：继续往治理层走
-
-也就是写：
-
-**76：validate / schema / policy 为什么说明 plugin 不是随便加载的目录，而是正式能力包**
-
-这会把：
-
-- schema
-- validate
-- policy
-- startup check
-
-这些治理层讲清楚。
-
-### 方向 B：继续往生态层走
-
-也就是写：
-
-**76：plugin CLI / install / marketplace 是怎么把 plugin 变成产品级生态对象的**
-
-这会更偏：
-
-- install
-- uninstall
-- update
-- list
-- marketplace
-
-如果只选一个，我现在更倾向 **方向 A**。
-
-因为前面 73-75 都还主要在 runtime / 接入层，接下来先补治理层，会更完整。

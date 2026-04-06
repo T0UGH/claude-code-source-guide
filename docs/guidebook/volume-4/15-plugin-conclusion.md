@@ -35,7 +35,7 @@ tags:
 
 > **为什么说 Claude Code 的 plugin，本质上已经不是“几个扩展点拼在一起”，而是一套统一扩展平台？**
 
-这篇就是专门做这个收口。
+这篇就是专门做这个收口，不再继续新开局部机制。
 
 也就是说，它不是再补某个函数，而是把前面 5 篇的结论压成一个更大的架构判断。
 
@@ -435,29 +435,3 @@ Claude Code 的 plugin，明显更接近后者。
 - 78 立总判断
 
 所以如果你后面再回看 plugin 线，这篇应该就是最适合放在最前面的“总索引 / 总结论”之一。
-
-## 下一步最顺怎么接
-
-plugin 线到这里，我觉得已经可以正式收一轮了。
-
-如果后面继续，我觉得有两个方向最顺。
-
-### 方向 A：切回更大的 Claude Code 总架构
-
-因为 plugin 这条线现在已经完整了，下一步很适合回到更大的问题：
-
-- plugin 在整个 Claude Code runtime 总图里到底占什么位置
-- 它和 agent / hooks / MCP / session / query engine 怎么拼成一张更完整的大图
-
-### 方向 B：切 builtin / cowork / add-dir / session-only 这些边缘形态
-
-因为 plugin 主线已经读透了，接下来再去读这些特殊边界，会更容易看懂：
-
-- 哪些算正式 install
-- 哪些只是 session 注入
-- 哪些是 builtin plugin
-- 哪些是 cowork 模式扩展
-
-如果只选一个，我现在更倾向 **方向 A**。
-
-因为 plugin 线已经收口了，下一步最有价值的是把它放回 Claude Code 整体架构里，而不是继续在 plugin 子枝杈上深挖。

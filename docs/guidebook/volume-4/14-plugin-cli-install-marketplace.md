@@ -15,7 +15,7 @@ tags:
 - **上一篇**：[上一篇：validate / schema / policy 为什么说明 plugin 不是随便加载的目录，而是正式能力包](./13-plugin-validate-schema-policy.md)
 - **下一篇**：[下一篇：为什么说 Claude Code 的 plugin 本质上是统一扩展平台，而不是几个零散扩展点](./15-plugin-conclusion.md)
 
-这一篇继续沿 plugin 主线推进，但重点从运行时内部转到生态对象化：CLI、install、marketplace 怎样把 plugin 变成产品级生态对象。
+这一篇继续沿 plugin 主线推进，但重点从运行时内部转到生态对象化：CLI、install、marketplace 怎样把 plugin 变成产品级生态对象。到这里，讨论重点已经从 runtime 内部转到产品层与生态层。
 
 ---
 
@@ -509,29 +509,3 @@ Claude Code 的 plugin，不只是：
 五层都串起来了。
 
 也就是说，读到这里再回头看 Claude Code 的 plugin，你已经不太会把它误解成“几个 hooks + 几个 markdown 文件”了。
-
-## 下一步最顺怎么接
-
-我觉得 77 之后，plugin 线已经完成了第一轮主干阅读。
-
-下一步可以有两个方向：
-
-### 方向 A：做一篇 plugin 总结收口
-
-比如：
-
-**78：为什么说 Claude Code 的 plugin 本质上是统一扩展平台，而不是几个零散扩展点**
-
-把 73-77 压成一篇总收口，会很适合回顾。
-
-### 方向 B：切回更大的外围系统
-
-比如接着看：
-
-- plugin 和 builtin plugin 的关系
-- plugin 与 cowork / add-dir / session-only 的边界
-- 或者切回 agentteam / 远程 session / REPL 启动链
-
-如果只选一个，我现在更倾向 **方向 A**。
-
-因为 plugin 这条线连着写了 5 篇，到这里做一个总收口，会特别顺。
