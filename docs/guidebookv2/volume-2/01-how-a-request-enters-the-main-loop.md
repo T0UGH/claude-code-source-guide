@@ -114,65 +114,33 @@ flowchart TD
 
 ---
 
-## 从源码角度看，请求是怎样被接入这条主线的
+## 从源码角度看，这一篇只先钉住“入口对象”，不展开入口层次
 
-卷二这一篇不深挖源码，但也不能完全飘在概念上。至少要把几个关键锚点钉住。
+卷二这一篇不深挖源码，但也不能完全飘在概念上。这里先只钉住一个足够支撑总图的判断：
 
-### 锚点一：`ask()` 不是主循环本身，而是对 `QueryEngine` 的一次便捷封装
+> **请求不是直接撞进模型，而是先被接进 `QueryEngine` 这样一个持续存在的 turn 级运行对象。**
 
-在 `cc/src/QueryEngine.ts` 里，公开的一次性调用入口是 `ask()`。它做的事很直接：
-
-- 创建一个 `QueryEngine`
-- 把当前 prompt、tools、上下文、预算等配置交进去
-- 调用 `engine.submitMessage(...)`
-
-也就是说，真正值得看的不是 `ask()` 这个壳，而是：
-
-> **一次请求是怎样被 `submitMessage()` 接成当前会话里的新一轮运行。**
-
-### 锚点二：`QueryEngine` 不是“一问一答函数”，而是“一段会话里的持续运行对象”
-
-`QueryEngine.ts` 里对自己的注释写得很直白：
+`QueryEngine.ts` 里有一句很关键的注释：
 
 > One QueryEngine per conversation. Each submitMessage() call starts a new turn within the same conversation.
 
-这句话非常关键。它说明：
+这句话先帮卷二总起篇立住三件事：
 
-- `QueryEngine` 不是一次性函数
-- 它对应的是一段 conversation
-- 每次 `submitMessage()` 只是把一个新请求接进这段持续存在的会话
+- `QueryEngine` 不是一次性问答函数
+- 它对应的是一段持续存在的 conversation
+- 每次新请求进入时，系统处理的不是裸文本，而是一轮新的 turn
 
-所以“进入主循环”这件事，从源码上说，不是进入某次孤立调用，而是：
+所以这篇只需要先把读者带到这里：
 
-> **把当前请求接进一个已经带着 messages、file cache、usage 等状态持续存在的运行对象。**
+> **一次请求进入 Claude Code，不是进入一次孤立调用，而是进入一个会持续维护 messages、状态与运行约束的主循环世界。**
 
-### 锚点三：`submitMessage()` 先做的不是调用模型，而是把请求整理成可进入运行时的输入
+至于更细的问题，比如：
 
-在真正进入后续 query 流程之前，`submitMessage()` 会先：
+- 为什么真正入口要落在 `submitMessage(...)`
+- `query(...)` 和入口对象是什么前后层次
+- 输入在入口前后分别如何被装配
 
-- 取 system prompt 的各个部分
-- 组装 user context / system context
-- 建立 `processUserInputContext`
-- 调 `processUserInput(...)`
-- 把得到的 `messagesFromUserInput` 并入当前消息流
-
-这意味着：
-
-> **Claude Code 的主循环入口，不是“拿到 prompt 立刻问模型”，而是先把这次输入整理成可被运行时接纳的一轮请求。**
-
-这也正是卷二第 2 篇和第 3 篇要拆开的地方：前者看“进入之前经历了什么”，后者看“怎样真正进入 QueryEngine”。
-
-### 锚点四：真正推进这一轮的，是后面那条会持续产出消息的 query 主线
-
-在 `submitMessage()` 里，整理完输入后，会进入：
-
-- `for await (const message of query(...))`
-
-这一步可以先被理解成：
-
-> **请求已经不再只是一个 prompt，而是被送进了一条会持续产出 assistant / user / progress / attachment / system 等消息的运行流。**
-
-这一点非常重要。因为它说明，主循环的基本单位从来不是一段最终文本，而是一条持续推进的消息流。
+这些都留给卷二第 03 篇单独展开。
 
 ---
 
