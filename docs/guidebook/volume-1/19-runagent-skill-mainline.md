@@ -62,7 +62,7 @@ source_url: https://feishu.cn/docx/NtLedid7koFjA2xBBKGcfw2xn8e
 - 把整条 query loop 跑完、yield 出去
 - 在 finally 里做清理（kill bash tasks、cleanup MCP、release state）
 
-所以我现在会直接给它下这个定义：
+所以更准确地说：
 
 > `runAgent.ts` 是 skill fork 路径真正落地的主干：它把 `forkedAgent.ts` 组装好的子 agent 上下文，通过完整的 agent 初始化流程，最终跑成一条可观测、可清理、可计量的 query loop。
 
@@ -537,15 +537,3 @@ sequenceDiagram
 后者说明它不是跑完就丢，而是会做完整资源清理。
 
 ---
-
-## 下一步最顺怎么接
-
-如果继续按 skill 主线走，下面最顺的方向有两个：
-
-### 方向 A：`processPromptSlashCommand`
-这是 skill inline 路径的执行层，解答的是 skill 不走 fork 时的完整展开逻辑。
-
-### 方向 B：skill 写法层
-回到 `loadSkillsDir.ts` 里那些 frontmatter 字段，看它们怎么在运行时真正生效。
-
-这两条都是自然延伸，看你更关心哪条。

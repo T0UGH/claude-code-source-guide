@@ -583,19 +583,3 @@ flowchart TD
 ### 判断 6：`disableModelInvocation: true` 说明 skill 化是用户主导的沉淀动作，不该被模型随手触发
 
 ---
-
-## 下一步最顺怎么接
-
-如果继续拆 bundled skills，我觉得有两条都很顺：
-
-### 方向 A：`verify`
-看 Claude Code 官方怎么定义“验证”这件事，特别适合接工程质量观。
-
-### 方向 B：`stuck`
-看 Claude Code 官方怎么处理 agent 卡住和失效恢复。
-
-如果只选一个，我下一篇会更倾向：
-
-> **`verify`**
-
-因为它和前面的 skill/runtime 方法论连得更紧，也更能看出 Claude Code 的工程价值观。

@@ -415,28 +415,3 @@ const ASSISTANT_BLOCKING_BUDGET_MS = 15_000;
 > BashTool 看起来是在跑 bash，实际上是在替 Claude Code 管理“命令怎么跑、跑多久、怎么展示、结果怎么回给模型”。
 
 ---
-
-## 下一步最顺怎么接
-
-我觉得有两条线都很自然。
-
-### 路线 A：继续读 `readOnlyValidation.ts`
-
-如果你现在最关心的是：
-
-- 它到底怎么判断一个 bash 是只读的
-- 为什么这块逻辑这么重
-- 为什么并发安全会建立在这上面
-
-那下一步就应该看它。
-
-### 路线 B：读 `UI.tsx`
-
-如果你现在更关心：
-
-- BashTool 的 use / progress / result 为什么能显示得这么像一个“产品”
-- tool UI 到底是怎么跟执行层接起来的
-
-那就去看 UI。
-
-我个人建议先接 `readOnlyValidation.ts`。因为 BashTool 的很多核心决策，最后都落在“只读判断”上。

@@ -45,12 +45,12 @@ source_url: https://feishu.cn/docx/RNNYdnJQroPnPexdjl4cMOumnAc
 
 > Claude Code 里，一个 skill 顶部那段 frontmatter，到底是什么？
 
-这次重点看两个文件：
+这篇重点看两个文件：
 
 - `src/utils/frontmatterParser.ts`
 - `src/skills/loadSkillsDir.ts`
 
-看完之后，我觉得可以把结论说得非常明确：
+看完之后，可以把结论说得更明确一点：
 
 > 在 Claude Code 里，frontmatter 不是写在 markdown 顶上的注释块，而是 skill 的运行时接口。
 
@@ -632,19 +632,3 @@ loader 并不关心“原文写的是不是个好看的标签”。
 ### 判断 6：写一个 skill 的 frontmatter，本质上是在设计它的行为边界，而不是补头部说明
 
 ---
-
-## 下一步最顺怎么接
-
-如果继续写，我觉得下一篇最顺的不是再泛泛讲 frontmatter 字段列表，而是更具体一点：
-
-> **什么样的 SKILL.md 才算一个“真的能进 runtime”的好 skill？**
-
-也就是把这一篇再往前推一步，落到：
-
-- skill 模板怎么写
-- 哪些字段是常用骨架
-- 什么时候该 inline，什么时候该 fork
-- `allowed-tools` / `paths` / `hooks` / `model` / `effort` 分别什么时候值得写
-- 什么样的写法会导致 skill 又重又乱又难用
-
-这会从“源码理解”正式走到“写法实践”。

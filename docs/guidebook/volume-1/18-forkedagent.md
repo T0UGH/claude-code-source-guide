@@ -39,7 +39,7 @@ source_url: https://feishu.cn/docx/XD21dRR9zoQNRexjUmtcyb8fn0d
 
 > 当一个 skill 决定 fork 之后，它是怎么被组装成真正能交给 agent runtime 去跑的？
 
-这次主看的是：
+这篇主看的是：
 
 - `src/utils/forkedAgent.ts`
 
@@ -58,7 +58,7 @@ source_url: https://feishu.cn/docx/XD21dRR9zoQNRexjUmtcyb8fn0d
 - 如何记录 sidechain transcript
 - 最后怎么从一串 message 里抽出结果
 
-所以我现在会直接给它下这个定义：
+所以更准确地说：
 
 > `forkedAgent.ts` 不是普通工具文件，而是 skill 接入 agent 执行层的胶水层。
 
@@ -656,33 +656,3 @@ Claude Code 其实很认真地在保留：
 ### 判断 6：这份文件真正站的位置，是 `SkillTool` 和 `runAgent` 中间的胶水层
 
 ---
-
-## 下一步最顺怎么接
-
-如果继续按这条线往下走，我觉得下一篇最顺的就是：
-
-- `runAgent.ts`
-
-因为现在：
-
-- forked skill 怎么被组 prompt
-- 怎么迁移 allowed tools
-- 怎么建立子上下文
-- 怎么累计 usage 和 transcript
-
-这些都已经清楚了。
-
-下一步自然就是：
-
-> 这个被装配好的 sidechain，最终是怎么在 `runAgent.ts` 里真正跑起来的？
-
-也就是继续把 skill 这条 fork 线，正式接进 agent runtime 主干。
-
-如果按现在这个顺序，skill 线会很稳：
-
-1. 定义层：`loadSkillsDir.ts`
-2. 入口层：`SkillTool.ts`
-3. 执行胶水层：`forkedAgent.ts`
-4. 执行主干：`runAgent.ts`
-
-我觉得这个顺序已经完全顺了。

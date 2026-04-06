@@ -34,7 +34,7 @@ source_url: https://feishu.cn/docx/HnJbdMFKboyUKNxkL84c1HGOn4f
 
 > 一轮 agent 回合在 Claude Code 里是怎么被编排起来的。
 
-接下来最自然的问题就是：
+顺着这条线，最自然的问题就是：
 
 > 那 agent 自己是怎么被塞进这套循环里的？
 
@@ -336,7 +336,7 @@ source_url: https://feishu.cn/docx/HnJbdMFKboyUKNxkL84c1HGOn4f
 
 ## 第五层：把 system prompt、skills、hooks、MCP 都预装进去
 
-这层是我觉得最能说明“装配线”味道的一层。
+这一层最能说明“装配线”这个比喻为什么成立。
 
 ### 1. system prompt 不是静态文本，而是动态增强后的结果
 
@@ -574,7 +574,7 @@ agent frontmatter 里的 `mcpServers` 可以是：
 
 > `runAgent.ts` 负责把 agent 装出来，`query.ts` 负责把 agent 跑起来。
 
-这是我这次最明确的结构感。
+这也是这篇最值得记住的结构感。
 
 ---
 
@@ -602,30 +602,3 @@ frontmatter / JSON / built-in 定义到这里才真正落地。
 > `runAgent.ts` 是 Claude Code 的 agent 装配线：它把 agent 定义、上下文继承、权限模型、工具池、skill 预载、MCP 接入、transcript 持久化和清理逻辑组装成一个真正可被 `query()` 驱动的运行时实体。
 
 ---
-
-## 下一步最顺怎么接
-
-我觉得后面最顺有两条路。
-
-### 路线 A：接 `forkSubagent.ts`
-因为 `runAgent` 已经看清“agent 怎么被装出来”，下一步很自然就是：
-
-- forked subagent 的隔离、worktree、上下文复制到底怎么成立
-
-这条线会更像 agent runtime 的分叉执行篇。
-
-### 路线 B：接 built-in agents / `loadAgentsDir.ts` 深挖
-如果你想把 agent 定义层补扎实，可以去看：
-
-- `builtInAgents.ts`
-- `built-in/*.ts`
-- `loadAgentsDir.ts`
-
-那会更接近：
-
-- agent 人设从哪来
-- description / prompt / tools / hooks / mcpServers 在定义层怎么声明
-
-如果按当前节奏，我更建议：
-
-> 先接 `forkSubagent.ts`。因为 `runAgent` 已经把“装配”讲清了，下一步接“分叉与隔离”会更顺。

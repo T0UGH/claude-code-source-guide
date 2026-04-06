@@ -387,29 +387,3 @@ Agent 系统复杂的地方，不在于有没有这个工具，而在于：
 > `prompt.ts` 是 Claude Code 的 AgentTool 使用说明层：它把 agent 列表、工具边界、何时调用、何时不要调用、fork 规则、并发建议和任务 brief 规范组织成模型可遵守的操作手册，同时尽量减少动态 agent 列表对 prompt cache 的破坏。
 
 ---
-
-## 下一步最顺怎么接
-
-我觉得后面最顺有两条。
-
-### 路线 A：接 `agentToolUtils.ts`
-这样能继续看：
-
-- agent lifecycle 辅助逻辑
-- progress / summary / async lifecycle
-- permission / rule 解析细节
-
-这会更靠近 AgentTool 的运行辅助层。
-
-### 路线 B：专门补一篇“Claude Code 的 agent 调度哲学”
-把这几篇串成一篇概念总图：
-
-- 定义层
-- 角色层
-- 使用说明层
-- 装配层
-- 主循环层
-
-如果按当前节奏，我更建议：
-
-> 先接 `agentToolUtils.ts`。因为 `prompt.ts` 已经把“怎么教模型用 agent”讲清了，下一步自然就是看 AgentTool 在真正执行和收尾时依赖的那层辅助骨架。

@@ -21,7 +21,7 @@ tags:
 
 ## 这篇看什么
 
-这一篇看的是：`src/utils/processUserInput/processUserInput.ts`
+这篇主看的是：`src/utils/processUserInput/processUserInput.ts`
 
 如果上一篇 `Tool.ts` 解决的是“tool 是什么”，那这一篇要解决的是另一个更关键的问题：
 

@@ -31,7 +31,7 @@ source_url: https://feishu.cn/docx/BN5cdLG21oxRxixB4ZZcZixanug
 
 前一篇已经把 `runAgent.ts` 看完了，知道了 agent 是怎么被装成一个可运行体的。
 
-那下一步自然就是：
+顺着前一篇往下，最自然的问题就是：
 
 > fork 到底是什么？它和普通 `subagent_type=xxx` 的 agent 调用差在哪？
 
@@ -435,7 +435,7 @@ fork child 的 `permissionMode` 是：
 - `runAgent` 负责“装起来怎么跑”
 - `forkSubagent` 负责“分叉时给它喂什么上下文，才能既像父分支又不失控”
 
-这就是我这次最明确的结构感。
+这也是这篇最明确的结构感。
 
 ---
 
@@ -463,25 +463,3 @@ fork child 的 `permissionMode` 是：
 > `forkSubagent.ts` 是 Claude Code 的上下文分叉层：它不重新创建一个全新角色，而是在父 agent 已成型的上下文和 prompt 基础上，构造一个 cache-friendly 的 worker 分支，让子 agent 继承父前缀、收紧行为边界，并在需要时继续支持 worktree 与 resume。
 
 ---
-
-## 下一步最顺怎么接
-
-我觉得后面最顺有两条。
-
-### 路线 A：接 `loadAgentsDir.ts` / built-in agents
-这样可以回头把 agent 定义层补扎实：
-
-- agent 从哪来
-- frontmatter 能声明什么
-- built-in / plugin / markdown agent 怎么汇到一起
-
-### 路线 B：接 `resumeAgent.ts`
-如果你想继续追“agent 生命周期完整闭环”，那 resume 很顺：
-
-- transcript 怎么重放
-- replacement state 怎么恢复
-- fork resume 和普通 resume 差在哪
-
-如果按当前节奏，我会更建议：
-
-> 先接 `loadAgentsDir.ts`。因为 fork 和 runAgent 都已经看到了执行层，现在回头把 agent 定义层补上，整个 agent 章节会更圆。

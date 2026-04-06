@@ -44,7 +44,7 @@ source_url: https://feishu.cn/docx/XERid4iZEoCeOnx7aXXc89AlnZr
 - 如果这 session 之前没开 debug logging，先把 logging 打开
 - 然后再让模型围绕当前现场去诊断
 
-所以我现在对它的最短判断是：
+所以可以先把它概括成：
 
 > `debug` 不是通用故障排查文档，而是一个面向当前会话现场、围绕 session debug log 动态生成的诊断 skill。
 
@@ -548,17 +548,3 @@ prompt 里有一步是：
 ### 判断 6：和 `verify` 一起看，会发现 Claude Code 官方很强调“先观察，再判断”
 
 ---
-
-## 下一步最顺怎么接
-
-如果继续拆 bundled skills，我觉得现在最顺的还是：
-
-- **`stuck`**
-
-因为现在顺序会很漂亮：
-
-- `verify`：怎么证明真的成了
-- `debug`：怎么围绕现场诊断
-- `stuck`：当 agent/流程真的卡住时，官方希望怎么恢复
-
-这三篇会形成一个很完整的工程闭环。

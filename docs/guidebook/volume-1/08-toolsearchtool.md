@@ -210,24 +210,3 @@ ToolSearchTool 本身不干活。
 > ToolSearchTool 搜的不是文本，而是“下一步可调用的能力”。
 
 ---
-
-## 下一步最顺怎么接
-
-如果继续往下，我也同意最顺的是：
-
-- `runAgent.ts`
-
-因为现在：
-
-- `MCPTool`
-- `SkillTool`
-- `ToolSearchTool`
-- `AgentTool`
-
-这几层已经都看到了。
-
-下一步自然就是看：
-
-> agent 到底怎么真正跑起来。
-
-所以后面顺着 `runAgent.ts` 往下拆，会更容易把整个执行链闭上。

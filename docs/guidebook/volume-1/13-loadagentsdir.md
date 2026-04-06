@@ -42,7 +42,7 @@ source_url: https://feishu.cn/docx/H2BldpWUpoGczpxmWEtcPRgHn1b
 
 > 这些 agent 本身到底从哪来？
 
-这次主看的是：
+这篇主看的是：
 
 - `src/tools/AgentTool/loadAgentsDir.ts`
 
@@ -533,25 +533,3 @@ memory、hooks、mcpServers、skills 这些都不是纯标签。
 > `loadAgentsDir.ts` 是 Claude Code 的 agent 定义层总入口：它把 built-in、plugin、markdown、JSON 等不同来源的 agent 声明，解析并统一成 `AgentDefinition`，再按来源优先级决出最终生效的 agent 集合，为后续的 runtime 装配提供标准输入。
 
 ---
-
-## 下一步最顺怎么接
-
-我觉得后面最顺有两条。
-
-### 路线 A：接 `builtInAgents.ts` + built-in agents 深挖
-如果你想继续走定义层，可以顺着看：
-
-- `builtInAgents.ts`
-- `generalPurposeAgent.ts`
-- `exploreAgent.ts`
-- `planAgent.ts`
-- `verificationAgent.ts`
-
-这样能把 Claude Code 官方内建角色模板彻底看清。
-
-### 路线 B：接 `prompt.ts`
-如果你更想看 AgentTool 给模型展示 agent 列表时，描述信息和使用引导是怎么组织的，这条也顺。
-
-如果按当前节奏，我更建议：
-
-> 先补一篇 built-in agents 总览。因为 `loadAgentsDir.ts` 已经把“定义系统”讲清了，下一步自然就是看官方到底内置了哪些角色模板，以及它们之间怎么分工。

@@ -41,7 +41,7 @@ source_url: https://feishu.cn/docx/ZsI8dNGtqoTpRsxB3HYchlIWnuc
 2. 模型什么时候先看到 skill 的“简介层”
 3. 完整 skill 正文又是什么时候才真正进上下文
 
-我这次重点补看了三处：
+这篇重点补看了三处：
 
 - `src/skills/loadSkillsDir.ts`
 - `src/tools/SkillTool/prompt.ts`
@@ -55,7 +55,7 @@ source_url: https://feishu.cn/docx/ZsI8dNGtqoTpRsxB3HYchlIWnuc
 
 > skill 的 `name` / `description` / `whenToUse` 会先在定义层被加载成 `Command` 字段，然后通过“skill 列表 / relevant skills reminder”这种简介层逐步暴露给 LLM；而完整 skill 正文只有在该 skill 被真正 invoke 时，才按需展开进当前上下文。
 
-我觉得这句话就是这篇的主结论。
+这句话基本就是这篇的主结论。
 
 ---
 
@@ -543,17 +543,3 @@ const desc = cmd.whenToUse
 ### 判断 5：Claude Code 对 skill 的提示预算设计，本质上是“先发现，再加载”，而不是“先全量灌进去”
 
 ---
-
-## 下一步最顺怎么接
-
-这篇其实顺手把另一个相关问题也带出来了：
-
-> `when_to_use` 和 `description`，到底哪个对 skill 自动发现更关键？
-
-如果继续，这个问题很值得单开一篇。因为它会直接落到：
-
-- 好 skill 的发现层应该怎么写
-- 为什么 `when_to_use` 在 `skillify` 里会被写成 CRITICAL
-- Claude Code 到底怎么平衡“发现率”和“prompt 预算”
-
-这个方向我觉得挺顺。

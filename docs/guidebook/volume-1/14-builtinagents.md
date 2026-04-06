@@ -466,21 +466,3 @@ built-in agent 体系比“写代码助手”要宽得多。
 > `builtInAgents.ts` 是 Claude Code 官方内建角色模板的装配表：它根据 feature gate、入口类型和运行环境，决定当前会话应加载哪些 built-in agents，并把通用执行、只读探索、规划、验证和产品说明这些工作模式组织成默认角色体系。
 
 ---
-
-## 下一步最顺怎么接
-
-我觉得后面最顺有两条。
-
-### 路线 A：继续深挖 built-in 角色差异
-比如专门拆一篇：
-
-- `Explore` vs `Plan` vs `verification`
-
-那会更偏“官方是怎么切工作流角色边界”的比较篇。
-
-### 路线 B：回头看 `prompt.ts`
-如果你想知道 AgentTool 怎么把这些 agent 展示给模型、怎么描述“何时该用哪个 agent”，这条会更顺。
-
-如果按当前节奏，我更建议：
-
-> 先接 `prompt.ts`。因为 built-in 角色模板已经看清了，下一步自然就是看 AgentTool 怎么把这些模板组织成给模型看的 agent 使用说明。

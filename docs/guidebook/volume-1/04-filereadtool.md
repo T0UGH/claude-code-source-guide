@@ -363,17 +363,3 @@ FileReadTool 专门写了 `getAlternateScreenshotPath()` 去兜这个坑。
 > FileReadTool 不只是“把文件读出来”，而是在替 Claude Code 决定：什么内容值得读、怎么读最合适、以及哪些重复内容根本不该再塞进上下文。
 
 ---
-
-## 下一步最顺怎么接
-
-我觉得后面有两条很自然的线。
-
-### 路线 A：接 `FileEditTool`
-
-这样能把“读”和“改”这两个最核心的本地文件能力拼起来。
-
-### 路线 B：接 `UI.tsx`
-
-如果你想看 FileReadTool 为什么在界面上显示得这么克制、为什么不直接把全文渲染出来，可以读它的 UI。
-
-如果按整体共读顺序，我更建议下一步直接接 `FileEditTool`。因为 read / edit 这两个放在一起看，Claude Code 的本地文件操作模型会一下子清楚很多。

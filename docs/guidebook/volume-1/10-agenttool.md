@@ -21,7 +21,7 @@ tags:
 
 ## 这篇看什么
 
-这篇主要看的是：
+这篇主看的是：
 
 - `src/tools/AgentTool/AgentTool.tsx`
 
@@ -29,7 +29,7 @@ tags:
 
 > 当主 agent 不想自己干，或者不适合自己干时，怎么把任务委派出去。
 
-我看完后的第一感觉是：
+更准确地说：
 
 > AgentTool 不是一个“帮你再开个 Claude”的小开关，而是 Claude Code 里任务委派、子 agent 生命周期、团队协作、异步执行、隔离运行的总入口之一。
 
@@ -381,17 +381,3 @@ worktree / remote 这些不是补丁，是正式设计。
 > AgentTool 的价值不在于“多开一个 agent”，而在于它把任务委派这件事做成了可控、可隔离、可异步、可协作的 runtime 能力。
 
 ---
-
-## 下一步最顺怎么接
-
-我觉得后面有两条自然路线。
-
-### 路线 A：接 `runAgent.ts`
-
-这样能看到 agent 真正跑起来时，system prompt、messages、tools、模型调用是怎么接上的。
-
-### 路线 B：接 `forkSubagent.ts`
-
-如果你更关心 Claude Code 那套 fork worker 机制，这条会更直接。
-
-如果按阅读顺序，我更建议下一步先接 `runAgent.ts`。因为 AgentTool 只是入口，真正执行链应该往那边看。

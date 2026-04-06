@@ -54,7 +54,7 @@ source_url: https://feishu.cn/docx/LJ1sdwrc8otFvExtdMWc9B0snvf
 
 这当然不能算错，但还是太平了。
 
-我这次回看了几处关键实现之后，觉得更准确的说法应该是：
+回看几处关键实现之后，更准确的说法是：
 
 > **skill 主要负责把“该怎么做”组织成可发现、可按需展开的能力说明；agent 才是 Claude Code 里真正负责跑完整自主回合、持有工具池、承接执行生命周期的运行主体。**
 
@@ -493,18 +493,3 @@ Claude Code 最后选的是：
 ### 判断 5：Claude Code 把 skill 和 agent 分开，不是重复设计，而是在把“能力发现/方法复用”和“任务执行/主体调度”拆成两层
 
 ---
-
-## 下一步最顺怎么接
-
-这篇如果继续往下走，我觉得最顺的不是再泛讲 skill 或 agent 本身，而是继续顺着这条 runtime 边界追：
-
-> **skill 是怎么借 agent runtime 跑起来的？**
-
-也就是把 forked skill 那条链彻底拆开：
-
-- `context: fork` 是什么时候决定路径切换的
-- `prepareForkedCommandContext(...)` 到底做了哪些转换
-- 为什么 skill 最后会落到 `baseAgent`
-- 这条设计到底是在复用 agent，还是在有意保持统一执行主干
-
-这个方向我觉得会很顺。
