@@ -1,365 +1,219 @@
 ---
-title: 卷一 04｜FileReadTool 统一读取入口
-date: 2026-04-02
+title: 卷一 04｜Claude Code 怎么把模型意图落成执行能力
+date: 2026-04-06
 tags:
   - Claude Code
-  - 源码共读
+  - 系统全景
+  - Tool Runtime
+  - 执行能力层
 ---
 
-# 卷一 04｜FileReadTool 统一读取入口
+# 卷一 04｜Claude Code 怎么把模型意图落成执行能力
 
 ## 导读
 
-- **所属卷**：卷一：运行时底座
-- **卷内位置**：Tool 4/9
-- **上一篇**：[上一篇：BashTool 不是跑 shell 这么简单](./03-bashtool-is-not-just-shell.md)
-- **下一篇**：[下一篇：FileEditTool 是受控修改原语](./05-fileedittool.md)
+- **所属卷**：卷一：Claude Code 系统全景导论
+- **卷内位置**：04 / 06
+- **上一篇**：[上一篇：一次请求是怎么跑成一次 Agent Turn 的](./03-bashtool-is-not-just-shell.md)
+- **下一篇**：Claude Code 怎么维持上下文、状态与持续工作
 
-这一篇看读取原语。它的价值不只是“读文件”，而是让你看清 Claude Code 怎么把最基础的文件读取动作包装成稳定的工具接口。
+上一篇把 Claude Code 的动态主线立住了：一次请求不会天然停在首条回复，而是沿着“判断 → 执行 → 结果回流 → 再判断”的闭环继续推进。
 
----
+但第三篇还留下了一个关键问题：
 
-## 这篇看什么
+> **当模型已经判断“下一步该做什么”时，Claude Code 怎么把这个判断真正落成现实动作？**
 
-这篇看的是：
+这篇补的，就是这层桥。
 
-- `src/tools/FileReadTool/FileReadTool.ts`
+先把核心判断摆在前面：
 
-如果 BashTool 更像 Claude Code 的执行内核之一，那 FileReadTool 更像另一种基础设施：
-
-> 把“读取文件”这件事做成稳定、结构化、跨类型的统一入口。
-
-它不只是读 `.ts`、`.md` 这种文本文件，还顺手覆盖了：
-
-- 图片
-- PDF
-- notebook
-- session memory / transcript 一类特殊文件
-
-所以 FileReadTool 的定位不是 `cat` 的替代品，而是 Claude Code 给模型提供的标准化读取能力。
+> **Claude Code 不是让模型直接“调函数”，而是让模型先产出 `tool_use` 这样的结构化意图，再由 runtime 把它编排、执行，并把结果重新送回当前 turn。tool 是这层里最标准的执行接口。**
 
 ---
 
-## 先给结论
+## 执行能力层在系统里的位置
 
-### 1. FileReadTool 的目标不是“尽量把文件内容都读出来”
+把前几篇连起来看，Claude Code 至少已经有这样一条主线：
 
-这点很关键。
+1. 用户把请求送进 runtime
+2. runtime 组织一轮 agent turn
+3. 模型形成当前判断
+4. 系统把这个判断落成现实动作
+5. 结果回流，当前 turn 再继续或收口
 
-它的设计目标更像是：
+第四篇讲的，就是第 3 步和第 4 步之间的那层执行能力结构。
 
-- 能读文本，但要控制 token 和大小
-- 能读图片，但要控制分辨率和 token 预算
-- 能读 PDF，但要控制页数和提取方式
-- 能读 notebook，但不把 notebook 当普通文本生啃
-- 能避免重复读取同一份没变化的文件
+可以先看这张总图：
 
-也就是说，FileReadTool 关心的不是“我能不能把文件打开”，而是：
-
-> 把不同类型的文件，以模型最能消化的方式读进来。
-
-### 2. 它是“按文件类型分流”的 tool
-
-FileReadTool 不是一个统一 `readFile()` 跑到底的设计。
-
-它在 `callInner()` 里一上来就按类型分流：
-
-- notebook → `readNotebook()`
-- image → `readImageWithTokenBudget()`
-- PDF → `readPDF()` / `extractPDFPages()`
-- text → `readFileInRange()`
-
-这说明 Claude Code 并没有把“读文件”理解成一种动作，而是理解成一组相关但不同的读取策略。
-
-这一点非常对。
-
-因为对模型来说：
-
-- 读文本
-- 读 notebook
-- 读 PDF
-- 读图片
-
-根本不是一回事。
-
-### 3. 它是少数明确把“去重”做到工具层里的 tool
-
-FileReadTool 有一段很值的逻辑：
-
-- 如果已经读过同一个文件
-- 而且 offset / limit 一样
-- 而且磁盘上的 mtime 没变
-
-那就不再把整份内容重新塞进上下文，而是返回：
-
-- `file_unchanged`
-- 对应 `FILE_UNCHANGED_STUB`
-
-这说明 Claude Code 已经很明确地在工具层做一件事：
-
-> 避免重复读同一份没变的内容，浪费上下文和 token。
-
-这不是小优化，这是实际 agent 体验里很有价值的一层。
-
----
-
-## FileReadTool 的输入和输出长什么样
-
-### 输入非常克制
-
-输入只有四个字段：
-
-- `file_path`
-- `offset`
-- `limit`
-- `pages`
-
-这个设计很干净。
-
-它没有往 schema 里塞一堆“模式开关”，而是把复杂性尽量留在内部逻辑里。对模型来说，最主要就是：
-
-- 读哪个文件
-- 从哪一行开始
-- 读多少行
-- 如果是 PDF，要读哪些页
-
-### 输出不是单一文本，而是判别式 union
-
-它的 output schema 是一个 `discriminatedUnion('type', ...)`，包括：
-
-- `text`
-- `image`
-- `notebook`
-- `pdf`
-- `parts`
-- `file_unchanged`
-
-这非常重要。
-
-因为它意味着 FileReadTool 返回的不是一个统一字符串，而是带类型的读取结果。
-
-也就是说，Claude Code 一开始就承认：
-
-> 文件读取结果本来就不是一种东西，别硬捏成一坨字符串。
-
-这个设计很靠谱。
-
----
-
-## 它最有意思的几块设计
-
-### 1. `isConcurrencySafe()` 和 `isReadOnly()` 都是直接 true
-
-这个比较直白：
-
-```ts
-isConcurrencySafe() {
-  return true
-}
-
-isReadOnly() {
-  return true
-}
+```mermaid
+flowchart LR
+    M[模型形成结构化意图] --> TU[tool_use]
+    TU --> O[orchestration]
+    O --> E[execution]
+    E --> C[tool.call]
+    C --> R[tool_result]
+    R --> RT[结果回流 runtime]
+    RT --> M2[模型继续当前 turn]
 ```
 
-也就是说，FileReadTool 在 Claude Code 里被明确当成：
+这张图最重要的不是术语，而是它说明了一件事：
 
-- 可并发
-- 只读
+> **执行不是模型自己往系统里伸手做事，而是一条由 runtime 接管的正式链路。**
 
-这和 BashTool 形成一个很强的对比。
-
-BashTool 要费劲判断“是不是只读”，FileReadTool 则从定义上就明确了自己的语义边界。
-
-这也说明 Claude Code 倾向于把高频、安全、语义明确的动作做成专门 tool，而不是全部丢给 Bash。
-
-### 2. `backfillObservableInput()` 会把路径规范化
-
-有这一段：
-
-```ts
-if (typeof input.file_path === 'string') {
-  input.file_path = expandPath(input.file_path)
-}
-```
-
-注释写得很直接：
-
-- hook 文档里要求 `file_path` 是绝对路径
-- 所以这里会统一展开路径
-- 防止用 `~` 或相对路径绕过 hook allowlist
-
-这个细节很值。
-
-因为它说明 FileReadTool 不是“收到路径就读”，而是很在意：
-
-- hooks 看到的路径是不是标准化的
-- permission matching 用的是不是统一表示
-
-这类小地方很能看出 Claude Code 的工程成熟度。
-
-### 3. `validateInput()` 做了很多前置拦截
-
-FileReadTool 的 `validateInput()` 很丰富，远不只是“文件存不存在”。
-
-它会先做几类检查：
-
-#### PDF 页码是否合法
-- pages 格式对不对
-- 一次请求是不是超过最大页数
-
-#### deny rule 检查
-- 如果路径命中 read deny 规则，直接拒绝
-
-#### UNC path 特殊处理
-- 避免在权限确认前就碰远程路径，减少安全风险
-
-#### 二进制扩展名检查
-- 普通二进制文件直接拒绝
-- 但 PDF、图片例外，因为这个 tool 对它们有专门处理
-
-#### 设备文件检查
-- 比如 `/dev/zero`、`/dev/random`、`/dev/stdin`
-- 这些不是“不推荐读”，而是根本会挂住或无限输出
-
-这一层很像一个“读文件防呆层”。
-
-也就是说，FileReadTool 不是让模型随便读，而是在读之前就把那些很蠢、很危险、很容易卡住系统的路径先拦掉。
-
-### 4. 它会尝试修正 macOS 截图路径
-
-这一段我挺喜欢。
-
-macOS 某些版本的截图文件名，在 `AM/PM` 前面可能是普通空格，也可能是窄空格（U+202F）。
-
-FileReadTool 专门写了 `getAlternateScreenshotPath()` 去兜这个坑。
-
-这很像一个真实产品会做的事，而不是纯工程演示项目。
-
-它说明 Claude Code 的实现者不是只关心“代码优雅”，也关心用户机器上那些烦人的实际问题。
-
-### 5. 它会自动触发 skill 发现
-
-读文件时，如果不是 simple mode，它还会：
-
-- `discoverSkillDirsForPaths(...)`
-- `addSkillDirectories(...)`
-- `activateConditionalSkillsForPaths(...)`
-
-这说明 FileReadTool 不只是“读完把内容给模型”，它还是 skill 发现链路的一部分。
-
-也就是说，Claude Code 在读某个路径时，可能顺手激活和这个路径相关的 skill。
-
-这个设计挺妙的：
-
-> 读取文件，不只是补内容，也可能补能力。
+也正因为这条链存在，Claude Code 才不是“会说的模型”，而是“能把意图推进成进展的 runtime”。
 
 ---
 
-## `call()` 里最值的一段：去重读取
+## 先把整条链讲清：`tool_use -> orchestration -> execution -> tool.call -> tool_result`
 
-我觉得 FileReadTool 最有代表性的工程点，就是这段 dedup 逻辑。
+## 1. `tool_use`：模型先表达意图
 
-它会看：
+模型先给出的，不是底层系统动作本身，而是一个结构化意图：
 
-- 这个文件之前是不是读过
-- 读的是不是同一个 offset / limit
-- 文件有没有改过
+- 读某个文件
+- 执行某个命令
+- 修改某段内容
+- 调用某个外部能力
 
-如果都没变，就直接返回：
+所以 `tool_use` 的意义不是“已经执行”，而是：
 
-```ts
-{
-  type: 'file_unchanged',
-  file: { filePath }
-}
-```
+> **把“下一步想做什么”表达成 runtime 可以接住的请求。**
 
-这背后的思路很清楚：
+它相当于把模型的判断，从自然语言推进到可编排的结构。
 
-- 之前的 read 结果已经在上下文里了
-- 再把整份文件重复塞一遍没有价值
-- 还会白白消耗 cache_creation tokens
+## 2. `orchestration`：runtime 决定这次意图如何进入当前 turn
 
-这个设计非常 agent 化。
+`tool_use` 产生之后，系统还不会立刻执行。中间先经过 orchestration。
 
-普通工具实现往往只管“能不能执行成功”，FileReadTool 开始关心“对整个会话上下文是不是划算”。
+这一层解决的不是“底层动作怎么发生”，而是：
 
----
+- 这是不是一个可接受的执行请求
+- 它应该路由给哪个执行对象
+- 它在当前 turn 里处在什么位置
+- 执行前后怎样接回主循环
 
-## `mapToolResultToToolResultBlockParam()` 也很成熟
+所以可以把它压成一句话：
 
-这里能看到 FileReadTool 对不同输出类型的处理完全不一样。
+> **orchestration 负责把这次工具意图纳入当前运行时。**
 
-### 文本
-- 会加行号
-- 可能加 memory freshness note
-- 可能加 cyber risk mitigation reminder
+它关心的是运行时编排，不是底层动作本身。
 
-### 图片
-- 直接返回 image block
+## 3. `execution`：系统开始推动现实动作发生
 
-### notebook
-- 走 notebook 专门的映射函数
+一旦这次请求被 runtime 接住，execution 才开始真正把结构化意图往现实动作压：
 
-### PDF
-- 不直接把全文硬塞回去，而是返回 PDF 读取说明
+- 读文件
+- 改文件
+- 跑命令
+- 调用别的能力边界
 
-### `file_unchanged`
-- 返回一个固定 stub
+所以 execution 的重点也可以压成一句话：
 
-这说明 FileReadTool 的结果映射不是“统一 stringify”，而是每种媒介走各自最合理的表示方式。
+> **execution 负责让已经被接住的请求真正发生。**
 
-这点其实和 BashTool 很像：
+如果说 orchestration 解决的是“怎么纳入当前 turn”，那 execution 解决的就是“现实动作怎么开始发生”。
 
-> tool 的输出不是为了忠实还原底层 I/O，而是为了给下一轮模型提供最合适的上下文表示。
+## 4. `tool.call`：具体执行对象被触发
 
----
+execution 最后还要落到具体对象上。最典型的，就是 `tool.call`。
 
-## 这个 tool 最像产品的地方
+这时 tool 的位置就很清楚了：
 
-如果我要挑 FileReadTool 里最像产品判断的地方，不是 PDF，也不是图片，而是这三个：
+> **tool 不是附带功能菜单，而是 runtime 把模型意图落成现实动作时所调用的标准执行接口。**
 
-### 1. 重复读取不重复塞内容
-很省上下文，而且逻辑上也说得通。
+这也是为什么卷一此处不急着深挖 BashTool、FileReadTool、FileEditTool 的实现。对这一篇更重要的是先看清：这些具体工具，都是同一层执行系统里的不同样本。
 
-### 2. 读不到文件时会给相似路径提示
-- `findSimilarFile()`
-- `suggestPathUnderCwd()`
+## 5. `tool_result`：执行的终点不是做完，而是结果回流
 
-也就是说，它不是简单抛一个 ENOENT，而是尽量把错误变成人能用的反馈。
+从 Claude Code 的角度看，执行成功还不算结束。真正关键的是：
 
-### 3. notebook / PDF / image 都不硬当文本处理
-这会让模型读起来稳定很多，也避免上下文被一堆低质量原始数据污染。
+> **执行结果必须重新回到当前 turn，变成下一步判断可以消费的输入。**
 
-这几个点合起来，能明显感觉到：
+所以 `tool_result` 不是单纯的底层返回值，而是当前工作回合继续推进的一部分。
 
-> FileReadTool 不是一个“工程上可用”的读取器，而是一个“给 agent 用、给模型用、给真实用户体验服务”的读取器。
+这也正好接回第三篇的判断：agent turn 之所以是闭环，不是因为做过一个动作，而是因为动作结果会重新回到 runtime 里。
 
 ---
 
-## 我对 FileReadTool 的整体判断
+## 为什么不能把它简单理解成“模型直接调函数”
 
-如果让我现在给 FileReadTool 下一个定义，我会这么说：
+“tool 就是 function calling”这个说法有一点像，但不够解释 Claude Code 为什么需要一整层执行能力结构。
 
-> FileReadTool 是 Claude Code 里最典型的“高频、稳定、语义明确”的基础 tool。它把多种文件读取统一进一个接口，同时尽量避免无意义的上下文浪费。
+至少差在三点。
 
-它和 BashTool 的对比也很有意思：
+### 第一，模型表达的是意图，不是直接拥有现实动作权限
 
-- BashTool：能力广，但很重，要做很多执行策略判断
-- FileReadTool：能力窄得多，但边界清楚，所以可以非常稳定、非常激进地优化体验
+模型最先产出的是“我接下来要做什么”的结构化判断，而不是直接操作文件、命令行或外部系统的能力。
 
-这也说明 Claude Code 的总体思路不是“一个万能工具打天下”，而是：
+所以 Claude Code 要解决的第一个问题，不是“模型会不会说”，而是：
 
-- 有 Bash 这种重武器
-- 也有 FileRead 这种专用高频工具
+> **模型的意图怎样被系统接住，并转成真实动作。**
 
-两者配合，模型会更稳。
+### 第二，Claude Code 需要的是运行时编排，不是孤立调用
+
+普通函数调用关心的，往往只是参数和返回值。
+
+但 Claude Code 关心的是：
+
+- 这次动作是否属于当前 turn
+- 应该在什么时候触发
+- 结果回来后是否继续
+- 结果如何重新进入主循环
+
+所以这里真正重要的，不是“是否存在调用”，而是：
+
+> **执行被怎样编排进当前工作回合。**
+
+### 第三，结果必须重新织回主循环
+
+如果一个动作只在底层发生，却没有把结果重新送回当前 turn，那它就只是一次孤立执行。
+
+而 Claude Code 需要的不是孤立执行，而是：
+
+- 模型形成意图
+- runtime 组织执行
+- 结果回流
+- 当前回合继续判断
+
+所以这里真正成立的不是“模型调了一个函数”，而是：
+
+> **runtime 把模型意图稳定地落成执行，并把结果重新织回主循环。**
 
 ---
 
-## 这一篇我最想记住的一句话
+## tool 在 Claude Code 里到底是什么
 
-> FileReadTool 不只是“把文件读出来”，而是在替 Claude Code 决定：什么内容值得读、怎么读最合适、以及哪些重复内容根本不该再塞进上下文。
+如果把这一篇只压成一句最该记住的话，那就是：
+
+> **tool 是 Claude Code 执行能力层里的标准接口：模型先通过 `tool_use` 表达意图，runtime 再通过 tool 把这份意图落成现实动作，并把结果送回当前 turn。**
+
+这句话有三个重点：
+
+- tool 不等于 Claude Code 的全部，但它是执行层最标准的对象
+- tool 的价值不只是“能做事”，而是动作边界清楚、能被 runtime 编排
+- tool 不是和主循环分开的附属层，而是主循环推进现实进展时最关键的接口之一
+
+所以这篇真正想建立的，不是“Claude Code 会调用很多工具”这个印象，而是：
+
+> **Claude Code 的执行能力，本质上是一层由 runtime 组织起来的接口系统。**
 
 ---
+
+## 这一篇在卷一里的作用
+
+把卷一前四篇连起来看，逻辑已经比较完整：
+
+- 第一篇回答：Claude Code 是什么系统
+- 第二篇回答：这套系统有哪些核心对象
+- 第三篇回答：一次请求怎么跑成一轮 agent turn
+- 第四篇回答：这一轮里的模型意图，怎么被落成执行能力
+
+所以第四篇的作用，不是抢先细讲某一个工具，而是替后面的工具系统卷先立一张执行层总图。
+
+等这张图立住之后，后面再看 BashTool、FileReadTool、FileEditTool，就不会像在看几个零散功能，而是在看 Claude Code 执行能力层的不同切面。
+
+---
+
+## 一句话收口
+
+> Claude Code 不是让模型直接“调函数”，而是让模型先产出 `tool_use`，再由 runtime 经历 `orchestration -> execution -> tool.call -> tool_result` 这条链，把意图落成现实动作，并把结果重新送回当前 turn。tool 的真正位置，不是功能菜单，而是模型意图通往现实动作的标准执行接口。
