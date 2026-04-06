@@ -43,7 +43,7 @@ tags:
 
 > **context collapse 更像一层“读时投影”，而不是直接把本地 transcript 改写掉。**
 
-这次我主要回看了：
+这篇主看的是：
 
 - `src/query.ts`
 - `src/setup.ts`
@@ -52,7 +52,7 @@ tags:
 
 虽然当前这份恢复源码里 `src/services/contextCollapse/*` 具体实现文件没有完整落出来，但这些调用点和注释已经足够把核心设计意图看得很清楚。
 
-看完之后，我现在会把这层设计压成一句很明确的话：
+看完之后，可以把这层设计压成一句很明确的话：
 
 > **context collapse 的目标不是把历史“变成别的东西”，而是在不破坏完整 transcript 的前提下，给模型构造一个更短的工作视图。**
 

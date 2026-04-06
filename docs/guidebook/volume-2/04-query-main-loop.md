@@ -45,7 +45,7 @@ tags:
 - `src/services/tools/toolOrchestration.ts`
 - `src/utils/queryHelpers.ts`
 
-看完之后，我现在会把 `query(...)` 的角色压成一句很清楚的话：
+看完之后，现在会把 `query(...)` 的角色压成一句很清楚的话：
 
 > **`query(...)` 不是一次单发模型调用，而是 Claude Code 主线程 runtime 里真正负责“模型采样 → 识别 tool_use → 执行工具 → 追加 tool_result → 再次采样”这条闭环的主循环。**
 
@@ -102,7 +102,7 @@ Claude Code 没把循环推进寄托在 API 给的某个漂亮字段上，而是
 
 ### 3. `query(...)` 真正维持的是“三段式循环”
 
-我现在会把整条主循环拆成三段：
+现在会把整条主循环拆成三段：
 
 1. **采样段**：把当前 messages + prompt 送给模型
 2. **工具段**：把模型产出的 tool_use 执行掉

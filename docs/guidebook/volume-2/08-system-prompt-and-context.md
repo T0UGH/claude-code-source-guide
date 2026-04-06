@@ -39,14 +39,14 @@ tags:
 - `messagesForQuery` 在进入 `callModel(...)` 之前还会经历哪些投影
 - attachment 归一化后的消息，到底是在这张图里的哪一层
 
-这次我主要回看了：
+这篇主看的是：
 
 - `src/QueryEngine.ts`
 - `src/query.ts`
 - `src/utils/systemPrompt.ts`
 - `src/constants/prompts.ts` 里 env details 那段
 
-看完之后，我现在会把这条链压成一句很清楚的话：
+看完之后，可以把这条链压成一句很清楚的话：
 
 > **Claude Code 的实际模型请求，不是“一段 system prompt + 一串消息”这么简单，而是把 prompt 分成 system 层、userContext 层、message history 层三段分别组装后，再一起送进 `callModel(...)`。**
 

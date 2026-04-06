@@ -41,14 +41,14 @@ tags:
 - context collapse 跟 autocompact 谁先谁后
 - 为什么 prompt 太长了以后，它还能继续转，而不是直接死掉
 
-这次我主要回看了：
+这篇主看的是：
 
 - `src/query.ts`
 - `src/utils/messages.ts`
 - `src/services/compact/compact.ts`
 - `src/services/compact/microCompact.ts`
 
-看完之后，我现在会把这条 context management 主线压成一句很清楚的话：
+看完之后，可以把这条 context management 主线压成一句很清楚的话：
 
 > **Claude Code 不是靠一次“大总结”解决上下文压力，而是用一串分层机制逐步减负：先切边，再局部裁剪，再清理旧工具结果，再做上下文投影，最后才在必要时整段 compact。**
 
@@ -88,7 +88,7 @@ tags:
 
 ### 2. 它的基本策略是：先保留颗粒度，再保留连续性，最后才退到摘要
 
-我现在会把它的优先级总结成：
+现在会把它的优先级总结成：
 
 - **先切掉已经被完整 compact 之前的历史**
 - **再把不关键但占空间的局部内容减掉**

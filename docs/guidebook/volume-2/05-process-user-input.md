@@ -38,13 +38,13 @@ tags:
 
 但源码里明显不是这样。
 
-这次我主要回看了：
+这篇主看的是：
 
 - `src/utils/processUserInput/processUserInput.ts`
 - `src/utils/processUserInput/processSlashCommand.tsx`
 - `src/utils/processUserInput/processTextPrompt.ts`
 
-看完之后，我现在会把 `processUserInput(...)` 的角色压成一句很清楚的话：
+看完之后，可以把 `processUserInput(...)` 的角色压成一句很清楚的话：
 
 > **`processUserInput(...)` 不是单纯把输入包成 message，而是 Claude Code 主线程在 query 前的输入路由层。**
 

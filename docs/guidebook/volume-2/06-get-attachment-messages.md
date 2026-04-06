@@ -31,12 +31,12 @@ tags:
 
 也就是说，Claude Code 里有很多“不是用户直接说出来，但又必须让模型看见”的上下文，都不是硬塞进 user text，而是走了 **attachment** 这条单独通道。
 
-这次我主要回看了：
+这篇主看的是：
 
 - `src/utils/attachments.ts`
 - `src/utils/messages.ts`
 
-看完之后，我现在会把 `getAttachmentMessages(...)` 的角色压成一句很清楚的话：
+看完之后，可以把 `getAttachmentMessages(...)` 的角色压成一句很清楚的话：
 
 > **`getAttachmentMessages(...)` 不是简单的“抽附件”，而是 Claude Code 把各种外生上下文统一转译成 attachment messages 的入口。**
 
