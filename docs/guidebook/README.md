@@ -1,166 +1,205 @@
 ---
-title: Claude Code Source Guide
+title: Claude Code 源码导读手册
 date: 2026-04-06
 status: draft
 ---
 
-# Claude Code Source Guide
+# Claude Code 源码导读手册
 
-这是一个把 **Claude Code 源码阅读** 整理成手册的项目。
+这不是一份零散笔记归档，也不是一组按时间堆起来的源码阅读记录。
 
-它不是源码仓库镜像，也不是零散笔记归档。更准确地说，它想做的是一件中间态的事：
+它更像一套**按系统结构重新整理过的导读手册**：
 
-> 把一组按阅读和研究过程长出来的源码笔记，重新整理成一套适合公开阅读的导读手册。
+> 从 runtime 底座，到请求主链，到长上下文治理，再到扩展体系、权限边界与多 agent 协作，把 Claude Code 的核心内部结构重新排成六卷。
 
-如果你是第一次来到这里，可以先记住一句话：
+如果你第一次进这个项目，最重要的不是记住所有编号，
+而是先知道：
 
-> 这里不是在解释“Claude Code 怎么用”，而是在解释“Claude Code 这套系统是怎么长成现在这个样子的”。
-
----
-
-## 这个项目现在在做什么
-
-现在还不是建站阶段，也还没到最终定稿。
-
-眼下更像是在做内容重组。
-
-具体来说，眼下在推进的是三件事：
-
-1. 把原本按研究顺序写出来的文章，重排成更适合阅读的卷结构
-2. 把每篇文章在全书里的位置重新定义清楚
-3. 先把内容骨架搭稳，再决定后面怎么做 GitHub Pages
-
-所以你现在看到的内容，重点不是“包装完成度”，而是“结构有没有站住”。
+- 这套手册在讲什么
+- 六卷分别负责哪一块
+- 你应该从哪里开始
 
 ---
 
-## 这套手册适合谁
+## 这套 guidebook 适合谁读
 
-这套东西主要写给下面几类读者：
+这套手册主要适合三类读者：
 
-### 1. 想系统读 Claude Code 源码的人
-不是只查一个函数，不是只看一个 feature，而是想知道这套系统整体怎么运转。
+### 1. 想系统理解 Claude Code 内部结构的人
+你不满足于“会用”，而想知道：
+- 它的主循环怎么跑
+- tool / agent / skill 怎么分层
+- 为什么长会话还能继续工作
+- 扩展点和权限系统为什么这样设计
 
-### 2. 在用 coding agent，但想看清内部结构的人
-你可能已经在用 Claude Code、Codex、OpenCode 这类东西，但如果你想把内部运行机制看明白，这套手册会比产品文档更有用。
+### 2. 正在做 coding agent / AI runtime / 多 agent 系统的人
+你不一定关心 Claude Code 本身，但关心它背后的工程取舍：
+- 运行时编排
+- 上下文治理
+- 工具调用闭环
+- 权限边界
+- team / swarm runtime
 
-### 3. 想做 agent runtime、工具系统、skill 体系研究的人
-Claude Code 值得看的地方，不只是它能干什么，而是它怎么把 tool、agent、skill、prompt、权限、team runtime 这些层面拼成一个整体。
+### 3. 想按主题跳读的人
+你不一定准备从头读到尾，只想快速看：
+- QueryEngine 主链
+- MCP / hooks / plugin
+- 权限系统
+- 多 agent 协作层
 
-它不太适合纯扫盲读者。如果你只是想快速上手命令，官方文档会更直接。这里更像是“源码导读”和“系统拆解”。
-
----
-
-## 推荐从哪里开始
-
-如果你不想猜顺序，直接从这里开始：
-
-### 第一站
-- [卷一｜Claude Code 的运行时底座](./01-volume-one-runtime-foundation.md)
-
-这是当前最适合当入口的一页。
-
-原因很简单：
-- 它不再承担学习路线的任务
-- 也不试图把全书一次说完
-- 它先把 Claude Code 最底下那几层搭清楚
-
-把这一卷读顺了，后面再看 QueryEngine 主链、长上下文、权限系统和 team runtime，会轻松很多。
-
-### 第二站
-- 映射表 v2：[`00-mapping-table-v2.md`](./00-mapping-table-v2.md)
-
-如果你更在意全书结构、卷内顺序、哪些文章被删了、哪些被挪卷了，那先看映射表也可以。
+这套 guidebook 也支持这样读。
 
 ---
 
-## 当前手册结构
+## 六卷总览
 
-这套 guidebook 目前按 6 卷来整理。
-
-### 卷一：运行时底座
-先把 Claude Code 的底层骨架搭起来：
+### [卷一｜运行时底座](./volume-1/README.md)
+这一卷讲 Claude Code 的基础部件：
 - tool
 - agent
 - skill
 - prompt
 
-入口：
-- [卷一｜Claude Code 的运行时底座](./01-volume-one-runtime-foundation.md)
+如果不先把这些对象各自处在哪一层看清，后面几卷很容易全都混成“主循环里的很多功能”。
 
-### 卷二：一条请求是怎么跑完整个系统的
-看 QueryEngine 主链，理解一条请求如何真正跑完整个 runtime。
+### [卷二｜一条请求是怎么跑完整个系统的](./volume-2/README.md)
+这一卷讲主线程请求主链：
+- QueryEngine
+- query(...)
+- processUserInput
+- messages.ts
+- prompt / context 组装
 
-### 卷三：长上下文与会话恢复
-看 compact、microCompact、snip、session 恢复这一整套上下文治理机制。
+它回答的是：**一次用户请求进入系统之后，到底怎么真正跑起来。**
 
-### 卷四：外部能力和扩展点
-看 MCP、hooks、plugin 这些外部能力是怎么接进来的。
+### [卷三｜长上下文与会话恢复](./volume-3/README.md)
+这一卷讲长会话能力：
+- compact
+- microCompact
+- snip
+- context collapse
+- sessionStorage
+- conversationRecovery
+- sessionRestore
 
-### 卷五：执行边界与安全控制
-看权限系统、路径规则、policy limits 这些边界控制怎么工作。
+它回答的是：**Claude Code 为什么能在长会话里继续工作，并在中断后重新接活。**
 
-### 卷六：多 agent 协作运行时
-看 team、teammate、mailbox、swarm 这一层怎么成立。
+### [卷四｜外部能力和扩展点是怎么接进来的](./volume-4/README.md)
+这一卷讲扩展体系：
+- MCP
+- hooks
+- plugin
 
-这 6 卷现在还在持续调整，但大的骨架已经基本定下来了。
+它回答的是：**Claude Code 为什么不是封闭 runtime，而是一套有正式扩展能力面的系统。**
 
----
+### [卷五｜执行边界与安全控制](./volume-5/README.md)
+这一卷讲权限系统：
+- permission decision
+- BashTool 权限模型
+- 路径授权
+- policy limits
 
-## 这个仓库里的内容怎么分
+它回答的是：**Claude Code 为什么不是“有能力就直接跑”的 agent，而是一套带分层行动边界的 runtime。**
 
-### `docs/guidebook/`
-放导读手册本体，也就是最终应该更接近公开阅读版本的内容。
+### [卷六｜多 agent 协作运行时](./volume-6/README.md)
+这一卷讲 team / teammate / swarm runtime：
+- team 生命周期
+- teammate runtime
+- mailbox 协议
+- Local / Remote / teammate 边界
 
-当前已经有：
-- `00-mapping-table-v2.md`
-- `01-volume-one-runtime-foundation.md`
-
-### `docs/notes/`
-放过程文档、brainstorm 纪要、结构调整记录。
-
-这些文件不是最终导读正文，但对理解“为什么这样改”很有用。
-
-### `docs/superpowers/`
-放初始化过程中的 spec 和 plan。
-
-这部分更像仓库工作记录，不是面向普通读者的正文内容。
-
----
-
-## 当前阶段最值得看的文件
-
-如果你现在就想快速判断这个项目在做什么，建议按这个顺序看：
-
-1. [卷一｜Claude Code 的运行时底座](./01-volume-one-runtime-foundation.md)
-2. [映射表 v2](./00-mapping-table-v2.md)
-3. `docs/notes/2026-04-05-volume-one-restructure-brainstorm.md`
-
-这三份看完，基本就能知道：
-- 这个项目要做成什么样
-- 第一卷为什么这样改
-- 当前重排到了哪一步
+它回答的是：**Claude Code 的多 agent 协作层为什么已经不只是“多开几个 agent”，而是一套正式的 swarm 运行时。**
 
 ---
 
-## 后面会继续写什么
+## 建议入口
 
-接下来最自然的推进顺序是：
+### 如果你第一次读这套手册
+先从：
+- [卷一｜运行时底座](./volume-1/README.md)
+- [卷二｜一条请求是怎么跑完整个系统的](./volume-2/README.md)
 
-1. 补 guidebook 首页
-2. 继续写卷二、卷三等导读页
-3. 补阅读路径页
-4. 回头处理卷内弱去重和导语
-5. 等内容骨架稳下来，再进入 GitHub Pages 方案选择
+这是最稳的入口。
 
-所以现在还不用急着定技术栈。
+### 如果你最关心 runtime 主链
+直接从：
+- [卷二｜一条请求是怎么跑完整个系统的](./volume-2/README.md)
 
-先把内容结构做对，后面的站点层才不容易返工。
+开始。
+
+### 如果你最关心长上下文和 resume
+直接从：
+- [卷三｜长上下文与会话恢复](./volume-3/README.md)
+
+开始。
+
+### 如果你最关心扩展体系
+直接从：
+- [卷四｜外部能力和扩展点是怎么接进来的](./volume-4/README.md)
+
+开始。
+
+### 如果你最关心权限与安全边界
+直接从：
+- [卷五｜执行边界与安全控制](./volume-5/README.md)
+
+开始。
+
+### 如果你最关心多 agent / swarm
+直接从：
+- [卷六｜多 agent 协作运行时](./volume-6/README.md)
+
+开始。
 
 ---
 
-## 一句话说明这个仓库
+## 怎么读这套手册
 
-如果要用一句最短的话介绍这个项目，我会这样写：
+### 读法 A：顺读
+如果你想完整建立 Claude Code 的系统心智模型，最稳的顺序就是：
 
-> Claude Code Source Guide 是一个把 Claude Code 源码阅读笔记重组成公开导读手册的项目，先整理内容骨架，再考虑 GitHub Pages。
+1. 卷一
+2. 卷二
+3. 卷三
+4. 卷四
+5. 卷五
+6. 卷六
+
+这是按“底座 → 主链 → 长会话 → 扩展 → 边界 → 协作”排出来的顺序。
+
+### 读法 B：按主题跳读
+如果你已经熟悉前两卷，只想补某个专题，可以直接跳到：
+- 长上下文：卷三
+- 扩展：卷四
+- 权限：卷五
+- 多 agent：卷六
+
+### 读法 C：只抓主线
+如果你不准备全读，至少建议先抓：
+- 卷一 README
+- 卷二 README
+- 卷三 README
+- 卷四 README
+- 卷五 README
+- 卷六 README
+
+也就是先把六卷目录页走一遍。这样即使暂时不细读正文，也能先知道整套书的骨架。
+
+---
+
+## 六卷快速跳转
+
+- [卷一｜运行时底座](./volume-1/README.md)
+- [卷二｜一条请求是怎么跑完整个系统的](./volume-2/README.md)
+- [卷三｜长上下文与会话恢复](./volume-3/README.md)
+- [卷四｜外部能力和扩展点是怎么接进来的](./volume-4/README.md)
+- [卷五｜执行边界与安全控制](./volume-5/README.md)
+- [卷六｜多 agent 协作运行时](./volume-6/README.md)
+
+---
+
+## 一句话理解这套手册
+
+如果只先记一句话，可以记这个：
+
+> **这套 guidebook 的目标，不是把 Claude Code 源码拆成很多零件，而是把它重新整理成一套可以连续阅读、可以按主题跳读、也可以作为系统设计参考的源码导读手册。**
