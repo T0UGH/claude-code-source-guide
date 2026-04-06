@@ -26,13 +26,13 @@ source_url: https://feishu.cn/docx/VEheddcLko6s7QxKB3hcMCWRngh
 - **上一篇**：[上一篇：frontmatter 不是注释而是 skill 的运行时接口](./22-frontmatter-runtime-interface.md)
 - **下一篇**：[下一篇：skillify 是 Claude Code 对好 skill 写法的官方样板](./24-skillify.md)
 
-这一篇开始从“怎么接进去”转向“什么样才成立”。它更像对前面 skill 主干的一次收束。
+这一篇开始从“怎么接进去”转向“什么样才成立”。前两篇已经分别处理了字段表和运行时接口；这一篇不再回头解释字段本体，而是只收一个判断问题：**什么样的 skill，才算写得稳、写得能进 runtime。**
 
 ---
 
 ## 这篇看什么
 
-前一篇我把 skill frontmatter 的地位讲清楚了：
+前一篇已经把 skill frontmatter 的地位讲清楚了：
 
 > frontmatter 不是注释，而是 skill 的运行时接口。
 

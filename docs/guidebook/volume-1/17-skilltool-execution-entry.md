@@ -22,46 +22,27 @@ source_url: https://feishu.cn/docx/XLQqdJzGcoQnKhx1LoZczRmvnHb
 - **上一篇**：[上一篇：loadSkillsDir 是 skill 定义层的总入口](./16-loadskillsdir.md)
 - **下一篇**：[下一篇：forkedAgent 是 skill 接入 agent 执行层的胶水层](./18-forkedagent.md)
 
-这一篇开始把 skill 从定义层推到执行层。读到这里，skill 不再只是配置或元数据，而开始变成运行时里的真实能力。
+这一篇开始把 skill 从定义层推到执行层。上一讲已经解释清楚“什么算 skill”；这一篇只继续回答下一步：**已经定义好的 skill，究竟如何被真正跑起来。**
 
 ---
 
 ## 这篇看什么
 
-上一讲我故意先不碰 `SkillTool.ts`，而是先把 skill 的定义层立住。
-
-因为如果不先看 `loadSkillsDir.ts`，很容易把 skill 理解成：
-
-- 几个 `SKILL.md`
-- 一点 frontmatter
-- 再加一个能调用它们的入口
-
-但上一讲已经把这个误解拆掉了。
-
-我们现在已经知道：
-
-- skill 不是 markdown 文件，而是结构化 `prompt command`
-- frontmatter 到定义层就已经开始长运行语义
-- skill 不是全量启动即生效，而是分 unconditional / conditional / dynamic
-- skill 来源也不是单目录，而是一个多来源、多层叠加的系统
-
-那接下来最自然的问题就是：
-
-> 这些已经被定义好的 skill，究竟怎么真正进入执行层？
-
-这次主看的是：
+这篇主看的是：
 
 - `src/tools/SkillTool/SkillTool.ts`
 
 如果上一讲解决的是：
 
 - Claude Code 里有哪些东西算 skill
+- skill 怎么先被压进 command 系统
 
 那这一讲解决的就是：
 
 - 这些 skill 怎么从定义对象，变成 runtime 里的真实调用
+- 调用时会经过哪些合法性检查与执行分流
 
-我现在对这个文件的判断是：
+所以这篇不再展开 skill 的来源、字段和定义层细节，而是只看执行入口本身。更准确地说：
 
 > `SkillTool.ts` 不是一个“执行 skill 文本”的小工具，而是 skill 从定义层进入执行层的总入口。
 

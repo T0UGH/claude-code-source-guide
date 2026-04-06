@@ -24,15 +24,15 @@ source_url: https://feishu.cn/docx/OF6DdxKy6o8hOlxC9c1c1EyDnOe
 - **上一篇**：[上一篇：skillify 是 Claude Code 对好 skill 写法的官方样板](./24-skillify.md)
 - **下一篇**：[下一篇：debug 是面向当前 session 的现场诊断 skill](./26-debug.md)
 
-这一篇不是简单讲一个例子，而是在看 Claude Code 官方怎么理解 verify 这类 skill。
+这一篇不是简单讲一个 bundled skill，而是在看 Claude Code 官方如何定义“验证”这件事。重点不在样板写法，而在验证边界本身。
 
 ---
 
 ## 这篇看什么
 
-上一篇我拆的是 `skillify`，它更像 Claude Code 官方对“怎么写一个好 skill”的样板。
+上一篇拆的是 `skillify`，它更像 Claude Code 官方对“怎么写一个好 skill”的样板。
 
-这次继续拆另一类更有工程味的内置 skill：
+这次继续看另一类更有工程味的内置 skill：
 
 - `verify`
 

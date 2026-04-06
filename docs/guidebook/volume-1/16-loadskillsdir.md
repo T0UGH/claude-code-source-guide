@@ -20,40 +20,29 @@ status: done
 - **上一篇**：[上一篇：SkillTool 是把 skill 接进 runtime 的桥](./15-skilltool-bridge.md)
 - **下一篇**：[下一篇：SkillTool 是 skill 进入执行层的总入口](./17-skilltool-execution-entry.md)
 
-这一篇接着讲 skill 定义层。和 agent 段里的 loadAgentsDir 对照着看，会更容易理解 Claude Code 是怎么把能力定义装进系统的。
+这一篇接着讲 skill 的定义层。上一篇已经解释了 SkillTool 为什么是 bridge；这一篇则把视角往前挪一层，只回答定义问题：**什么东西算 skill，skill 从哪里来，又是怎样先被系统收编的。**
 
 ---
 
 ## 这篇看什么
 
-这次我把 skill 这条线重开了。
-
-而且不是按“先看字段、先看样例、先看 SkillTool”的走法重开，而是故意按前面学 agent 那条更稳的路径来：
-
-1. 先立定义层
-2. 再看入口层
-3. 再看执行层
-4. 最后再回到写法层和设计实践
-
-所以这次新的第一讲，主看的是：
+这篇主看的是：
 
 - `src/skills/loadSkillsDir.ts`
 
-看完这个文件，我觉得 skill 这条线终于站稳了。因为它先回答了几个真正关键的问题：
+它回答的不是“skill 怎么执行”，而是几件更靠前的问题：
 
 - Claude Code 里什么东西才算一个 skill
 - skill 从哪里来
-- frontmatter 到底什么时候开始有“运行语义”
+- frontmatter 从哪一层开始长出运行语义
 - skill 为什么不是启动后全都生效
-- skill 最后是怎么进入统一 runtime 的
+- skill 最后怎样进入统一的 command 系统
 
-我现在会直接给它下这个定义：
+更准确地说：
 
 > `loadSkillsDir.ts` 不是“读 skills 目录”的工具函数，而是 Claude Code 的 skill 定义层总入口。
 
-如果前面 agent 那条线里，`loadAgentsDir.ts` 负责把 agent 世界先立起来，那 skill 这边差不多就是同样的位置。
-
-它负责把不同来源、不同形态的 skill，统一收进一种 Claude Code 真正能消费的对象里。后面你再去看 `SkillTool.ts`，就不会再有那种“怎么突然就冒出来一个 skill 入口”的悬空感。
+如果前面 agent 那条线里，`loadAgentsDir.ts` 负责先把 agent 世界立起来，那 skill 这边差不多就是同样的位置。它把不同来源、不同形态的 skill，统一压成 Claude Code 真正能消费的对象。等这一层立住之后，再看下一篇 `SkillTool.ts`，才不会有“skill 怎么突然就冒出来一个执行入口”的悬空感。
 
 ---
 

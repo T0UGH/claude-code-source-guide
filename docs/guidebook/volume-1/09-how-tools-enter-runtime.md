@@ -13,7 +13,7 @@ tags:
 - **所属卷**：卷一：运行时底座
 - **卷内位置**：Tool 9/9
 - **上一篇**：[上一篇：ToolSearchTool 是工具发现层](./08-toolsearchtool.md)
-- **下一篇**：[下一篇：AgentTool 不是再开一个 agent 这么简单](../01-volume-one-runtime-foundation.md)
+- **下一篇**：[下一篇：AgentTool 不是再开一个 agent 这么简单](./10-agenttool.md)
 
 这一篇是 tool 段的收束。前面几篇主要在讲工具是什么、有哪些原语、怎么组织；这篇开始回答另一件更关键的事：这些工具最后是怎么真正接进 runtime 的。
 

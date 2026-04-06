@@ -24,13 +24,13 @@ source_url: https://feishu.cn/docx/G85Qd8htloKzcjxDCbJcXKCinwg
 - **上一篇**：[上一篇：skill 的 name 和 description 是什么时候让 LLM 感知到的](./28-skill-name-description.md)
 - **下一篇**：[下一篇：skill 和 agent 是怎么分工的](./30-skill-vs-agent.md)
 
-这一篇接着讲 skill 发现机制。和上一篇一起读，能把“模型为什么会发现这个 skill”讲得更完整。
+这一篇接着讲 skill 发现机制。上一篇已经解释了“skill 信息何时暴露给模型”；这一篇只继续追问：**在已经暴露出来的简介层里，哪个字段更影响发现命中。**
 
 ---
 
 ## 这篇看什么
 
-上一篇我刚把一个问题拆清了：
+上一篇已经把一个前提拆清了：
 
 > skill 的 `name` / `description` 不是开局以完整 `SKILL.md` 形式全量注入，而是先以 skill listing / relevant-skills reminder 这种简介层逐步暴露给模型；完整正文只有 invoke 时才按需展开。
 

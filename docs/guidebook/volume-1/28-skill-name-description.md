@@ -24,13 +24,13 @@ source_url: https://feishu.cn/docx/ZsI8dNGtqoTpRsxB3HYchlIWnuc
 - **上一篇**：[上一篇：skills 篇结语：skill 不是提示词而是能力单元](./27-skills-conclusion.md)
 - **下一篇**：[下一篇：when_to_use 和 description 哪个对 skill 发现更关键](./29-when-to-use-vs-description.md)
 
-这一篇把 skill 线从执行侧拉到发现侧。它开始解释模型是怎么感知 skill 的。
+这一篇把 skill 线从执行侧拉到发现侧。它不再讨论“skill 怎么跑”，而是先解释另一个更靠前的问题：**skill 的信息是什么时候暴露给模型的。**
 
 ---
 
 ## 这篇看什么
 
-这个问题其实问得特别准，而且正好卡在 skill 机制最容易误解的一层：
+这个问题正好卡在 skill 机制最容易误解的一层：
 
 > skill 的 `name` / `description` 到底是什么时候让 LLM 感知到的？
 > 是不是会话一开始就把所有 skill 全量注进去？

@@ -12,17 +12,19 @@ source_repo: https://github.com/T0UGH/cc
 
 # 卷一 21｜Skill frontmatter 字段速查
 
-这份是给自己以后查字段用的，尽量写得直接一点。
+这篇是卷一里少数偏参考手册的一页，目标不是展开方法论，而是把常见字段先摆平，方便后面查阅。
 
 先记最重要的一句：
 
 > **最小 skill format 的确只要 `name` 和 `description`。**
-> 但从 `src/skills/loadSkillsDir.ts` 来看，Claude Code 其实还能吃下不少可选字段。
+> 但从 `src/skills/loadSkillsDir.ts` 来看，Claude Code 实际支持的字段要比常见示例多得多。
 
 所以别把两件事混在一起：
 
 - 对外最常见的写法：很简
-- runtime 真正支持的字段：比你平时看到的多
+- runtime 真正支持的字段：范围更大
+
+如果你想看这些字段为什么会真的影响运行时行为，下一篇再展开；这一篇先把字段表收清楚。
 
 ---
 

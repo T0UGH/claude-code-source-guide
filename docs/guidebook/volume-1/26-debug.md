@@ -22,7 +22,7 @@ source_url: https://feishu.cn/docx/XERid4iZEoCeOnx7aXXc89AlnZr
 - **上一篇**：[上一篇：verify 是 Claude Code 对验证即运行时观察的官方定义](./25-verify.md)
 - **下一篇**：[下一篇：skills 篇结语：skill 不是提示词而是能力单元](./27-skills-conclusion.md)
 
-这一篇继续沿着官方 skill 范式往下看。和 verify 对照着读，会更容易看出 Claude Code 对 skill 的期望边界。
+这一篇继续沿着官方 bundled skill 往下看，但重点从“验证边界”转到了“诊断现场”。和 `verify` 对照着读，会更容易看出 Claude Code 如何区分 verification 和 debugging。
 
 ---
 
@@ -30,7 +30,7 @@ source_url: https://feishu.cn/docx/XERid4iZEoCeOnx7aXXc89AlnZr
 
 前一篇拆的是 `verify`。
 
-`verify` 很像一份工程价值观文件：它在定义“什么才算验证”。
+`verify` 更像一份工程价值观文件：它在定义什么才算验证。
 
 这次看的 `debug`，气质完全不一样。
 

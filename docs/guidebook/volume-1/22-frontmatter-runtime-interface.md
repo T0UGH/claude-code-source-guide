@@ -23,7 +23,7 @@ source_url: https://feishu.cn/docx/RNNYdnJQroPnPexdjl4cMOumnAc
 - **上一篇**：[上一篇：Skill frontmatter 字段速查](./21-skill-frontmatter-fields.md)
 - **下一篇**：[下一篇：什么样的 SKILL 才是真正能进 runtime 的好 skill](./23-good-runtime-skill.md)
 
-这一篇把 frontmatter 从字段表推进到运行时意义层。重点不是字段名字，而是这些元数据为什么会真的影响 skill 的运行。
+这一篇把 frontmatter 从字段表推进到运行时意义层。上一篇已经把“有哪些字段”列出来了；这一篇只回答另一个更硬的问题：**这些字段为什么不只是说明文字，而会真的影响 skill 的运行。**
 
 ---
 

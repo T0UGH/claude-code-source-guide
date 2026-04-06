@@ -29,7 +29,7 @@ source_url: https://feishu.cn/docx/LJ1sdwrc8otFvExtdMWc9B0snvf
 - **上一篇**：[上一篇：when_to_use 和 description 哪个对 skill 发现更关键](./29-when-to-use-vs-description.md)
 - **下一篇**：[下一篇：prompt 是 AgentTool 给模型看的使用说明层](./31-prompt-as-instruction-layer.md)
 
-这一篇放在 skill 段最后很合适。前面已经把 skill 自己讲得很完整，这里刚好回过头，把它和 agent 的边界重新说清。
+这一篇放在 skill 段最后很合适。前面几篇已经把 skill 的定义、发现和展开讲得差不多了；这里回过头，只做一件事：**把 skill 和 agent 的系统分工重新说清。**
 
 ---
 

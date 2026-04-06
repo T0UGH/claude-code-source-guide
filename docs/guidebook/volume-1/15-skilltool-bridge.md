@@ -15,7 +15,7 @@ tags:
 - **上一篇**：[上一篇：builtInAgents 是官方内建角色模板总表](./14-builtinagents.md)
 - **下一篇**：[下一篇：loadSkillsDir 是 skill 定义层的总入口](./16-loadskillsdir.md)
 
-skill 段从这里正式开始。第一步先别急着看写法，而是先看 skill 作为能力单元，究竟怎么进入 Claude Code 的 runtime。
+skill 段从这里正式开始。这一篇先不展开 skill 的定义细节，也不进入具体写法，而是先看一个更靠中间层的问题：skill 这类能力单元，究竟是怎么被接进 Claude Code runtime 的。
 
 ---
 
@@ -25,17 +25,13 @@ skill 段从这里正式开始。第一步先别急着看写法，而是先看 s
 
 - `src/tools/SkillTool/SkillTool.ts`
 
-如果前面那些工具大多是在做具体动作——读、写、改、搜、跑命令、拉 agent——那 SkillTool 的位置又不一样。
+这一篇只回答一个核心问题：**SkillTool 为什么是 bridge，而不是普通执行器。**
 
-它不直接完成某种业务动作，而是在做一件更“中层”的事：
+如果前面那些工具大多是在做具体动作——读、写、改、搜、跑命令、拉 agent——那 SkillTool 的位置不一样。它不直接完成某项业务动作，而是在做一件更中层的事：
 
 > 把 Claude Code 的 skill / slash-command 体系，接进统一的 tool runtime。
 
-我看完后的第一感觉是：
-
-> SkillTool 不是“执行一个 prompt 模板”这么简单，它其实是 slash command、skill frontmatter、tool 权限、agent fork 执行之间的桥接层。
-
-这也是为什么它看起来不像 BashTool 那么重执行，不像 FileReadTool 那么重 I/O，但在架构上依然很关键。
+更准确地说，这篇关心的是 **skill 在系统里的桥位**：它连的是 command、权限、inline / fork 分流和 agent 执行链。至于“什么算 skill、skill 从哪里来”，留到下一篇 `loadSkillsDir` 再讲；“已经定义好的 skill 如何真正进入执行层”，则放到再下一篇继续展开。
 
 ---
 
