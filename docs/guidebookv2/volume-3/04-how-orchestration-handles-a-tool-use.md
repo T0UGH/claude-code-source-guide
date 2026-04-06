@@ -110,27 +110,15 @@ flowchart TD
 
 ## 为什么 orchestration 不能省
 
-### 因为执行层不是单工具系统
-
 如果 Claude Code 只有一个 BashTool，orchestration 可以写得很薄。但事实不是这样：
 
 - 它有 Bash / File / Search 这组本地执行对象
 - 还有 SkillTool / AgentTool 这样的高阶对象
 - 它们都要走统一闭环
 
-这就决定了系统必须有一层专门负责“接调用、匹配对象、组织分发”的中间结构。
+所以系统必须有一层专门负责“接调用、匹配对象、组织分发”的中间结构。
 
-### 因为执行层还要守住卷内边界
-
-卷三后面要分别写：
-
-- Bash 的通用执行器地位
-- FileRead 的现实材料入口
-- FileEdit / FileWrite 的落盘语义
-- Grep 的材料定位
-- ToolSearch 的能力发现
-
-这些角色之所以能彼此分开，不只是因为工具内部不同，更因为在 orchestration 视角下，它们本来就在同一执行层里承担不同职责，而不是互相代打。
+而且卷三后面之所以还能把 Bash、文件家族、搜索家族、SkillTool / AgentTool 分开，也正是因为 orchestration 先把它们放进了同一执行层的不同职责位里，而不是让它们互相代打。
 
 ## 图 2：分发到具体执行对象的桥接图
 
