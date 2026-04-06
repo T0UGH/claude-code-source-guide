@@ -53,7 +53,7 @@ status: draft
 
 ## 六卷总览
 
-### [卷一｜运行时底座](./volume-1/README.md)
+### [卷一｜运行时底座](./volume-1/index.md)
 这一卷讲 Claude Code 的基础部件：
 - tool
 - agent
@@ -62,7 +62,7 @@ status: draft
 
 如果不先把这些对象各自处在哪一层看清，后面几卷很容易全都混成“主循环里的很多功能”。
 
-### [卷二｜一条请求是怎么跑完整个系统的](./volume-2/README.md)
+### [卷二｜一条请求是怎么跑完整个系统的](./volume-2/index.md)
 这一卷讲主线程请求主链：
 - QueryEngine
 - query(...)
@@ -72,7 +72,7 @@ status: draft
 
 它回答的是：**一次用户请求进入系统之后，到底怎么真正跑起来。**
 
-### [卷三｜长上下文与会话恢复](./volume-3/README.md)
+### [卷三｜长上下文与会话恢复](./volume-3/index.md)
 这一卷讲长会话能力：
 - compact
 - microCompact
@@ -84,7 +84,7 @@ status: draft
 
 它回答的是：**Claude Code 为什么能在长会话里继续工作，并在中断后重新接活。**
 
-### [卷四｜外部能力和扩展点是怎么接进来的](./volume-4/README.md)
+### [卷四｜外部能力和扩展点是怎么接进来的](./volume-4/index.md)
 这一卷讲扩展体系：
 - MCP
 - hooks
@@ -92,7 +92,7 @@ status: draft
 
 它回答的是：**Claude Code 为什么不是封闭 runtime，而是一套有正式扩展能力面的系统。**
 
-### [卷五｜执行边界与安全控制](./volume-5/README.md)
+### [卷五｜执行边界与安全控制](./volume-5/index.md)
 这一卷讲权限系统：
 - permission decision
 - BashTool 权限模型
@@ -101,7 +101,7 @@ status: draft
 
 它回答的是：**Claude Code 为什么不是“有能力就直接跑”的 agent，而是一套带分层行动边界的 runtime。**
 
-### [卷六｜多 agent 协作运行时](./volume-6/README.md)
+### [卷六｜多 agent 协作运行时](./volume-6/index.md)
 这一卷讲 team / teammate / swarm runtime：
 - team 生命周期
 - teammate runtime
@@ -116,38 +116,38 @@ status: draft
 
 ### 如果你第一次读这套手册
 先从：
-- [卷一｜运行时底座](./volume-1/README.md)
-- [卷二｜一条请求是怎么跑完整个系统的](./volume-2/README.md)
+- [卷一｜运行时底座](./volume-1/index.md)
+- [卷二｜一条请求是怎么跑完整个系统的](./volume-2/index.md)
 
 这是最稳的入口。
 
 ### 如果你最关心 runtime 主链
 直接从：
-- [卷二｜一条请求是怎么跑完整个系统的](./volume-2/README.md)
+- [卷二｜一条请求是怎么跑完整个系统的](./volume-2/index.md)
 
 开始。
 
 ### 如果你最关心长上下文和 resume
 直接从：
-- [卷三｜长上下文与会话恢复](./volume-3/README.md)
+- [卷三｜长上下文与会话恢复](./volume-3/index.md)
 
 开始。
 
 ### 如果你最关心扩展体系
 直接从：
-- [卷四｜外部能力和扩展点是怎么接进来的](./volume-4/README.md)
+- [卷四｜外部能力和扩展点是怎么接进来的](./volume-4/index.md)
 
 开始。
 
 ### 如果你最关心权限与安全边界
 直接从：
-- [卷五｜执行边界与安全控制](./volume-5/README.md)
+- [卷五｜执行边界与安全控制](./volume-5/index.md)
 
 开始。
 
 ### 如果你最关心多 agent / swarm
 直接从：
-- [卷六｜多 agent 协作运行时](./volume-6/README.md)
+- [卷六｜多 agent 协作运行时](./volume-6/index.md)
 
 开始。
 
@@ -189,12 +189,12 @@ status: draft
 
 ## 六卷快速跳转
 
-- [卷一｜运行时底座](./volume-1/README.md)
-- [卷二｜一条请求是怎么跑完整个系统的](./volume-2/README.md)
-- [卷三｜长上下文与会话恢复](./volume-3/README.md)
-- [卷四｜外部能力和扩展点是怎么接进来的](./volume-4/README.md)
-- [卷五｜执行边界与安全控制](./volume-5/README.md)
-- [卷六｜多 agent 协作运行时](./volume-6/README.md)
+- [卷一｜运行时底座](./volume-1/index.md)
+- [卷二｜一条请求是怎么跑完整个系统的](./volume-2/index.md)
+- [卷三｜长上下文与会话恢复](./volume-3/index.md)
+- [卷四｜外部能力和扩展点是怎么接进来的](./volume-4/index.md)
+- [卷五｜执行边界与安全控制](./volume-5/index.md)
+- [卷六｜多 agent 协作运行时](./volume-6/index.md)
 
 ---
 
