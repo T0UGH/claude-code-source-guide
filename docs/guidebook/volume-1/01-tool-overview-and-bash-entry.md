@@ -1,358 +1,264 @@
 ---
-title: 卷一 01｜Tool 总图与 BashTool 入口
-date: 2026-04-02
+title: 卷一 01｜Claude Code 到底是什么系统
+date: 2026-04-06
 tags:
   - Claude Code
-  - tool
-  - BashTool
-  - 源码共读
+  - 系统全景
+  - Agent Runtime
+  - 源码导读
 ---
 
-# 卷一 01｜Tool 总图与 BashTool 入口
+# 卷一 01｜Claude Code 到底是什么系统
 
 ## 导读
 
-- **所属卷**：卷一：运行时底座
-- **卷内位置**：Tool 1/9
+- **所属卷**：卷一：Claude Code 系统全景导论
+- **卷内位置**：01 / 06
 - **上一篇**：无
-- **下一篇**：[下一篇：Tool 体系总览](./02-tool-system-overview.md)
+- **下一篇**：[下一篇：Claude Code 由哪些核心对象组成](./02-tool-system-overview.md)
 
-很多人第一次看 Claude Code 源码时，注意力会先被主循环、消息流、上下文压缩这些更显眼的部分吸走。但如果想真正理解这个系统是怎么把“模型能力”落成“可执行能力”的，tool 体系其实更适合作为卷一入口。
+如果第一次看 Claude Code，很容易把它理解成一个会聊天的 CLI，或者一组能调工具的工程功能集合。这样理解不算错，但远远不够。真正的问题是：**Claude Code 到底是一套怎样的系统？**
 
-这一篇要回答两个问题：**为什么卷一先讲 tool，而不是先讲主循环；为什么 BashTool 会成为理解整套工具体系的最好入口。** 顺着这两个问题往下看，tool 就不会再是“有很多工具目录”的散点印象，而会变成一条清楚的 runtime 执行链。
+如果这个问题不先讲清，后面无论去看主循环、工具、上下文，还是 skill、agent、MCP 这些扩展能力，读起来都会像在逛一堆分散源码，而不是在理解同一个 runtime。
 
----
+所以这一篇先不急着深挖某个局部，而是先做一件更基础的事：
 
-## 这篇看什么
-
-这一篇的目标不是把 `Tool.ts` 讲成制度手册，而是先把读者带到一个能站住的位置：Claude Code 里的 tool 到底是什么、它在 runtime 里处在哪一层、模型产出的 `tool_use` 又是怎么一路落成真实的 `tool.call(...)`。
-
-大概顺序是：
-
-1. 先看 `src/Tool.ts`，建立 tool 的低分辨率总图
-2. 再看 `src/utils/processUserInput/processUserInput.ts`，厘清这层负责什么、不负责什么
-3. 接着追“tool 到底在哪里被真正调用”，把主链一路追到
-   - `src/query.ts`
-   - `src/services/tools/toolOrchestration.ts`
-   - `src/services/tools/toolExecution.ts`
-   - 最终的 `tool.call(...)`
-4. 最后落到一个最重的具体样本：`src/tools/BashTool/BashTool.tsx`
-
-这一轮结束后，tool 体系至少会从“工具很多”变成“执行链清楚”。
+> **先把 Claude Code 看成一个完整系统，再决定后面各个局部该怎么理解。**
 
 ---
 
-## 1. 先建立一个总图：Tool 在 Claude Code 里到底是什么
+## 先给判断：Claude Code 不是聊天壳，而是 Agent Runtime
 
-如果先不看细节，很多人会把 Claude Code 的 tool 直觉地理解成“模型可以调用的一组函数”。这个理解不能说全错，但远远不够。
+如果只看表面，Claude Code 很像一个更强的命令行聊天工具：
 
-真正把 `src/Tool.ts` 读下来，更准确的判断是：
+- 你输入一句话
+- 模型回复一段内容
+- 中间偶尔调工具
+- 最后把结果打印回终端
 
-> **tool 不是函数清单，而是 runtime 里的正式执行对象。**
+但如果把源码和运行方式一起看，真正更准确的判断是：
 
-它不只是负责“做事”，还同时带着输入校验、权限判断、执行约束，以及给 UI 展示 tool 使用过程和结果的协议。
+> **Claude Code 不是“会聊天的 CLI”，而是一套把模型、运行时、执行能力、上下文和扩展能力编织在一起的 agent runtime。**
 
-这一层最值得先改掉的直觉不是“Claude Code 有很多工具”，而是：
+这里最关键的不是“它能不能聊天”，而是：
 
-> **tool 在这里并不是零散功能，而是一类可被 runtime 调度、校验、执行、展示的标准对象。**
+- 它能不能把一次用户输入变成一轮可持续展开的 agent turn
+- 它能不能把模型意图落成真实执行动作
+- 它能不能在执行过程中继续维持上下文、状态和恢复能力
+- 它能不能继续吸纳 skill、agent、subagent、MCP、plugin 这些扩展能力
 
-核心感受有几条。
+也就是说，Claude Code 的核心不是一个聊天前端，而是：
 
-### 1.1 tool 不只是执行单元，也是 UI 单元
+> **一套能够组织模型推理、工具执行、状态持续与能力扩展的运行时系统。**
 
-一个 Tool 除了 `call()` 之外，还有：
-
-- `renderToolUseMessage`
-- `renderToolUseProgressMessage`
-- `renderToolResultMessage`
-- `mapToolResultToToolResultBlockParam`
-
-这意味着 Claude Code 的工具不是“后端做事，前端随便显示”，而是工具自己就带着展示协议。
-
-### 1.2 `buildTool()` 是统一出厂函数
-
-所有工具都应该经 `buildTool()` 生成。它的作用不是花哨，而是把默认行为集中起来，比如：
-
-- 默认不并发安全
-- 默认不是只读
-- 默认不是破坏性操作
-- 默认权限检查放行到通用权限系统继续处理
-
-这样调用方拿到的永远是完整 Tool 对象，不用在外围到处补默认逻辑。
-
-### 1.3 `ToolUseContext` 很重
-
-`ToolUseContext` 里不只是工具执行参数，还带了大量 runtime 状态：
-
-- AppState
-- messages
-- readFileState
-- mcpClients
-- agentDefinitions
-- permission context
-- notification / prompt / OS notification 等回调
-
-也就是说，tool 运行时其实是深度嵌在整个 Claude Code runtime 里的，不是独立小模块。
+如果这一点不先立住，后面几卷几乎都会看歪。
 
 ---
 
-## 2. 一个关键误区：`processUserInput.ts` 不是 tool 执行层
+## 为什么很多人会先把它看浅
 
-如果顺着主循环入口往下读，很容易先盯上 `processUserInput.ts`，然后误以为“tool 应该就在这里被调起来”。
+之所以容易误判，是因为 Claude Code 最显眼的一层恰好不是它最本质的一层。
 
-但更准确的理解是：
+用户最先接触到的往往是：
 
-> **`processUserInput.ts` 是输入编排层，不是 tool 执行层。**
+- 一个 CLI 界面
+- 一轮对话输入输出
+- 一些命令和 slash command
+- 一些“帮我读文件 / 改代码 / 跑命令”的直接体验
 
-它主要做三件事：
+这些都是真实存在的，但它们更像是**表层交互面**，不是系统本体。
 
-1. 标准化输入
-   - 文本
-   - content blocks
-   - pasted images
-   - attachment messages
+如果顺着这层表象去理解，就会自然得到几个偏浅的结论：
 
-2. 决定走哪条路径
-   - `processBashCommand()`
-   - `processSlashCommand()`
-   - `processTextPrompt()`
+### 1. 它像一个加强版聊天壳
+错不在这里，而在于这只解释了“用户怎么看见它”，没有解释“系统怎么运作”。
 
-3. 在 query 前做最后一轮拦截
-   - UserPromptSubmit hooks
-   - additional contexts
-   - blocking / preventContinuation
+### 2. 它像一组工具调用能力的集合
+这也不算错，但如果只停在这里，就会把 tool 看成若干功能点，而看不见 runtime 如何调度、约束、展示、恢复和继续推进。
 
-所以这层负责的是：
+### 3. 它像一套工程 productivity features
+这更接近产品视角，但仍然没进入系统视角。你会知道它有哪些功能，却不知道这些功能为什么能被放进同一套运行时里。
 
-- 用户输入怎么进入系统
-- 进系统之后先走哪条路径
+换句话说，Claude Code 最容易被看浅，不是因为它表面做得不够明显，而是因为：
 
-但**不是**工具最终怎么执行。
-
-这一步之所以重要，是因为它把“人类输入进入系统”和“runtime 真正执行 tool”这两层分开了。前者解决的是入口分流，后者解决的是模型已经决定调用工具之后，系统怎么把 `tool_use` 变成真实执行。
+> **它最先暴露给用户的，是交互层；而真正该先理解的，是运行时层。**
 
 ---
 
-## 3. 真正的主链：从 `tool_use` 到 `tool.call(...)`
+## Claude Code 的系统总图
 
-这一篇最关键的问题其实在这里：
+如果先把细节都压住，Claude Code 至少可以先被看成下面这张图里的系统：
 
-> **tool 到底在哪里被真正调用？**
-
-答案不在 `processUserInput.ts`，而在下面这条链：
-
-```text
-query.ts
-  -> runTools(...)
-  -> runToolUse(...)
-  -> tool.call(...)
+```mermaid
+flowchart TD
+    U[用户输入] --> C[命令 / Prompt / 会话入口]
+    C --> R[Claude Code Runtime]
+    R --> M[模型推理]
+    M --> T[工具执行层]
+    T --> R
+    R --> X[上下文与状态管理]
+    X --> M
+    R --> E[扩展能力层]
+    E --> T
+    E --> M
+    R --> O[输出与继续运行]
+    O --> U
 ```
 
-这一条链立起来之后，tool 系统才真正从“抽象定义”和“输入入口”变成 runtime 里的执行路径。
+这张图不用看得太细，先抓住三件事就够了。
 
-### 3.1 `query.ts`
+### 1. 用户并不是直接面对模型
+用户输入先进的不是“裸模型”，而是 Claude Code runtime。也就是说，真正接住用户请求的是运行时系统，不是单一模型 API。
 
-`query.ts` 在模型返回 assistant message 后，会抽取 `tool_use blocks`，然后交给 `runTools(...)`。
+### 2. 模型也不是直接面对世界
+模型虽然能推理，但真正把意图落成动作，还要经过工具执行层、权限约束、上下文管理和扩展能力层。
 
-这里有一个很关键的边界：
+### 3. 系统不是“一轮结束就归零”
+Claude Code 不是收一条输入、吐一条输出就结束，而是始终在维护：
 
-- `processUserInput.ts` 处理的是“人类输入”
-- `query.ts` 处理的是“模型输出”
+- 当前消息历史
+- 当前状态
+- 当前上下文
+- 当前可用能力
+- 当前运行中的任务
 
-所以 tool 系统真正开始启动，不是在用户刚输入时，而是在模型已经决定要发起 `tool_use` 之后。
-
-### 3.2 `toolOrchestration.ts`
-
-`runTools(...)` 不直接执行具体 tool，它先做调度：
-
-- 读 `isConcurrencySafe`
-- 分批
-- 并发安全的并发跑
-- 不并发安全的串行跑
-
-也就是说，这层更像 scheduler，不是 executor。
-
-### 3.3 `toolExecution.ts`
-
-真正开始接触具体 tool 的地方，是 `runToolUse(...)`。
-
-这里最关键的一步是：
-
-```ts
-findToolByName(toolUseContext.options.tools, toolName)
-```
-
-模型只给了一个 `tool_use.name`，runtime 在这里把它绑定成真实的 Tool 对象。
-
-后面再走：
-
-- `validateInput`
-- `checkPermissions`
-- `tool.call(...)`
-
-所以这一层最清晰的结论是：
-
-> **Claude Code 不是主循环直接调工具，而是模型先产出结构化 `tool_use`，runtime 再把它翻译成真实的 `tool.call(...)`。**
-
-这也解释了为什么 tool 系统在源码里看起来不像“函数注册表”。它真正承接的，是模型输出和执行系统之间的翻译层。
+所以它更像一个持续运行的 agent runtime，而不是一次性问答界面。
 
 ---
 
-## 4. 为什么 BashTool 是理解整套 tool 体系的最好入口
+## 从系统角度看，Claude Code 至少有五层
 
-如果只是想找一个“具体工具”来读，Claude Code 里其实有很多候选。但 BashTool 之所以适合作为卷一第一篇的入口，不是因为它最常见，而是因为它最能暴露整个 tool runtime 的重量。
+如果把这套系统进一步压成稳定的阅读对象，我觉得最值得先认清的是下面五层。
 
-更直接地说：
+### 第一层：交互入口层
+这一层回答的是：
 
-> **BashTool 不是普通工具样本，而是 Claude Code tool 体系里压强最大的一类基础设施型工具。**
+- 用户到底通过什么入口把意图送进系统
+- 普通 prompt、命令、slash command、后续扩展入口分别在什么位置
 
-它同时碰到了：
+这一层很显眼，但不是最深的一层。
 
-- 执行策略
-- 安全策略
-- 并发策略
-- 长任务与后台任务
-- 输出组织
-- UI 呈现
+### 第二层：主循环 / Runtime 编排层
+这一层回答的是：
 
-也就是说，读 BashTool，不只是读一个 shell 工具，而是在看 Claude Code 怎样把“模型调用工具”做成一套真正的运行时执行系统。
+- 一次请求怎么被组织成一轮 agent turn
+- 模型输出怎样继续触发工具、继续推理、继续回应
+- 为什么 Claude Code 不是“一问一答结束”
 
-### 4.1 并发安全直接建立在只读判断上
+这是系统真正动起来的核心层。
 
-BashTool 里这句很关键：
+### 第三层：执行能力层
+这一层回答的是：
 
-```ts
-isConcurrencySafe(input) {
-  return this.isReadOnly?.(input) ?? false;
-}
-```
+- 模型产生的结构化意图如何落成真实动作
+- tool 在系统里是什么
+- 为什么工具不是“函数列表”，而是正式执行对象
 
-也就是说：
+这是 Claude Code 把“智能”接到“行动”上的关键接口层。
 
-- 只读 bash → 更容易并发
-- 非只读 bash → 更谨慎
+### 第四层：上下文与状态层
+这一层回答的是：
 
-Claude Code 没给 bash 单独再造一套并发规则，而是把并发策略直接挂在只读判断上。
+- Claude Code 如何在多轮运行中维持上下文
+- 为什么要有 context construction、session、collapse、compact、restore 这些机制
+- 为什么这套系统不会越跑越乱
 
-### 4.2 `isReadOnly()` 不是表面文章
+如果没有这层，Claude Code 只能是一轮一轮地短促工作，无法持续推进复杂任务。
 
-它背后接的是 `checkReadOnlyConstraints(...)`，而不是简单看命令前缀。
+### 第五层：扩展能力层
+这一层回答的是：
 
-这也解释了为什么 `readOnlyValidation.ts` 会很大。BashTool 的很多运行策略，实际上都绕不过这层判断。
+- skill、agent、subagent、MCP、plugin 这些能力如何被装进系统
+- 为什么 Claude Code 不是一个封闭产品，而是一套会继续长能力的 runtime
 
-### 4.3 输入输出 schema 很重
+这一层决定了 Claude Code 的上限不只是“内置功能”，而是“可继续装配的能力系统”。
 
-BashTool 的输入不只是 `command`，还有：
+可以先把这五层记成一句话：
 
-- `timeout`
-- `description`
-- `run_in_background`
-- `dangerouslyDisableSandbox`
-- `_simulatedSedEdit`
-
-输出也不只是 `stdout/stderr`，还包括：
-
-- `interrupted`
-- `isImage`
-- `backgroundTaskId`
-- `assistantAutoBackgrounded`
-- `returnCodeInterpretation`
-- `persistedOutputPath`
-- `persistedOutputSize`
-
-所以 BashTool 返回的并不是“命令结果”，而是“命令结果 + runtime 元信息 + UI 所需信息”。
-
-### 4.4 它从一开始就不是“一次性返回结果”设计
-
-`call()` 里不是直接 `exec(command)`，而是走 `runShellCommand()`，用 async generator 做：
-
-- 流式 progress
-- 最终结果返回
-- 后台任务切换
-
-这让 BashTool 从结构上就更像一个 session 内任务执行器，而不是普通 shell wrapper。
-
-### 4.5 它承担了很多产品级判断
-
-这部分最能看出 Claude Code 的产品哲学：
-
-- 检测阻塞型 `sleep N`，引导用后台任务或 Monitor
-- 长任务可以自动 background
-- 大输出写到磁盘，再给模型 preview + path
-- 图片输出会识别并特殊处理
-- simulated sed edit 直接按 preview 结果落盘，避免 preview 和实际执行不一致
-
-这些都说明 BashTool 不只是工具，而是 Claude Code 执行体验的核心承载点之一。
+> **Claude Code 先接住用户，再组织主循环，再把模型意图落成执行，再维持上下文与状态，最后不断接入新的能力。**
 
 ---
 
-## 5. 目前这轮对 tool 体系的整体判断
+## 这套系统真正难的地方不在“会不会调工具”
 
-如果把这一轮的收获压成几句话，可以记成下面这样。
+如果只从产品宣传语看，Claude Code 最容易被记住的是：
 
-### 5.1 tool 体系是五层结构，不是一团实现
+- 会读文件
+- 会改代码
+- 会跑命令
+- 会用 subagent
+- 会接 MCP
 
-1. `processUserInput.ts`：输入编排层
-2. `query.ts`：模型输出解释层
-3. `toolOrchestration.ts`：调度层
-4. `toolExecution.ts`：执行层
-5. `Tool.ts`：抽象层
+但这些都只是“能力名词”。
 
-### 5.2 Claude Code 的 tool 系统不是“模型直接调函数”
+真正困难、也真正决定它系统水平的，是下面这些问题：
 
-它中间有很明确的 runtime 翻译层：
+### 1. 一次请求如何被组织成一轮可持续工作的 agent turn
+不是“答一句”就结束，而是可能继续调用工具、继续处理结果、继续做下一步。
 
-- 模型产出 `tool_use`
-- runtime 抽取 `tool_use`
-- runtime 调度、校验、执行
-- 再映射成 `tool_result`
+### 2. 模型意图怎样被稳定地翻译成执行动作
+不是让模型直接碰世界，而是让 runtime 接住它的结构化意图，再决定怎么执行、怎么约束、怎么展示。
 
-### 5.3 BashTool 是最重的基础设施型 tool
+### 3. 长任务与多轮任务如何持续下去
+不是每轮都从零开始，而是能记住、压缩、恢复、继续推进。
 
-它表面上是 shell 工具，实际上背着：
+### 4. 新能力如何被接进来而不把系统搞散
+不是多加几个功能按钮，而是 skill、agent、MCP、plugin 这些东西都能放进同一套 runtime 语义里。
 
-- 执行策略
-- 安全策略
-- UI 策略
-- 输出整理策略
+所以更准确地说：
 
-这也是为什么 BashTool 看起来特别肥。
+> **Claude Code 的价值不在于“它会几个动作”，而在于它怎样把这些动作组织进一套可以持续工作的系统。**
 
 ---
 
-## 6. 后面最值得继续读的 tool
+## 为什么这本书要先这样读
 
-这一篇先把 tool 体系的总图立起来。顺着这条线继续往下，最值得补的不是“再找一个复杂工具随机看”，而是把 BashTool 周边的关键判断和本地文件能力线接上。
+如果现在就一头扎进具体文件，比如先去看 BashTool、FileReadTool、runAgent、compact、MCP auth，你当然也能看懂很多局部细节。
 
-接下来优先级最高的几类是：
+但问题是：
 
-### 文件与搜索类
-- `FileReadTool`
-- `FileEditTool`
-- `FileWriteTool`
-- `GrepTool`
-- `GlobTool`
+- 你会知道它们各自做了什么
+- 却不一定知道它们为什么会出现在同一套系统里
+- 也不一定知道它们在整张地图上各自站在哪
 
-### runtime / agent 类
-- `SkillTool`
-- `AgentTool`
-- `ToolSearchTool`
+这就是为什么这本书的阅读路径不该按“源码目录”来组织，而应该按“读者理解坡度”来组织。
 
-### 外部连接类
-- `MCPTool`
-- `WebFetchTool`
-- `WebSearchTool`
-- `LSPTool`
+先有系统地图，再有局部细节，读者脑子里才会形成一个稳定的理解顺序：
 
-如果按当前这篇的主线继续推进，最自然的是两条线：
+1. 它是什么系统
+2. 它由什么对象组成
+3. 它怎么跑一轮
+4. 它怎么执行
+5. 它怎么持续
+6. 它怎么扩展
 
-1. 继续深读 `readOnlyValidation.ts`
-2. 补 `FileReadTool` / `FileEditTool`
+后面每一卷，其实都只是在继续拆这六个问题中的一部分。
 
-前者能补清 BashTool 最核心的运行判断；后者能把“本地文件操作”这条主能力线补完整。
+---
+
+## 这一卷之后会继续拆什么
+
+新卷一接下来会顺着下面这条路径往前推：
+
+### 02｜Claude Code 由哪些核心对象组成
+先把 prompt、command、tool、agent、skill、context、session、runtime 这些对象认全。
+
+### 03｜一次请求是怎么跑成一次 Agent Turn 的
+从系统总图切到动态主线，但只先看总流程。
+
+### 04｜Claude Code 怎么把模型意图落成执行能力
+进入 tool runtime 的总图，不急着深挖具体工具。
+
+### 05｜Claude Code 怎么维持上下文、状态与持续工作
+解释为什么这套系统不是“一问一答后就重启”。
+
+### 06｜Claude Code 怎么长出更多能力
+把 skill、agent、subagent、MCP、plugin 的扩展地图先立起来，并顺手把后面几卷导航出去。
+
+也就是说，卷一读完以后，你不一定已经掌握某个局部实现，但你脑子里应该已经有了一张稳定的 Claude Code 系统地图。后面再进入主循环、工具系统、上下文管理或扩展机制时，你看到的就不再是散点文件，而是同一套 runtime 的不同侧面。
 
 ---
 
 ## 一句话收口
 
-> Claude Code 的 tool 体系，本质上不是“模型直接调用一组函数”，而是模型先产出结构化 `tool_use`，runtime 再把它翻译成可调度、可校验、可执行、可展示的正式执行流程。BashTool 之所以适合作为卷一入口，不是因为它只是最常见的工具，而是因为它最完整地暴露了这套运行时设计。
+> Claude Code 最重要的，不是它会不会聊天，也不是它能不能调工具，而是它怎样把模型、运行时、执行能力、上下文和扩展能力编织成一套可持续工作的 agent runtime。这一卷的任务，就是先把这张地图替你搭出来。
