@@ -1,128 +1,121 @@
 # Claude Code 源码导读手册
 
-> 六卷系统拆解 Claude Code 的内部结构。
+> 按 7 个认知台阶重组 Claude Code 内部结构的中文源码导读项目。
 
-这是一个面向中文读者的公开项目：
-把 Claude Code 的核心源码重新整理成一套**可连续阅读、可按主题跳读、也可作为系统设计参考**的导读手册。
+这是一个面向中文读者的公开项目。
 
-它不是零散笔记归档，也不是按写作时间堆起来的源码阅读记录。  
-它更像一套按系统结构重排后的 guidebook：
+它不是零散笔记归档，也不是按源码目录平铺的阅读记录，而是把 Claude Code 重新整理成一套**可连续阅读、可按主题跳读、也可作为系统设计参考**的 guidebook。
 
-- 从 runtime 底座开始
-- 进入请求主链
-- 解释长上下文与会话恢复
-- 再展开扩展体系、权限边界与多 agent 协作
+当前仓库的正式阅读入口已经切到 **guidebook v2**。
 
 ## 在线阅读
 
-- 文档站：<https://t0ugh.github.io/claude-code-source-guide/>
-- Guidebook 总览：<https://t0ugh.github.io/claude-code-source-guide/guidebook/>
+- 文档站：首页：<https://t0ugh.github.io/claude-code-source-guide/>
+- Guidebook v2 总览：<https://t0ugh.github.io/claude-code-source-guide/guidebookv2/>
 
-## 这套手册为什么值得看
+说明：
+- `guidebookv2/` 是当前正式阅读入口
+- `guidebook/` 旧资产仍保留在仓库中，但不再作为默认导航
 
-如果你在用 Claude Code，或者正在研究 coding agent / AI runtime，最容易遇到的问题往往不是“怎么用某个功能”，而是：
+## 这套手册在讲什么
 
-- 它的主循环到底怎么跑
-- tool / agent / skill / prompt 分别处在哪一层
-- 为什么长会话还能继续工作
-- MCP、hooks、plugin 为什么不是一类东西
-- 为什么它的权限系统不是几个确认框
-- team / teammate 为什么已经像一套 swarm runtime
+这套手册不是带你“逛源码目录”，而是想回答一串更关键的问题：
 
-这套手册的目标，就是把这些问题系统地讲清楚。
+- Claude Code 到底是什么系统
+- 一次请求怎么跑成一次 Agent Turn
+- 模型决定做事之后，执行能力怎么真正落地
+- 上下文、状态和恢复机制为什么能让系统持续工作
+- Claude Code 怎样接入外部能力，并长成一个可扩展平台
+- 为什么它的多 agent 能力已经更像协作运行时，而不只是“多开几个 agent”
+- 用户入口、运行时接口、工作流控制层，最后又怎样被收成今天这个产品
 
-## 六卷分别讲什么
+## 七卷分别讲什么
 
-### 卷一｜运行时底座
-讲 Claude Code 的基础部件：
-- tool
-- agent
-- skill
-- prompt
+### 卷一｜Claude Code 系统全景导论
+先回答：**Claude Code 到底是什么系统。**
 
-### 卷二｜一条请求是怎么跑完整个系统的
-讲主线程请求主链：
-- QueryEngine
-- query(...)
-- processUserInput
-- messages.ts
-- prompt / context 组装
+这一卷建立全景图，帮助读者先看清核心对象、层次关系和整体轮廓。
 
-### 卷三｜长上下文与会话恢复
-讲长会话能力：
-- compact
-- microCompact
-- snip
-- context collapse
-- sessionStorage
-- conversationRecovery
-- sessionRestore
+### 卷二｜一次 Agent Turn 怎么跑起来
+回答：**一次用户请求怎么真正进入系统，并闭合成一轮 agent turn。**
 
-### 卷四｜外部能力和扩展点是怎么接进来的
-讲扩展体系：
-- MCP
-- hooks
-- plugin
+这一卷是动态主线卷，重点在请求入口、主循环、QueryEngine 与当前 turn 的形成。
 
-### 卷五｜执行边界与安全控制
-讲权限系统：
-- permission decision
-- BashTool 权限模型
-- 路径授权
-- policy limits
+### 卷三｜工具系统怎么把模型意图落成执行
+回答：**模型已经决定做事之后，runtime 怎么把意图落成现实执行。**
+
+这一卷进入执行层，重点看 tool abstraction、tool orchestration 和本地能力接入。
+
+### 卷四｜上下文与状态怎么维持系统持续工作
+回答：**Claude Code 为什么不是一轮跑完就散，而是能持续工作。**
+
+这一卷重点是上下文构造、状态维持、压缩治理与恢复机制。
+
+### 卷五｜外部扩展与多代理能力
+回答：**Claude Code 怎样长出更多能力，并把系统外部的能力源接进来。**
+
+这一卷聚焦 skills、MCP、agents、hooks、plugins 等扩展对象。
 
 ### 卷六｜多 agent 协作运行时
-讲 team / teammate / swarm runtime：
-- team 生命周期
-- teammate runtime
-- mailbox 协议
-- Local / Remote / teammate 边界
+回答：**为什么 Claude Code 的多 agent 能力，本质上是一层协作运行时。**
+
+这一卷重点看 team / teammate runtime、生命周期、mailbox 协议与 swarm 收束。
+
+### 卷七｜命令、工作流与产品层整合
+回答：**用户入口、运行时接口、工作流控制层，是怎样最终收成一个完整产品形态的。**
+
+这一卷是控制层 / 产品整合卷，负责把 command、workflow、runtime interface 和产品形态收在一起。
 
 ## 适合谁读
 
 这套手册主要适合：
 
 1. **Claude Code 用户 / 爱好者**  
-   想知道它到底是怎么工作的，而不只满足于“会用”。
+   不只想“会用”，还想知道它为什么这样工作。
 
-2. **做 coding agent / AI runtime 的工程师**  
-   想借 Claude Code 看运行时编排、上下文治理、权限边界和多 agent 协作的工程设计。
+2. **做 coding agent / AI runtime / 多 agent 系统的工程师**  
+   想看运行时编排、上下文治理、执行层、扩展层、权限边界与协作系统的工程取舍。
 
 3. **想按主题快速跳读的人**  
-   你不一定准备从头读到尾，只想快速看 QueryEngine、MCP、权限系统、team runtime 等某一块。
+   不一定从头读到尾，但想快速抓某一条主线，比如 QueryEngine、工具执行层、MCP、team runtime 或产品控制层。
 
 ## 从哪里开始读
 
 ### 如果你第一次进入这个项目
 建议先读：
-- [Guidebook 总览](./docs/guidebook/index.md)
-- [卷一｜运行时底座](./docs/guidebook/volume-1/index.md)
-- [卷二｜一条请求是怎么跑完整个系统的](./docs/guidebook/volume-2/index.md)
 
-### 如果你只想抓主线
-可以直接看每卷的导读页：
-- [卷一](./docs/guidebook/volume-1/index.md)
-- [卷二](./docs/guidebook/volume-2/index.md)
-- [卷三](./docs/guidebook/volume-3/index.md)
-- [卷四](./docs/guidebook/volume-4/index.md)
-- [卷五](./docs/guidebook/volume-5/index.md)
-- [卷六](./docs/guidebook/volume-6/index.md)
+- [Guidebook v2 总览](./docs/guidebookv2/README.md)
+- [卷一｜Claude Code 系统全景导论](./docs/guidebookv2/volume-1/index.md)
+- [卷二｜一次 Agent Turn 怎么跑起来](./docs/guidebookv2/volume-2/index.md)
+
+### 如果你只想先抓整体结构
+可以直接看七卷导读：
+
+- [卷一](./docs/guidebookv2/volume-1/index.md)
+- [卷二](./docs/guidebookv2/volume-2/index.md)
+- [卷三](./docs/guidebookv2/volume-3/index.md)
+- [卷四](./docs/guidebookv2/volume-4/index.md)
+- [卷五](./docs/guidebookv2/volume-5/index.md)
+- [卷六](./docs/guidebookv2/volume-6/index.md)
+- [卷七](./docs/guidebookv2/volume-7/index.md)
 
 ## 仓库结构
 
-- `docs/guidebook/` — 手册正文与各卷导读
-- `docs/notes/` — 结构重组、编辑与建站相关工作笔记
-- `docs/superpowers/` — 这轮项目推进中用到的设计稿与实施计划
+- `docs/guidebookv2/` — 当前正式阅读入口与重写结果
+- `docs/guidebook/` — 旧资产与旧卷结构，保留作参考与迁移素材
+- `docs/notes/` — 重组、编辑、建站相关工作笔记
+- `docs/superpowers/` — 设计稿、实施计划与过程性文档
 
 ## 当前状态
 
 目前仓库已经完成：
-- 六卷正文迁移
-- 第一轮技术编辑收稿
-- 各卷导读页
-- guidebook 总入口页
-- MkDocs Material 文档站部署
+
+- GitHub Pages 默认入口切到 `guidebookv2/`
+- v2 七卷主结构已经建立
+- 卷一到卷七均已具备卷级入口页
+- MkDocs Material 文档站已部署并可在线阅读
+- 旧版 `guidebook/` 继续保留在仓库中，方便回收旧资产
 
 ## 一句话理解这个项目
 
-> 这不是把 Claude Code 源码拆成很多零件的资料堆，而是把它重新整理成一套适合中文读者系统阅读的源码导读手册。
+> 这不是把 Claude Code 源码拆成很多零件的资料堆，而是把它重新整理成一套适合中文读者建立系统心智模型的源码导读手册。
