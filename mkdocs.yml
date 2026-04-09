@@ -59,7 +59,6 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
 
-
 exclude_docs: |
   guidebook/README.md
   guidebook/volume-2/README.md
@@ -83,102 +82,91 @@ extra_javascript:
 
 nav:
   - 首页: index.md
-  - Guidebook 总览: guidebook/index.md
-  - 卷一｜运行时底座:
-      - 导读: guidebook/volume-1/index.md
-      - 01 Tool 总图与 BashTool 入口: guidebook/volume-1/01-tool-overview-and-bash-entry.md
-      - 02 Tool 体系总览: guidebook/volume-1/02-tool-system-overview.md
-      - 03 BashTool 不是跑 shell 这么简单: guidebook/volume-1/03-bashtool-is-not-just-shell.md
-      - 04 FileReadTool: guidebook/volume-1/04-filereadtool.md
-      - 05 FileEditTool: guidebook/volume-1/05-fileedittool.md
-      - 06 FileWriteTool: guidebook/volume-1/06-filewritetool.md
-      - 07 GrepTool: guidebook/volume-1/07-greptool.md
-      - 08 ToolSearchTool: guidebook/volume-1/08-toolsearchtool.md
-      - 09 主循环里 tool 怎么被接住: guidebook/volume-1/09-how-tools-enter-runtime.md
-      - 10 AgentTool: guidebook/volume-1/10-agenttool.md
-      - 11 runAgent 装配线: guidebook/volume-1/11-runagent-assembly-line.md
-      - 12 forkSubagent: guidebook/volume-1/12-forksubagent.md
-      - 13 loadAgentsDir: guidebook/volume-1/13-loadagentsdir.md
-      - 14 builtInAgents: guidebook/volume-1/14-builtinagents.md
-      - 15 SkillTool 桥位: guidebook/volume-1/15-skilltool-bridge.md
-      - 16 loadSkillsDir: guidebook/volume-1/16-loadskillsdir.md
-      - 17 SkillTool 执行入口: guidebook/volume-1/17-skilltool-execution-entry.md
-      - 18 forkedAgent: guidebook/volume-1/18-forkedagent.md
-      - 19 runAgent 接 skill 主干: guidebook/volume-1/19-runagent-skill-mainline.md
-      - 20 processPromptSlashCommand: guidebook/volume-1/20-processpromptslashcommand.md
-      - 21 skill frontmatter 字段速查: guidebook/volume-1/21-skill-frontmatter-fields.md
-      - 22 frontmatter 是运行时接口: guidebook/volume-1/22-frontmatter-runtime-interface.md
-      - 23 什么样的 skill 才成立: guidebook/volume-1/23-good-runtime-skill.md
-      - 24 skillify: guidebook/volume-1/24-skillify.md
-      - 25 verify: guidebook/volume-1/25-verify.md
-      - 26 debug: guidebook/volume-1/26-debug.md
-      - 27 skills 结语: guidebook/volume-1/27-skills-conclusion.md
-      - 28 name / description 何时暴露: guidebook/volume-1/28-skill-name-description.md
-      - 29 when_to_use vs description: guidebook/volume-1/29-when-to-use-vs-description.md
-      - 30 skill vs agent: guidebook/volume-1/30-skill-vs-agent.md
-      - 31 prompt 指令层: guidebook/volume-1/31-prompt-as-instruction-layer.md
-  - 卷二｜请求主链:
-      - 导读: guidebook/volume-2/index.md
-      - 01 从 query 到 tool.call 的连接处: guidebook/volume-2/01-from-query-to-tool-call.md
-      - 02 主循环在编排一次完整 agent 回合: guidebook/volume-2/02-full-agent-turn.md
-      - 03 QueryEngine 总入口: guidebook/volume-2/03-queryengine-entry.md
-      - 04 query(...) 主循环: guidebook/volume-2/04-query-main-loop.md
-      - 05 processUserInput: guidebook/volume-2/05-process-user-input.md
-      - 06 getAttachmentMessages: guidebook/volume-2/06-get-attachment-messages.md
-      - 07 messages.ts: guidebook/volume-2/07-messages-normalization.md
-      - 08 system prompt 和 context: guidebook/volume-2/08-system-prompt-and-context.md
-      - 09 旧消息压缩切边投影: guidebook/volume-2/09-collapse-keeps-working.md
-      - 10 context collapse: guidebook/volume-2/10-context-collapse-read-time-projection.md
-      - 11 例子串主链: guidebook/volume-2/11-queryengine-example-walkthrough.md
-      - 12 通俗解释主链: guidebook/volume-2/12-queryengine-example-plain.md
-      - 13 system / user / context 三分: guidebook/volume-2/13-system-user-contexts.md
-  - 卷三｜长上下文与恢复:
-      - 导读: guidebook/volume-3/index.md
-      - 01 主循环术语表: guidebook/volume-3/01-main-loop-glossary.md
-      - 02 主循环时序图版: guidebook/volume-3/02-main-loop-sequence-diagram.md
-      - 03 长上下文每轮都重算吗: guidebook/volume-3/03-does-long-context-recompute-every-turn.md
-      - 04 sessionStorage: guidebook/volume-3/04-session-storage.md
-      - 05 compact: guidebook/volume-3/05-compact.md
-      - 06 microCompact: guidebook/volume-3/06-microcompact.md
-      - 07 compact vs microCompact: guidebook/volume-3/07-compact-vs-microcompact.md
-      - 08 snip: guidebook/volume-3/08-snip.md
-      - 09 cache_edits / content replacement: guidebook/volume-3/09-cache-edits-and-content-replacement.md
-      - 10 snip 到底裁掉了什么: guidebook/volume-3/10-what-snip-removes.md
-      - 11 四种上下文形态并排: guidebook/volume-3/11-four-context-forms-side-by-side.md
-      - 12 20 条 agent 层设计: guidebook/volume-3/12-twenty-agent-design-takes.md
-      - 13 conversationRecovery: guidebook/volume-3/13-conversation-recovery.md
-      - 14 sessionRestore: guidebook/volume-3/14-session-restore.md
-      - 15 session 线收尾: guidebook/volume-3/15-session-line-conclusion.md
-  - 卷四｜扩展体系:
-      - 导读: guidebook/volume-4/index.md
-      - 01 MCP 接入 runtime: guidebook/volume-4/01-mcp-runtime-entry.md
-      - 02 MCPTool 调用链: guidebook/volume-4/02-mcptool-call-chain.md
-      - 03 CLI + skill vs MCP: guidebook/volume-4/03-cli-plus-skill-vs-many-mcp.md
-      - 04 MCP 认证状态机: guidebook/volume-4/04-mcp-auth-state-machine.md
-      - 05 MCP 权限边界: guidebook/volume-4/05-mcp-permission-boundary.md
-      - 06 hooks 总入口: guidebook/volume-4/06-hooks-runtime-entry.md
-      - 07 PreToolUse / PostToolUse: guidebook/volume-4/07-pretooluse-posttooluse-hooks.md
-      - 08 SessionStart / Stop hooks: guidebook/volume-4/08-sessionstart-stop-hooks.md
-      - 09 hooks 收尾: guidebook/volume-4/09-hooks-conclusion.md
-      - 10 plugin 能力面: guidebook/volume-4/10-plugin-capability-surface.md
-      - 11 pluginLoader: guidebook/volume-4/11-plugin-loader.md
-      - 12 plugin 接入面: guidebook/volume-4/12-plugin-attachment-points.md
-      - 13 validate / schema / policy: guidebook/volume-4/13-plugin-validate-schema-policy.md
-      - 14 install / marketplace: guidebook/volume-4/14-plugin-cli-install-marketplace.md
-      - 15 plugin 收口: guidebook/volume-4/15-plugin-conclusion.md
-  - 卷五｜权限边界:
-      - 导读: guidebook/volume-5/index.md
-      - 01 权限系统总图: guidebook/volume-5/01-permission-system-overview.md
-      - 02 tool execution 和 permission decision: guidebook/volume-5/02-tool-execution-and-permission-decision.md
-      - 03 BashTool 权限模型: guidebook/volume-5/03-bashtool-permission-model.md
-      - 04 路径权限与持久化: guidebook/volume-5/04-path-permissions-and-persistence.md
-      - 05 policy limits: guidebook/volume-5/05-policy-limits.md
-      - 06 权限系统收口: guidebook/volume-5/06-permission-system-conclusion.md
-  - 卷六｜多 agent 协作:
-      - 导读: guidebook/volume-6/index.md
-      - 01 team / teammate runtime 位置: guidebook/volume-6/01-team-runtime-position.md
-      - 02 team 生命周期: guidebook/volume-6/02-team-lifecycle.md
-      - 03 InProcessTeammateTask: guidebook/volume-6/03-inprocess-teammate-task.md
-      - 04 mailbox / idle / shutdown: guidebook/volume-6/04-mailbox-idle-shutdown.md
-      - 05 Local / Remote / teammate 边界: guidebook/volume-6/05-local-remote-teammate-boundaries.md
-      - 06 swarm 收口: guidebook/volume-6/06-team-runtime-conclusion.md
+  - Guidebook v2 总览: guidebookv2/README.md
+  - 卷一｜Claude Code 系统全景导论:
+      - 导读: guidebookv2/volume-1/index.md
+      - 01 Claude Code 到底是什么系统: guidebookv2/volume-1/01-claude-code-what-system-is-this.md
+      - 02 Claude Code 由哪些核心对象组成: guidebookv2/volume-1/02-what-are-the-core-objects.md
+      - 03 一次请求是怎么跑成一次 Agent Turn 的: guidebookv2/volume-1/03-how-a-request-becomes-an-agent-turn.md
+      - 04 Claude Code 怎么把模型意图落成执行能力: guidebookv2/volume-1/04-how-intent-becomes-execution.md
+      - 05 Claude Code 怎么维持上下文、状态与持续工作: guidebookv2/volume-1/05-how-claude-code-maintains-context-state-and-continuity.md
+      - 06 Claude Code 怎么长出更多能力: guidebookv2/volume-1/06-how-claude-code-grows-new-capabilities.md
+  - 卷二｜一次 Agent Turn 怎么跑起来:
+      - 导读: guidebookv2/volume-2/index.md
+      - 01 一次请求怎么进入 Claude Code 的主循环: guidebookv2/volume-2/01-how-a-request-enters-the-main-loop.md
+      - 02 用户输入在进入运行时之前经历了什么: guidebookv2/volume-2/02-what-happens-before-user-input-enters-runtime.md
+      - 03 请求是怎么进入 QueryEngine 的: guidebookv2/volume-2/03-how-a-request-enters-queryengine.md
+      - 04 当前 query 是怎么被组织起来的: guidebookv2/volume-2/04-how-the-current-query-is-organized.md
+      - 05 系统怎么决定这一轮要不要调用能力: guidebookv2/volume-2/05-how-the-system-decides-to-act.md
+      - 06 结果怎么重新回到当前 turn: guidebookv2/volume-2/06-how-results-return-to-the-current-turn.md
+      - 07 一轮 Agent Turn 什么时候继续，什么时候收口: guidebookv2/volume-2/07-when-an-agent-turn-continues-or-stops.md
+      - 08 把整条主循环重新压成一张稳定运行图: guidebookv2/volume-2/08-stable-main-loop-map.md
+  - 卷三｜工具系统怎么把模型意图落成执行:
+      - 导读: guidebookv2/volume-3/index.md
+      - 01 为什么模型意图不能直接变成现实动作: guidebookv2/volume-3/01-why-model-intent-cannot-directly-become-real-world-action.md
+      - 02 tool execution 主线总览: guidebookv2/volume-3/02-tool-execution-mainline-overview.md
+      - 03 为什么 tool 是正式运行时执行接口: guidebookv2/volume-3/03-why-tool-is-the-formal-runtime-execution-interface.md
+      - 04 orchestration 怎么接住一次 tool use: guidebookv2/volume-3/04-how-orchestration-handles-a-tool-use.md
+      - 05 为什么 BashTool 像通用执行器: guidebookv2/volume-3/05-why-bashtool-feels-like-the-general-executor.md
+      - 06 FileReadTool 怎么把真实材料带进当前判断: guidebookv2/volume-3/06-how-filereadtool-brings-real-material-into-current-judgment.md
+      - 07 FileEdit / FileWrite 怎么把判断写回文件: guidebookv2/volume-3/07-how-fileedit-and-filewrite-apply-judgment-back-to-files.md
+      - 08 GrepTool 怎么在真实材料里找东西: guidebookv2/volume-3/08-how-greptool-finds-things-in-real-material.md
+      - 09 ToolSearchTool 怎么找该用什么工具: guidebookv2/volume-3/09-how-toolsearchtool-finds-what-tool-to-use.md
+      - 10 为什么执行层不只处理本地工具: guidebookv2/volume-3/10-why-execution-layer-does-not-only-handle-local-tools.md
+      - 11 把执行层重新压成一张稳定运行图: guidebookv2/volume-3/11-stable-execution-layer-map.md
+  - 卷四｜上下文与状态怎么维持系统持续工作:
+      - 导读: guidebookv2/volume-4/index.md
+      - 01 为什么 Claude Code 不是一轮一重置系统: guidebookv2/volume-4/01-why-claude-code-is-not-a-one-turn-reset-system.md
+      - 02 为什么 messages、context、system prompt、transcript、session 不是一回事: guidebookv2/volume-4/02-why-messages-context-system-prompt-transcript-session-are-not-the-same.md
+      - 03 当前可工作上下文是怎么被组出来的: guidebookv2/volume-4/03-how-the-current-workable-context-is-assembled.md
+      - 04 为什么系统不能一直把整段历史原样发出去: guidebookv2/volume-4/04-why-the-system-cannot-keep-sending-the-entire-history.md
+      - 05 collapse / compaction / projection / restore 总图: guidebookv2/volume-4/05-overall-map-of-collapse-compaction-projection-restore.md
+      - 06 projection 与 collapse 管的是可工作视图，不是 transcript 本身: guidebookv2/volume-4/06-projection-and-collapse-govern-the-workable-view-not-the-transcript-itself.md
+      - 07 compact / compaction 是主动减载机制: guidebookv2/volume-4/07-compact-and-compaction-as-the-active-load-shedding-mechanism.md
+      - 08 restore / session recovery 怎么让系统恢复工作: guidebookv2/volume-4/08-restore-and-session-recovery-how-the-system-resumes-work.md
+  - 卷五｜外部扩展与多代理能力:
+      - 导读: guidebookv2/volume-5/index.md
+      - 01 为什么复杂场景会逼 Claude Code 长出扩展层: guidebookv2/volume-5/01-why-complex-scenarios-force-claude-code-to-grow-an-extension-layer.md
+      - 02 为什么 Claude Code 选择把扩展权交给用户: guidebookv2/volume-5/02-why-claude-code-chooses-to-hand-extension-power-to-users.md
+      - 03 skills / MCP / agents / subagents / hooks / plugins 怎么进入 Claude Code: guidebookv2/volume-5/03-how-skills-mcp-agents-subagents-hooks-and-plugins-enter-claude-code.md
+      - 04 为什么 skill 不只是长 prompt: guidebookv2/volume-5/04-why-skills-are-more-than-long-prompts.md
+      - 05 skill 怎么把用户体验、工作流和角色带进 Claude Code: guidebookv2/volume-5/05-how-skills-bring-user-experience-workflows-and-roles-into-claude-code.md
+      - 06 SkillTool 与 skills runtime 怎么接入执行链: guidebookv2/volume-5/06-how-skilltool-and-skills-runtime-enter-the-execution-chain.md
+      - 07 什么样的 skill 才是好 runtime skill: guidebookv2/volume-5/07-what-makes-a-good-runtime-skill.md
+      - 08 skill、tool、agent 的边界: guidebookv2/volume-5/08-boundaries-between-skill-tool-and-agent.md
+      - 09 为什么 MCP 不只是更多远程工具: guidebookv2/volume-5/09-why-mcp-is-not-just-more-remote-tools.md
+      - 10 Claude Code 怎么用 MCP 接外部能力与资源系统: guidebookv2/volume-5/10-how-claude-code-uses-mcp-to-connect-external-capabilities-and-resource-systems.md
+      - 11 MCP 与 skills、hooks、plugins 的关系: guidebookv2/volume-5/11-how-mcp-relates-to-skills-hooks-and-plugins.md
+      - 12 为什么 agent 不只是另一个工具: guidebookv2/volume-5/12-why-agent-is-not-just-another-tool.md
+      - 13 Claude Code 怎么长出更多执行者: guidebookv2/volume-5/13-how-claude-code-grows-more-executors.md
+      - 14 为什么 runAgent 像 agent runtime 装配线: guidebookv2/volume-5/14-why-runagent-feels-like-an-agent-runtime-assembly-line.md
+      - 15 为什么主 agent 需要 spawn subagents: guidebookv2/volume-5/15-why-the-main-agent-needs-to-spawn-subagents.md
+      - 16 为什么 forkSubagent 不只是启动另一个 agent: guidebookv2/volume-5/16-why-forksubagent-is-not-just-starting-another-agent.md
+      - 17 主 agent 与 worker agent 的边界和信息流: guidebookv2/volume-5/17-boundaries-and-information-flow-between-main-agent-and-worker-agent.md
+      - 18 agent、skill、tool 之间的边界与协调: guidebookv2/volume-5/18-boundaries-and-coordination-between-agent-skill-and-tool.md
+      - 19 为什么平台层需要 runtime seams，而不只是 capability objects: guidebookv2/volume-5/19-why-platform-layer-needs-runtime-seams-not-just-capability-objects.md
+      - 20 hooks 在 Claude Code runtime 里扮演什么角色: guidebookv2/volume-5/20-what-role-hooks-play-in-claude-code-runtime.md
+      - 21 不同 hooks 各自拦截、连接和修改什么: guidebookv2/volume-5/21-what-different-hooks-intercept-connect-and-modify-in-claude-code.md
+      - 22 为什么有了 skills、MCP、hooks 之后仍然需要 plugins: guidebookv2/volume-5/22-why-plugins-are-still-needed-after-skills-mcp-and-hooks.md
+      - 23 plugins 相对其他扩展对象占在哪一层: guidebookv2/volume-5/23-what-layer-plugins-occupy-relative-to-other-extension-objects.md
+      - 24 为什么 plugins 代表了更完整的打包、分发与复用形态: guidebookv2/volume-5/24-why-plugins-represent-a-more-complete-form-of-packaging-distribution-and-reuse.md
+      - 25 为什么这些扩展对象最终收束成平台层: guidebookv2/volume-5/25-why-these-extension-objects-converge-into-a-platform-layer.md
+  - 卷六｜多 agent 协作运行时:
+      - 导读: guidebookv2/volume-6/index.md
+      - 01 为什么 Claude Code multi-agent 是协作运行时: guidebookv2/volume-6/01-why-claude-code-multi-agent-is-a-collaboration-runtime.md
+      - 02 team 与 teammate runtime 在 Claude Code 里处在哪: guidebookv2/volume-6/02-where-team-and-teammate-runtime-sit-in-claude-code.md
+      - 03 teams 是怎么被创建、注册与清理的: guidebookv2/volume-6/03-how-teams-are-created-registered-and-cleaned-up.md
+      - 04 InProcessTeammate runtime 是怎么真正跑起来的: guidebookv2/volume-6/04-how-inprocess-teammate-runtime-actually-runs.md
+      - 05 mailbox / idle / shutdown 怎么把闭环合上: guidebookv2/volume-6/05-how-mailbox-idle-and-shutdown-close-the-loop.md
+      - 06 local、remote、teammate task 的边界: guidebookv2/volume-6/06-boundaries-between-local-remote-and-teammate-tasks.md
+      - 07 为什么 Claude Code team 本质上是一种 swarm: guidebookv2/volume-6/07-why-claude-code-team-is-a-swarm.md
+  - 卷七｜命令、工作流与产品层整合:
+      - 导读: guidebookv2/volume-7/index.md
+      - 01 为什么 Claude Code 需要控制层: guidebookv2/volume-7/01-why-claude-code-needs-a-control-layer.md
+      - 02 为什么 slash / prompt commands 不只是快捷方式: guidebookv2/volume-7/02-why-slash-and-prompt-commands-are-not-just-shortcuts.md
+      - 03 命令入口是怎样接进 runtime 的: guidebookv2/volume-7/03-how-command-entry-enters-the-runtime.md
+      - 04 为什么 frontmatter 与 command interface 是运行时接口: guidebookv2/volume-7/04-why-frontmatter-and-command-interface-are-runtime-interfaces.md
+      - 05 工作流控制层是怎样在 Claude Code 里成立的: guidebookv2/volume-7/05-how-the-workflow-control-layer-forms-in-claude-code.md
+      - 06 为什么 command、tool、skill、agent 的边界要在卷七收口: guidebookv2/volume-7/06-why-command-tool-skill-and-agent-boundaries-close-in-volume-7.md
+      - 07 为什么 Claude Code 的产品形态本质上是 runtime 被包装给用户的方式: guidebookv2/volume-7/07-why-claude-codes-product-form-is-runtime-packaged-for-users.md
+      - 08 为什么用户入口、运行时接口和工作流控制会收成今天这个产品: guidebookv2/volume-7/08-why-user-entry-runtime-interface-and-workflow-control-become-todays-product.md
