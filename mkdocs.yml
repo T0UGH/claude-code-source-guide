@@ -77,8 +77,8 @@ validation:
   unrecognized_links: warn
 
 extra_javascript:
-  - javascripts/mermaid-init.js
   - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+  - javascripts/mermaid-init.js
 
 nav:
   - 首页: index.md
