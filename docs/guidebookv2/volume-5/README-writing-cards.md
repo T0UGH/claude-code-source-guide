@@ -272,79 +272,225 @@ plugins 不是兜底概念，而是更完整的扩展封装层。
 
 # Skills 组（04-08）
 
-## 04｜为什么 skills 不是“长 prompt”那么简单
-- **这篇主问题**：为什么 skill 不是长一点的 prompt。
+> 这一组的新目标不是把旧 skills 文章拆开重排，而是用 **5 个连续问题** 帮读者同时得到两层收获：
+> 
+> 1. **源码心智模型**：看清 skill 在 Claude Code 里到底是什么、怎么成立、怎么运行。
+> 2. **使用反哺**：读完以后，读者会更会判断什么时候该写 skill、怎么写 skill、什么时候不该用 skill。
+>
+> 五篇固定坡度：
+>
+> 1. **它是什么，不是什么**
+> 2. **它为什么值钱**
+> 3. **它怎么运行**
+> 4. **它怎样才算写对**
+> 5. **它和其它扩展对象怎么分工**
+>
+> **源码锚点说明**：本组卡片里出现的 `cc/src/...` 路径，默认指向 Claude Code 上游源码镜像中的真实文件锚点，**不要求当前 `claude-code-source-guide` 仓库本地存在同路径源码**。如果本仓库无法直接核对源码，执行时应优先回收旧文中的 `source_files`、已完成文章中的源码证据链，以及写作卡片明确指定的函数 / 文件名，不得因为本地缺少 `cc/src` 就把文章写成无源码支撑的概念文。
+
+## 04｜Skill 不是长 prompt，而是 Claude Code 的方法单元
+- **这篇主问题**：为什么 skill 不能被理解成“更长、更规范一点的 prompt”。
+- **这篇对读者的直接收益**：读完以后，读者应立即放弃“把 skill 当提示词收藏夹”的心智模型，开始把 skill 理解成“可复用方法单元”。
+- **文章角色**：破误解篇。必须下刀够快，先劈开 skill ≠ prompt，后面四篇才站得住。
 - **必须回收的旧文章**：
   - `docs/guidebook/volume-1/21-skill-frontmatter-fields.md`
-  - `docs/guidebook/volume-1/23-good-runtime-skill.md`
-  - `docs/guidebook/volume-1/27-skills-conclusion.md`
-- **必读源码文件**：
-  - `cc/src/skills/`
-  - `cc/src/tools/SkillTool/SkillTool.ts`
-- **主证据链**：skill 有定义层 → 有 runtime 字段与语义 → 可被发现、加载、调用 → 不是纯文本 prompt 补丁。
-- **必须有的 mermaid 主图**：skill 从 markdown 定义到 runtime 对象的转化图。
-- **这篇绝对不能空讲的硬货**：必须明确 skill 至少有定义层、发现层、调用层三个层次。
-- **禁止偷吃的相邻篇职责**：不提前讲完 SkillTool 执行链，不提前吃 06。
-
-## 05｜skills 是怎样把用户经验、流程和角色结构接进 Claude Code 的
-- **这篇主问题**：用户工作方式怎样通过 skills 进入系统。
-- **必须回收的旧文章**：
-  - `docs/guidebook/volume-1/24-skillify.md`
-  - `docs/guidebook/volume-1/23-good-runtime-skill.md`
-  - `docs/guidebook/volume-1/27-skills-conclusion.md`
-- **必读源码文件**：
-  - `cc/src/skills/`
-  - `cc/src/commands/`
-  - `cc/src/tools/SkillTool/`
-- **主证据链**：用户经验 / 流程 / 角色结构 → 被写成 skill 定义 → 进入能力面 → 成为可调用的方法组织单元。
-- **必须有的 mermaid 主图**：用户方法进入系统的转化图。
-- **这篇绝对不能空讲的硬货**：必须说明 skill 进入的是“方法组织层”，不是底层动作原语层。
-- **禁止偷吃的相邻篇职责**：不把 06 的 SkillTool 主链写完，不把 08 的边界写完。
-
-## 06｜SkillTool / skills runtime 是怎样接进执行链的
-- **这篇主问题**：SkillTool / skills runtime 怎样真正接进执行链。
-- **必须回收的旧文章**：
   - `docs/guidebook/volume-1/15-skilltool-bridge.md`
-  - `docs/guidebook/volume-1/17-skilltool-execution-entry.md`
-  - `docs/guidebook/volume-1/16-loadskillsdir.md`
+  - `docs/guidebook/volume-1/27-skills-conclusion.md`
 - **必读源码文件**：
+  - `cc/src/skills/loadSkillsDir.ts`
   - `cc/src/tools/SkillTool/SkillTool.ts`
-  - `cc/src/tools/SkillTool/`
-  - `cc/src/commands/`
-  - `cc/src/tools/AgentTool/runAgent.ts`
-- **主证据链**：skill 被发现 → 进入能力面 → assistant 调用 SkillTool → SkillTool 匹配 skill → inline / fork 分流 → 结果回流当前 turn。
-- **必须有的 mermaid 主图**：SkillTool 接入执行链主图。
-- **这篇绝对不能空讲的硬货**：必须讲出 inline / fork 两条路径，必须讲出 SkillTool 和 AgentTool / runAgent 的连接。
-- **禁止偷吃的相邻篇职责**：不把“好 skill 的标准”写成主角，不把 agent 边界讲完。
+  - `cc/src/commands.ts` 或 `cc/src/commands/`
+- **主证据链**：`SKILL.md` 不会以裸文本直接运行 → frontmatter 会先被解析成 runtime 字段 → skill 会被编译成 `type: 'prompt'` 的 command-like 对象 → SkillTool 负责统一调用面 → 所以变化的不是字数，而是系统地位。
+- **必须有的 mermaid 主图**：`SKILL.md → frontmatter 解析 → Command 对象 → SkillTool 调用面` 的转化图。
+- **必须讲出来的 3 个硬点**：
+  1. skill 至少同时具有 **定义层 / 发现层 / 调用层**，不是纯内容层。
+  2. frontmatter 不是排版信息，而是运行时声明。
+  3. SkillTool 不是“读文档器”，而是方法单元的统一调用面。
+- **绝对不能写成什么**：
+  - “skill 和 prompt 都很重要”的和稀泥文
+  - 字段说明书
+  - 空泛的“Claude Code 很先进”概念文
+- **禁止偷吃的相邻篇职责**：
+  - 不展开 skill 为什么会显著提升使用体验（那是 05）
+  - 不把 inline / fork 执行链写完（那是 06）
+  - 不讲好坏 skill 判准（那是 07）
+- **标题下导语必须立住的一句话**：
+  - **prompt 是一次性输入，skill 是 Claude Code 可发现、可调用、可复用的方法单元。**
 
-## 07｜什么样的 skill 才算好的 runtime skill
-- **这篇主问题**：什么样的 skill 才能稳定进入 Claude Code 工作流。
+## 05｜为什么 Skill 能让 Claude Code 从“会做”变成“稳定会做”
+- **这篇主问题**：Claude Code 明明已经会对话、会调工具了，为什么还需要 skill 这一层。
+- **这篇对读者的直接收益**：读完以后，读者应会判断“什么值得 skill 化”，知道 skill 的价值在于把偶然成功的方法沉淀成稳定可复用的方法。
+- **文章角色**：价值锚点篇。它要把 skills 组立成“能力定制重轴”，不是“提示词复用组”。
+- **必须回收的旧文章**：
+  - `docs/guidebook/volume-1/24-skillify.md`
+  - `docs/guidebook/volume-1/23-good-runtime-skill.md`
+  - `docs/guidebook/volume-1/27-skills-conclusion.md`
+- **必读源码文件**：
+  - `cc/src/skills/bundled/skillify.ts`
+  - `cc/src/skills/loadSkillsDir.ts`
+  - `cc/src/tools/SkillTool/SkillTool.ts`
+- **主证据链**：没有 skill 时，高质量协作往往依赖用户重复交代 + 上下文刚好完整 + 模型这次刚好没跑偏 → `skillify` 证明官方真正想沉淀的是 `repeatable process`，包括 inputs / steps / success criteria / tools / agents / checkpoint → skill 的真正价值是把“这次做对了”变成“以后还能稳定做对”。
+- **必须有的 mermaid 主图**：`临场成功协作 → 抽取 repeatable process → 变成 reusable skill → 回到后续任务复用` 的闭环图。
+- **必须讲出来的 4 个硬点**：
+  1. skill 承接的是 **方法**，不是某次答案。
+  2. `skillify` 最值钱的不是自动生成文件，而是定义了“什么样的流程才值得沉淀”。
+  3. skill 让用户偏好、流程、成功标准、人工 checkpoint 变成未来可调用对象。
+  4. 这一层会直接改变 Claude Code 的稳定性，而不仅是便利性。
+- **绝对不能写成什么**：
+  - 抒情式“用户经验很重要”
+  - 只讲角色结构，不解释它为什么对稳定性有价值
+  - 把 05 写成 04 的另一版“skill 不是 prompt”
+- **禁止偷吃的相邻篇职责**：
+  - 不详细走 SkillTool 调用链（那是 06）
+  - 不把好 skill 判准讲成 checklist（那是 07）
+  - 不把 skill / tool / agent 边界讲完（那是 08）
+- **标题下导语必须立住的一句话**：
+  - **skill 的作用不是多加一个能力点，而是把 Claude Code 从“有时会做”推进到“能稳定复用地做”。**
+- **推荐 section skeleton（起稿顺序）**：
+  1. **导语：为什么 Claude Code 明明已经会调工具，还会反复出现“这次做对了、下次又飘”的问题**
+     - 开门先点真实使用痛点：Claude Code 不是不会做，而是很多高质量协作依赖临场上下文、用户重复交代和模型当场状态。
+     - 这一段的任务不是解释 skill 机制，而是先让读者承认“稳定复用”本身就是问题。
+  2. **没有 skill 时，Claude Code 的高质量协作为什么容易停留在一次性成功**
+     - 展开三类脆弱来源：
+       - 用户偏好要反复重说
+       - 流程顺序和成功标准留在当前会话里
+       - 角色分工只存在于当场协作，不会自动继承
+     - 这里要落一条判断：没有 skill 时，Claude Code 当然也能做成很多事，但这种“会做”常常不稳定。
+  3. **`skillify` 为什么是这一篇最关键的源码证据**
+     - 直接切进 `skillify.ts` 的定位：它不是在“保存 prompt”，而是在捕捉 `repeatable process`。
+     - 明确列出它关心的东西：inputs、steps、success criteria、tools、agents、human checkpoint。
+     - 这里要点出：官方自己已经把 skill 定义成“把一次成功协作抽成未来可重跑的方法单元”。
+  4. **skill 接进系统的，首先不是答案，而是方法**
+     - 这一节专讲“答案”和“方法”的差别：
+       - 答案是一次性交付
+       - 方法是可复用组织
+     - 必须把“用户真正想保留下来的，通常不是某次输出，而是判断顺序、约束边界、完成标准”写透。
+  5. **skill 为什么会直接改变 Claude Code 的稳定性，而不只是便利性**
+     - 这一节要把价值抬高：
+       - 它不是省几句 prompt
+       - 而是让未来任务更容易命中正确方法、更少漂移、更少重复沟通
+     - 建议用“有 skill / 无 skill”的对照表写，效果会更清楚。
+  6. **经验、流程、角色结构，分别是怎么被压进 skill 的**
+     - 分三小段讲：
+       - 经验：哪些判断先做、哪些坑先避开
+       - 流程：先后顺序、例外处理、成功标准
+       - 角色结构：什么该留在主线程，什么该交给独立执行者
+     - 这里可以自然把后面 agent 主轴的坡度铺出来，但只能点到为止。
+  7. **为什么这一篇必须把 skill 立成“能力定制重轴”**
+     - 回到卷五位置说明：如果这一篇立不住，skills 组就会被读成“提示词复用组”。
+     - 要明确说出：skill 让用户自己的做事方式第一次以对象形式进入系统能力面。
+  8. **收口：Claude Code 不是因为多了 skill 才能做事，而是因为有了 skill 才更可能稳定把事做对**
+     - 结尾不要再回机制细节，而是把使用收益收稳。
+- **建议本篇至少出现的 2 个对照表 / 小图**：
+  - `无 skill 的一次性成功` vs `有 skill 的稳定复用`
+  - `答案 / 方法 / 执行者` 三层对照小表
+
+## 06｜Skill 在源码里怎么跑起来：从 SKILL.md 到 inline / fork
+- **这篇主问题**：skill 在 Claude Code runtime 里到底怎样被发现、展开、执行，并最终回流当前 turn。
+- **这篇对读者的直接收益**：读完以后，读者应真正理解 inline / fork 的差别，知道为什么 skill 设计会影响工具权限、模型、effort、工作路径。
+- **文章角色**：机制主链篇。它必须提供这组里最硬的一条源码执行链。
+- **必须回收的旧文章**：
+  - `docs/guidebook/volume-1/16-loadskillsdir.md`
+  - `docs/guidebook/volume-1/17-skilltool-execution-entry.md`
+  - `docs/guidebook/volume-1/18-forkedagent.md`
+  - `docs/guidebook/volume-1/19-runagent-skill-mainline.md`
+- **必读源码文件**：
+  - `cc/src/skills/loadSkillsDir.ts`
+  - `cc/src/tools/SkillTool/SkillTool.ts`
+  - `cc/src/utils/processUserInput/processSlashCommand.tsx`
+  - `cc/src/utils/forkedAgent.ts`
+  - `cc/src/tools/AgentTool/runAgent.ts`
+- **主证据链**：`loadSkillsDir` 先把 skill 编译成 command 对象 → `getSkillToolCommands(...)` 决定哪些 skill 能进模型可见能力面 → assistant 调用 SkillTool → `findCommand(...)` 定位 skill → 若 inline，走 `processPromptSlashCommand(...)` 并把消息 / allowedTools / model / effort 回注当前 turn → 若 fork，走 `executeForkedSkill(...)` / `prepareForkedCommandContext(...)`，最终接到 `runAgent(...)` → 结果回流当前线程。
+- **必须有的 mermaid 主图**：`发现 → 调用 → inline/fork 分流 → runAgent 连接 → 回流 turn` 的完整主链图。
+- **必须讲出来的 5 个硬点**：
+  1. skill 先是对象，后才可能进入执行链。
+  2. 发现层不是附属效果，而是前置筛选步骤。
+  3. inline skill 会改当前线程的工作方式，不只是塞一段文本。
+  4. fork skill 不是另起神秘黑盒，而是把工作包交给 agent runtime。
+  5. skills runtime 和 agent runtime 在 fork 路径上是正式接上的。
+- **绝对不能写成什么**：
+  - 单纯的源码漫游记录
+  - “把函数按调用顺序抄一遍”的散步文
+  - 没有 inline / fork 对照关系的链路文
+- **禁止偷吃的相邻篇职责**：
+  - 不把“好 skill 的标准”写成主角（那是 07）
+  - 不把 skill / tool / agent 边界展开成总论（那是 08）
+- **标题下导语必须立住的一句话**：
+  - **skill 的强，不在于能展开文本，而在于它能组织执行。**
+
+## 07｜什么样的 Skill 才真的好用：从 runtime 约束反推设计原则
+- **这篇主问题**：什么样的 skill 才算好 skill，能被系统稳定发现、稳定执行、稳定不变形。
+- **这篇对读者的直接收益**：读完以后，读者应会写、会改、会挑 skill，也能判断一个第三方 skill 为什么“总想不起来 / 总跑飘 / 总抢活”。
+- **文章角色**：判准篇。它必须像架构评审，而不是像写作建议合集。
 - **必须回收的旧文章**：
   - `docs/guidebook/volume-1/23-good-runtime-skill.md`
   - `docs/guidebook/volume-1/24-skillify.md`
   - `docs/guidebook/volume-1/21-skill-frontmatter-fields.md`
+  - `docs/guidebook/volume-1/29-when-to-use-vs-description.md`
 - **必读源码文件**：
-  - `cc/src/skills/`
-  - `cc/src/tools/SkillTool/`
-- **主证据链**：skill 定义方式 → 运行时可发现性 → 执行边界与职责清晰度 → 持续可用性。
-- **必须有的 mermaid 主图**：坏 skill / 好 skill 的 runtime 分岔图。
-- **这篇绝对不能空讲的硬货**：必须给出 runtime 视角下的好 skill 判准，不得只是写作 checklist。
-- **禁止偷吃的相邻篇职责**：不把 08 的对象边界正文讲完。
+  - `cc/src/skills/loadSkillsDir.ts`
+  - `cc/src/tools/SkillTool/SkillTool.ts`
+  - `cc/src/skills/bundled/skillify.ts`
+- **主证据链**：发现层会筛掉描述模糊、触发语义不足的 skill → frontmatter 高影响字段会真实改变执行行为 → inline / fork 两条路径都要求正文具备 workflow 结构 → `skillify` 官方样板又反向给出 inputs / steps / success criteria / artifacts / checkpoint / rules 的骨架 → 因此“好 skill”首先是 runtime 上成立，其次才是文笔好看。
+- **必须有的 mermaid 主图**：`发现稳定性 / 执行边界 / 工作流结构 / 完成判据 / 重复使用不变形` 的 runtime 分岔图。
+- **必须给出的 5 条硬判准**：
+  1. 职责单一稳定
+  2. 发现稳定（`description` / `when_to_use` 有区分度）
+  3. 运行影响克制（权限、fork、model、effort 只在必要时改）
+  4. 正文是工作流，不是散文
+  5. 完成判据明确，能稳定回流结果
+- **绝对不能写成什么**：
+  - “好 skill checklist” 空话文
+  - 纯写作技巧文
+  - 不敢说坏味道的温和总结文
+- **必须点名的常见坏味道**：
+  - 万能 skill
+  - `description` / `when_to_use` 写虚
+  - 无脑 `context: fork`
+  - 权限和模型声明发胖
+  - 正文只有理念没有动作
+  - 没有 success criteria
+- **禁止偷吃的相邻篇职责**：
+  - 不展开 08 的对象边界总收束
+- **标题下导语必须立住的一句话**：
+  - **好 skill 不是写得最花的 prompt，而是能稳定被发现、稳定被执行、稳定不变形的方法单元。**
 
-## 08｜skill、tool、agent 三者的边界到底是什么
-- **这篇主问题**：skill / tool / agent 各自是什么层级。
+## 08｜什么时候该用 Skill，什么时候该用 tool / agent / MCP
+- **这篇主问题**：实际工作里该怎样选抽象层；skill、tool、agent、MCP 分别该在什么问题上出场。
+- **这篇对读者的直接收益**：读完以后，读者应少犯 3 种大错：把 tool 用成 workflow、把 skill 写成半成品 agent、把本该接 MCP 的能力硬写成 skill。
+- **文章角色**：决策与边界收口篇。不是只给定义，而是给“以后怎么选”的判断框架。
 - **必须回收的旧文章**：
   - `docs/guidebook/volume-1/30-skill-vs-agent.md`
   - `docs/guidebook/volume-1/15-skilltool-bridge.md`
   - `docs/guidebook/volume-1/10-agenttool.md`
+  - `docs/guidebook/volume-4/01-mcp-runtime-entry.md`
+  - `docs/guidebook/volume-4/03-cli-plus-skill-vs-many-mcp.md`
 - **必读源码文件**：
-  - `cc/src/tools/SkillTool/`
-  - `cc/src/tools/AgentTool/`
-  - `cc/src/tools/`
-- **主证据链**：tool 负责动作执行 → skill 负责方法组织 → agent 负责执行者结构 → 三者在 runtime 协作但不等价。
-- **必须有的 mermaid 主图**：skill / tool / agent 三层边界图。
-- **这篇绝对不能空讲的硬货**：必须明确三者分别解决什么问题，不能只写抽象边界话术。
-- **禁止偷吃的相邻篇职责**：不把 Agent 主轴正文细讲完。
+  - `cc/src/tools/SkillTool/SkillTool.ts`
+  - `cc/src/tools/AgentTool/runAgent.ts`
+  - `cc/src/utils/forkedAgent.ts`
+  - `cc/src/commands.ts` 或 `cc/src/commands/`
+  - `cc/src/mcp/`
+- **主证据链**：tool 直接暴露动作原语 → skill 暴露方法组织对象 → agent 负责执行者装配与分叉 → MCP 提供系统外能力源 / 资源系统入口 → 四者都能进入 runtime，但解决的不是同一类问题 → 所以选错抽象层，就会导致工作流发胖、职责串线、系统边界混乱。
+- **必须有的 mermaid 主图**：`问题类型 → 该选 tool / skill / agent / MCP` 的决策分流图。
+- **必须讲出来的 4 个硬点**：
+  1. tool 解决“现在能做什么动作”
+  2. skill 解决“这些动作该怎么组织成稳定方法”
+  3. agent 解决“谁来承担这段工作、如何继续分叉与回流”
+  4. MCP 解决“怎样从系统外接入能力源和资源系统”
+- **必须给出的 4 个读者决策题**：
+  - 什么时候直接调 tool 就够
+  - 什么时候值得沉淀成 skill
+  - 什么时候必须让 agent 承接
+  - 什么时候根本不是 skill 问题，而是应该接 MCP
+- **绝对不能写成什么**：
+  - 只讲定义不讲选择情境
+  - 只讲 skill / tool / agent，不把 MCP 放回卷五对象体系
+  - 纯边界术语收口文
+- **禁止偷吃的相邻篇职责**：
+  - 不把 Agent 主轴正文细节提前讲完
+  - 不把 MCP 组三篇提前写成详解
+- **标题下导语必须立住的一句话**：
+  - **tool 解决动作，skill 解决方法，agent 解决执行者，MCP 解决外部能力源；真正会用 Claude Code，关键不只是会调用，而是会选层。**
 
 ---
 
