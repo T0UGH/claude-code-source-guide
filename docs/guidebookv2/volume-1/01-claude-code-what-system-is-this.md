@@ -48,21 +48,9 @@ Claude Code 最先暴露给用户的，往往只是它最表面的一层：
 
 如果先把局部细节都压住，Claude Code 至少可以先被看成下面这张系统图：
 
-```mermaid
-flowchart TD
-    U[用户输入] --> C[命令 / Prompt / 会话入口]
-    C --> R[Claude Code Runtime]
-    R --> M[模型推理]
-    M --> T[工具执行层]
-    T --> R
-    R --> X[上下文与状态管理]
-    X --> M
-    R --> E[扩展能力层]
-    E --> T
-    E --> M
-    R --> O[输出与继续运行]
-    O --> U
-```
+![Claude Code 整体分层架构图](../../assets/claude-code-overall-architecture-v2.png)
+
+*图：Claude Code 整体分层架构图。它不是把所有源码对象一次讲完，而是先把系统分成入口层、编排层、能力层、状态与上下文层、执行环境层，以及持久化与产品层，帮助读者先站稳全局视角。*
 
 这张图最值得先抓住的一点不是“模块有哪些”，而是：
 
