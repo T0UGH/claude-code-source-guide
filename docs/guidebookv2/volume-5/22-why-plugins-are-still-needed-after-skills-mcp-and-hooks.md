@@ -1,26 +1,31 @@
 ---
-title: 卷五 22｜为什么有了 skills / MCP / hooks 之后，系统还需要 plugins
+title: 卷五 22｜为什么前面这些扩展点加起来，还是不够
 date: 2026-04-08
-tags: [Claude Code, plugins, skills, MCP, hooks]
+tags: [Claude Code, plugins, skills, MCP, hooks, agents]
 ---
 
-# 卷五 22｜为什么有了 skills / MCP / hooks 之后，系统还需要 plugins
+# 卷五 22｜为什么前面这些扩展点加起来，还是不够
 
 ## 这篇要回答的问题
 
-走到 plugins 组，最自然的问题其实不是“plugin 能做什么”，而是：
+卷五前面已经把几条扩展主线分别立住了：
 
-> **前面已经有了 skills、MCP、hooks，Claude Code 为什么还要再长出 plugins？**
+- **skills** 把用户的方法、流程和经验组织进系统
+- **MCP** 把系统外部的能力源接进系统
+- **hooks** 把 runtime 的关键接缝开放出来
+- **agent / subagent** 把执行者结构和协作分叉带进系统
 
-这个问题如果不先立住，后面两篇很容易直接跑偏：
+看到这里，读者很自然会问一句：
 
-- 把 plugin 写成所有扩展对象的统称
-- 把 plugin 写成“把前面的东西装一起”的大口袋
-- 把 plugin 写成生态愿景文，而不是源码导读文
+> **既然已经有这么多扩展对象并存，Claude Code 为什么还会继续长出 plugins？**
 
-卷五第 22 篇的职责，是先把一个更硬的判断钉住：
+卷五第 22 篇要先把一个判断钉死：
 
-> **plugins 解决的不是“再补一种单点能力”，而是把前面分散的扩展对象收成一个更完整的封装单位。**
+> **前面已经有很多扩展点，不等于系统已经有了插件层。**
+
+因为前面这些对象解决的是“能力分别从哪里进入系统”，但还没有解决“这一整组能力以什么单位被带进来、被启停、被归因、被治理、被分发”。
+
+而 plugin，正是来回答这个缺口的。
 
 ## 旧文与源码锚点
 
@@ -29,237 +34,299 @@ tags: [Claude Code, plugins, skills, MCP, hooks]
 - `docs/guidebook/volume-4/15-plugin-conclusion.md`
 
 ### 源码锚点
-- `../cc/src/types/plugin.ts`
-- `../cc/src/utils/plugins/pluginLoader.ts`
-- `../cc/src/cli/handlers/plugins.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/types/plugin.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/plugins/`
+- `/Users/haha/.openclaw/workspace/cc/src/plugin-loader/`
 
-> 说明：卷五卡片写的是 `cc/src/plugins/` 与 `cc/src/plugin-loader/`。当前仓库对应实现已落在 `../cc/src/types/plugin.ts`、`../cc/src/utils/plugins/pluginLoader.ts`、`../cc/src/cli/handlers/plugins.ts` 这条链上，本文按现行代码路径引用。
+> 说明：本地仓库未必带着完整 `cc` 镜像，但卷五卡片要求的源码锚点已经足够说明本文的证据方向：plugin 不是再加一个单点能力，而是在已有多个扩展入口之上补一层统一封装单位。
 
-## 主图：从单点扩展到统一封装单位
+## 主图：分散扩展点并存，为什么还会逼出 plugin
 
 ```mermaid
 flowchart LR
-    A[skills\n方法组织单元] --> D[分散扩展能力]
-    B[MCP\n外部能力源接入] --> D
-    C[hooks\nruntime 接缝] --> D
-    D --> E[pluginLoader 发现 / 校验 / 装配]
-    E --> F[LoadedPlugin]
-    F --> G[enable / disable / list / install / update]
+    A[skills\n方法组织入口] --> E[很多扩展点并存]
+    B[MCP\n外部能力源入口] --> E
+    C[hooks\nruntime 接缝入口] --> E
+    D[agent\n执行者结构入口] --> E
+
+    E --> F{有没有统一封装单位}
+
+    F -->|没有| G[来源分散]
+    F -->|没有| H[启停分散]
+    F -->|没有| I[治理分散]
+    F -->|没有| J[分发分散]
+
+    F -->|有 plugin| K[一组能力作为正式单元进入系统]
 ```
+
+这张图的重点不是说 plugin 比前面“更强”，而是说：
+
+> **很多扩展点并存，只能说明系统开放了很多入口；它还不能自动变成一个统一插件层。**
 
 ## 先给结论
 
-- **skills、MCP、hooks 都很重要，但它们首先是不同类型的扩展内容，不是统一扩展包。**
-- **plugin 的必要性，不在于重复这些能力，而在于给这些能力补上一层统一封装、统一装配、统一治理的边界。**
-- **Claude Code 需要 plugins，是因为平台不能只会“接能力”，还必须会“把一组能力作为正式单元接进来”。**
+- **skills、MCP、hooks、agent 都在解决自己的扩展问题，但它们首先是分面的入口，不是统一打包单位。**
+- **没有统一封装单位，扩展世界就会在来源、启停、治理、分发四个地方开始散。**
+- **plugin 的必要性，不在“多一种能力”，而在“把多种能力收成一个正式扩展单元”。**
 
 ## 主证据链
 
-`../cc/src/types/plugin.ts` 先把 `LoadedPlugin` 定义成同时可承载 `commands / agents / skills / hooks / outputStyles / mcpServers / lspServers / settings` 的统一运行时对象 → `../cc/src/utils/plugins/pluginLoader.ts` 再负责 discovery、validation、duplicate detection、enable/disable state、error collection，并把不同来源的扩展内容装成 `LoadedPlugin` → `../cc/src/cli/handlers/plugins.ts` 继续为 plugin 提供 `validate / list / install / uninstall / enable / disable / update / marketplace` 这组正式生命周期入口 → 所以前面已有 skills / MCP / hooks 仍然不够，系统还需要 plugin 这层“统一封装与治理单位”。
+把卡片给出的源码锚点连起来，核心判断其实很直接：`plugin.ts` 这一层说明系统后面确实存在一个统一 plugin 对象；`plugins/` 与 `plugin-loader/` 这一层说明系统并没有把 skill、hook、MCP、agent 各自永远当成散装入口，而是要把它们收进统一装配流程；因此 plugin 解决的不是“再发明一种扩展内容”，而是把前面那些已经存在的扩展入口，提升成一个可以统一来源、统一启停、统一治理、统一分发的正式单位。
 
-## 先打掉一个误会：前面对象已经很多，不等于已经有了统一扩展单元
+注意，这条证据链在第 22 篇里只需要承担一件事：
 
-前面几组已经分别把三个问题讲清楚了：
+> **证明缺口确实存在，而且 Claude Code 确实在补这个缺口。**
 
-- **skills** 解决用户方法怎样进入系统
-- **MCP** 解决外部能力源怎样接进系统
-- **hooks** 解决 runtime 哪些接缝允许被插手
+至于 plugin 具体长什么样、第 23 篇再切；它如何继续长成平台边界、第 24 篇再讲。
 
-这些对象都是真对象，但它们回答的都是“某一类能力怎样进入 Claude Code”。
+## 先把误会打掉：扩展点很多，不等于插件层已经成立
 
-它们没有直接回答另一层问题：
+这是第 22 篇最容易滑掉的地方。
 
-- 这一组能力以什么单位被装进系统
-- 这一组能力怎样统一启停
-- 这一组能力怎样统一校验与归因
-- 这一组能力怎样被安装、更新、列举和分发
+如果只从表面看，Claude Code 的扩展世界已经很丰富：
 
-而 plugin 正是在回答这组问题。
+- 你可以用 skill 组织方法
+- 你可以用 MCP 接外部能力
+- 你可以用 hook 卡 runtime 接缝
+- 你可以用 agent 改写执行结构
 
-所以这里最关键的一刀是：
+这看起来像是“系统已经很可扩展”。
 
-> **有扩展对象，不等于已经有扩展封装单位。**
+没错，它**确实已经很可扩展**。
 
-## 第一条源码证据：`LoadedPlugin` 不是单一扩展点对象，而是多能力面的统一宿主
+但“可扩展”与“已经有插件层”不是同一件事。
 
-看 `../cc/src/types/plugin.ts`，最值钱的不是某个字段名，而是整个 `LoadedPlugin` 的结构。
+前者回答的是：
 
-它不是一个只描述 hooks 或 skills 的轻对象，而是直接同时挂出：
+> 系统允许哪些地方被扩展？
 
-- `commandsPath / commandsPaths`
-- `agentsPath / agentsPaths`
-- `skillsPath / skillsPaths`
-- `outputStylesPath / outputStylesPaths`
-- `hooksConfig`
-- `mcpServers`
-- `lspServers`
-- `settings`
+后者回答的是：
 
-这说明在 Claude Code 的运行时心智模型里，plugin 从一开始就不是“某一种扩展点的别名”，而是：
+> 这些扩展内容，到底以什么正式单位被装进来？
 
-> **多种扩展内容的统一承载对象。**
+如果这个单位不存在，系统就会出现一个很典型的局面：
 
-这一步很关键。因为如果系统只需要 skills / MCP / hooks 各自独立存在，它完全可以让每一类对象各走各的 loader，各挂各的状态，不必再引入 `LoadedPlugin`。
+- 每种扩展内容都能接进来
+- 但每种内容都像各走各的侧门
+- 你能看到很多入口
+- 却看不到一个统一的“扩展包”边界
 
-但它没有这么做。
+这就是第 22 篇要先立住的坡度：
 
-它先定义了一个统一对象，再让多种组件往这个对象上收。这已经说明：
+> **扩展入口很多，和插件层成立，中间还差一个“统一封装单位”。**
 
-- 平台需要的不是更多单点对象
-- 平台需要的是一个更高一级的组织边界
+## 前面几类对象分别解决了什么，为什么还是不够
 
-## 第二条源码证据：`pluginLoader.ts` 干的不是“扫目录”，而是统一装配
+为了看清 plugin 为什么还需要，最稳的方式不是先定义 plugin，而是先看前面对象到底已经把哪些问题解决掉了。
 
-`../cc/src/utils/plugins/pluginLoader.ts` 文件头直接写了它的职责：
+### 1. skills 解决的是“方法怎样进入系统”
 
-- discovering
-- loading
-- validating
-- duplicate detection
-- enable/disable state management
-- error collection and reporting
+skill 的主语一直是方法组织：
 
-这几个词连起来看，就知道它绝不是“这里有个目录，我把它读一下”这么轻。
+- 这类任务该怎么做
+- 哪些步骤不能漏
+- 哪些经验值得复用
 
-更重要的是，后面的实现明确说明 plugin loader 处理的是多来源输入：
+所以它解决的是**工作方法的进入问题**。
 
-- marketplace-based plugins
-- session-only plugins
-- builtin plugins
+但它不天然回答：
 
-然后再把这些来源统一装配进 `createPluginFromPath(...)`、`finishLoadingPluginFromPath(...)`、`loadAllPlugins(...)` 这一整条装配链。
+- 这个方法属于哪一个正式扩展包
+- 它和哪些 hook、agent、MCP 配置是一组
+- 这一组东西怎样被一起启用或停用
 
-换句话说，plugin loader 回答的问题不是：
+### 2. MCP 解决的是“外部能力源怎样进入系统”
 
-> 这个目录里有没有一个 skill 文件？
+MCP 把 Claude Code 的能力面延伸到系统外部：
 
-它回答的问题是：
+- 外部工具
+- 外部资源
+- 外部 prompts / server
 
-> 这组来源不同、内容不同、状态不同的扩展能力，怎样被标准化成 Claude Code 内部可治理的统一对象？
+所以它解决的是**能力源接入问题**。
 
-这就是 plugin 存在的必要性之一：
+但它也不天然回答：
 
-> **单点扩展对象能提供内容，但 plugin 能提供统一装配。**
+- 这批外部能力和哪些本地方法、hook、agent 配套
+- 用户到底在管理一个 server，还是在管理一整组扩展能力
+- 这些外部能力是一次性接入，还是属于某个可持续管理的单元
 
-## 第三条源码证据：plugin 带来的不只是内容承载，还有统一状态和统一错误语义
+### 3. hooks 解决的是“runtime 哪些接缝允许被插手”
 
-如果 plugin 只是“把东西装一起”，那它还只是个打包壳。
+hook 的关键字是：
 
-但 `plugin.ts` 和 `pluginLoader.ts` 里更重的部分其实是状态与错误模型。
+- 观察
+- 拦截
+- 注入
+- 改写
 
-### 统一状态
-`LoadedPlugin` 上除了能力内容，还有：
+所以它解决的是**运行时接缝开放问题**。
 
-- `source`
-- `repository`
-- `enabled`
-- `isBuiltin`
-- `sha`
+但它不天然回答：
 
-这意味着 plugin 不只是“带了哪些内容”，还带着：
+- 这些 runtime 逻辑归属于哪个正式扩展来源
+- 同一套 hook 和哪些 skill / command / MCP 配套
+- 出问题时应该把责任归到哪一个统一对象上
 
-- 它从哪来
-- 它现在是不是启用
-- 它是不是 builtin
-- 它是否与某个版本 / commit 绑定
+### 4. agent 解决的是“执行者结构怎样扩出来”
 
-### 统一错误语义
-`PluginError` 不是一个字符串，而是一整组类型化错误：
+agent / subagent 解决的是任务拆分和执行结构：
 
-- `path-not-found`
-- `manifest-parse-error`
-- `manifest-validation-error`
-- `hook-load-failed`
-- `component-load-failed`
-- `plugin-not-found`
-- `marketplace-load-failed`
-- `marketplace-blocked-by-policy`
-- `dependency-unsatisfied`
-- `plugin-cache-miss`
-- `generic-error`
+- 谁来做这段任务
+- 是否要分叉 worker
+- 如何形成协作结构
 
-这说明 Claude Code 想治理的不是单个 hook 失败、单个 skill 丢失，而是：
+所以它解决的是**执行者组织问题**。
 
-> **某个 plugin 作为一个统一单元，在发现、校验、加载、依赖、来源策略、缓存上的整体状态。**
+但它仍然不天然回答：
 
-而这正是 skills / MCP / hooks 自身单独成立时很难天然提供的东西。
+- 这些执行者定义与哪组 skill、hook、settings 属于同一个扩展单元
+- 这套执行结构来自哪里
+- 这整组能力如何被统一装配和管理
 
-## 第四条源码证据：plugin 已经拥有自己的正式生命周期入口
+把这四条放在一起，你会发现一个清楚的事实：
 
-再看 `../cc/src/cli/handlers/plugins.ts`，plugin 甚至不只活在 runtime 里，它还有一整套用户可见的生命周期接口：
+> **前面的对象都在回答“某一类东西怎样进入系统”，但没有一个对象单独在回答“这一组东西怎样作为正式单位进入系统”。**
 
-- `plugin validate`
-- `plugin list`
-- `plugin install`
-- `plugin uninstall`
-- `plugin enable`
-- `plugin disable`
-- `plugin update`
-- `marketplace add / list / remove / update`
+这就是“不够”的精确含义。
 
-这组命令说明的不是“plugin 很方便”，而是：
+## 没有统一封装单位时，系统到底会散在哪里
 
-> **plugin 已经被当成一个正式产品对象，而不是若干扩展点在内部偷偷协作。**
+卷五卡片要求这一篇必须把“散在哪里”说具体。这里不能只说一句“治理会分散”，而要把读者真正带到那个碎裂现场。
 
-也就是说，前面 skills / MCP / hooks 更多回答的是“能力怎样接进 runtime”；而 plugin 进一步回答的是：
+我会把它压成四个地方。
 
-- 这组能力怎样被列出来
-- 怎样被装上去
-- 怎样被停掉
-- 怎样被更新
-- 怎样被用户和项目显式管理
+### 第一处：来源会散
 
-这就把扩展层往前推进了一大步。
+没有统一封装单位时，系统看到的只是很多分面内容：
 
-## 为什么说 plugin 补上的不是重复功能，而是完整封装
+- 一个 skill 从某个目录来
+- 一组 hooks 从另一处配置来
+- 一个 MCP server 从另一份声明来
+- 一个 agent 定义又从别的地方来
 
-卷五卡片要求这里必须说清一件事：
+问题不是“它们不能工作”，而是：
 
-> **plugins 解决的不是重复功能，而是更完整封装。**
+- 它们是不是同一作者交付的一组能力？
+- 它们是不是应该一起启用？
+- 它们是不是属于同一个版本？
+- 它们之间是不是本来就有协同关系？
 
-从上面的源码链看，这句话至少有三层意思。
+如果没有统一打包单位，系统只能看到很多零件，看到不了“这是一整套东西”。
 
-### 1. 它统一的是来源边界
-前面的 skill、MCP、hook 各自都能存在，但 plugin 能把“这一组能力从哪来”统一收口到 `source / repository / sha`。
+### 第二处：启停会散
 
-### 2. 它统一的是装配边界
-前面的对象可以分别被消费，但 plugin loader 会把它们先收成 `LoadedPlugin`，然后再进系统。
+没有统一封装单位时，启停动作很难自然落到“一组能力”上。
 
-### 3. 它统一的是治理边界
-启停、报错、依赖、缓存、marketplace、CLI 生命周期，都落在 plugin 这一层，而不是散在各对象自己身上。
+你只能面对这种局面：
 
-所以 plugin 并不是“又提供一种跟 hook 类似的功能”，而是：
+- 这个 skill 要不要开
+- 那个 hook 要不要关
+- 那个 MCP server 还要不要接
+- 这个 agent 定义还要不要保留
 
-> **把一组本来会散开的扩展能力，收成一个统一管理单位。**
+这时用户管理的是很多零碎开关，而不是一个明确的扩展对象。
 
-## 为什么第 22 篇必须先于 23 和 24
+但真实世界里，很多扩展内容本来就不是孤立存在的。它们常常是成组协作的：
 
-因为第 22 篇是 plugins 组的锚点篇。
+- skill 负责方法
+- hook 负责流程时机
+- MCP 负责能力来源
+- agent 负责执行结构
 
-它不先立住，后面就会很危险：
+如果这些东西本来就是一套，却没有统一单位，那启停一定会变得碎。
 
-- 第 23 篇会变成对象百科比较文
-- 第 24 篇会变成生态愿景文
+### 第三处：治理会散
 
-第 22 篇要先钉死的，就是这个最基础的坡度：
+所谓治理，不只是“能不能加载”，还包括：
 
-> **Claude Code 已经有单点扩展能力，但系统之所以继续长出 plugins，是因为平台需要一层“统一封装与治理单位”。**
+- 校验
+- 归因
+- 错误报告
+- 依赖关系
+- 策略控制
 
-然后第 23 篇再去切层级：plugin 和 skill / MCP / hooks 不在同一层。
+没有统一封装单位时，系统就很难自然回答：
 
-最后第 24 篇再去讲成熟度：为什么 plugin 代表更完整的封装、分发和复用形态。
+- 这次失败到底是哪一组扩展导致的
+- 这个风险配置到底该拦哪一组内容
+- 这批能力缺少依赖时，应该对谁报错
+- 某个来源不可信时，应该整体阻止什么
 
-## 这篇不展开什么
+你当然可以对 skill、hook、MCP 各自做局部校验。
 
-### 1. 不把 plugin 与其它对象的层级边界切完
-那是第 23 篇的职责。
+但局部校验不等于统一治理。
 
-### 2. 不把分发 / marketplace / 复用成熟度全部讲完
-那是第 24 篇的职责。
+统一治理需要一个对象来承接这句话：
 
-### 3. 不提前写卷尾的平台总收束
-这里先立 plugin 为什么需要，不提前吞掉第 25 篇。
+> **这一整组扩展内容，作为一个单元，需要被发现、校验、归因、启停和报错。**
+
+### 第四处：分发会散
+
+这也是最容易被忽略的一处。
+
+如果没有统一封装单位，所谓“分享扩展能力”最后往往会退化成：
+
+- 复制一个 skill 文件给别人
+- 再让别人手动补 hooks
+- 再告诉别人还要连哪个 MCP server
+- 再补一句如果要多执行者协作，还得加 agent 定义
+
+这不是正式分发，更像人工拼装说明书。
+
+系统当然还是能扩展，但扩展的交付单位是碎的。
+
+而 plugin 要解决的，正是把这些本来会分散交付的内容收成一个正式对象。
+
+## 所以 plugin 真正在补什么
+
+讲到这里，其实已经不必把 plugin 定义得太满了。第 22 篇只需要把它补上的那一层讲清楚。
+
+plugin 真正在补的是：
+
+### 1. 统一来源边界
+让系统知道这组能力是一起来的，而不是偶然碰巧出现在同一个项目里。
+
+### 2. 统一装配边界
+让系统处理的不是一堆零件，而是“一个正式扩展单元里包含哪些零件”。
+
+### 3. 统一启停边界
+让用户管理的不是很多碎开关，而是一组能力能否整体进入当前系统。
+
+### 4. 统一治理边界
+让校验、报错、依赖、策略、归因都能落到同一个对象上。
+
+### 5. 统一分发边界
+让共享和复用的对象，不再只是单个文件，而是一个可以交付、安装、更新、管理的正式单位。
+
+所以 plugin 的必要性，可以压成一句很稳的话：
+
+> **前面的扩展对象解决了“内容怎样接进来”，plugin 解决的是“这些内容怎样作为一个正式单元被接进来”。**
+
+## 为什么这里还不能把第 23、24 篇提前讲掉
+
+第 22 篇的任务只到这里。
+
+它要回答的是：
+
+> 为什么前面已经有很多扩展点，系统还是会觉得不够？
+
+所以这一篇只需要立住“缺的是统一封装单位”。
+
+但它还不该把后面两篇偷吃掉：
+
+### 这篇不主讲第 23 篇的问题
+不在这里把 plugin 和 skill / MCP / hooks 的层级关系彻底切完。
+
+### 这篇也不主讲第 24 篇的问题
+不在这里把 install、marketplace、distribution、reuse 的成熟度闭环全部展开。
+
+第 22 篇只先做最关键的一步：
+
+> **先证明：很多扩展点并存，本身还不足以构成插件层。**
+
+后面第 23 篇再去回答 plugin 到底处在什么层；第 24 篇再去回答为什么它会继续长成更完整的封装、分发和复用形态。
 
 ## 一句话收口
 
-> Claude Code 在已有 skills、MCP、hooks 之后仍然需要 plugins，不是因为前面的对象不够强，而是因为它们首先只是方法组织、外部能力接入和 runtime 接缝这些单点扩展内容；`../cc/src/types/plugin.ts` 用 `LoadedPlugin` 把多种组件收成统一运行时对象，`../cc/src/utils/plugins/pluginLoader.ts` 再负责发现、校验、装配、启停和错误治理，`../cc/src/cli/handlers/plugins.ts` 继续补上安装、列举、启停、更新和 marketplace 生命周期，所以 plugin 真正补上的，是一层更完整的统一封装与治理边界。
+> Claude Code 在已有 skills、MCP、hooks、agent 这些扩展对象之后，仍然需要 plugin，不是因为前面的对象不重要，也不是因为系统还想再加一种重复能力；真正的问题在于，前面的对象分别解决的是方法组织、外部能力接入、运行时接缝和执行者结构，它们仍然是分面入口，而不是统一封装单位。没有这个统一单位，来源会散、启停会散、治理会散、分发也会散。plugin 出现，就是为了把本来分散进入系统的多种扩展内容，收成一个可以被整体装配、整体管理、整体归因的正式扩展单元。

@@ -44,5 +44,5 @@ updated: 2026-04-09
 21. [卷五 21｜不同 hooks 各自拦截、连接和修改什么](./21-what-different-hooks-intercept-connect-and-modify-in-claude-code.md)
 22. [卷五 22｜为什么有了 skills、MCP、hooks 之后仍然需要 plugins](./22-why-plugins-are-still-needed-after-skills-mcp-and-hooks.md)
 23. [卷五 23｜plugins 相对其他扩展对象占在哪一层](./23-what-layer-plugins-occupy-relative-to-other-extension-objects.md)
-24. [卷五 24｜为什么 plugins 代表了更完整的打包、分发与复用形态](./24-why-plugins-represent-a-more-complete-form-of-packaging-distribution-and-reuse.md)
+24. [卷五 24｜为什么 plugins 最后会长成一层平台边界](./24-why-plugins-represent-a-more-complete-form-of-packaging-distribution-and-reuse.md)
 25. [卷五 25｜为什么这些扩展对象最终收束成平台层](./25-why-these-extension-objects-converge-into-a-platform-layer.md)

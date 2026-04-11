@@ -703,51 +703,59 @@ plugins 不是兜底概念，而是更完整的扩展封装层。
 
 # Plugins 组（22-24）
 
-## 22｜为什么有了 skills / MCP / hooks 之后，系统还需要 plugins
-- **这篇主问题**：既然已有 skills / MCP / hooks，为什么还需要 plugins。
+## 22｜为什么前面这些扩展点加起来，还是不够
+- **这篇主问题**：既然前面已经有了 skills、MCP、hooks、agent 这些扩展对象，为什么系统还是不满足于“很多扩展点并存”，还要再长出 plugins 这一层。
 - **必须回收的旧文章**：
-  - `docs/guidebook/volume-4/10-plugin-capability-surface.md`
-  - `docs/guidebook/volume-4/15-plugin-conclusion.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-4/10-plugin-capability-surface.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-4/15-plugin-conclusion.md`
 - **必读源码文件**：
-  - `cc/src/plugins/`
-  - `cc/src/plugin-loader/`
-- **主证据链**：前面对象提供单点扩展能力 → plugins 提供更完整封装单位 → 系统进入更成熟扩展层。
-- **必须有的 mermaid 主图**：skills / MCP / hooks 到 plugins 的封装升级图。
-- **这篇绝对不能空讲的硬货**：必须说清 plugins 解决的不是重复功能，而是更完整封装。
-- **禁止偷吃的相邻篇职责**：不把 23 / 24 的层级和成熟封装问题讲完。
+  - `/Users/haha/.openclaw/workspace/cc/src/types/plugin.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/plugins/`
+  - `/Users/haha/.openclaw/workspace/cc/src/plugin-loader/`
+- **主证据链**：前面的对象分别解决方法组织、外部能力源、运行时接缝、执行者结构 → 但它们仍然是分面接入，不是统一封装单位 → 没有统一封装单位，就会出现来源分散、启停分散、治理分散、分发分散的问题 → plugin 因而不是在加一个重复对象，而是在回答“多扩展点并存为什么还不够”。
+- **必须有的 mermaid 主图**：分散扩展点并存 → 统一封装单位出现的升级图。
+- **这篇绝对不能空讲的硬货**：必须说清没有统一封装单位时到底会散在哪里，不能提前把 plugin 的内部组成讲成主体答案。
+- **禁止偷吃的相邻篇职责**：不把 plugin 到底是什么讲成 23，不把平台化收束讲成 24。
+- **标题下导语必须立住的一句话**：
+  - **前面已经有很多扩展点，不等于系统已经有了插件层。**
 
-## 23｜plugins 和其它扩展对象分别处在什么层级
-- **这篇主问题**：plugins 和 skills / hooks / MCP 分别处在什么层级。
+## 23｜plugin 到底是什么，它不是哪一种扩展点的壳
+- **这篇主问题**：plugin 到底是什么，为什么它既不是 hooks 的壳、不是 marketplace 安装包、也不是某一种扩展点的同义词。
 - **必须回收的旧文章**：
-  - `docs/guidebook/volume-4/10-plugin-capability-surface.md`
-  - `docs/guidebook/volume-4/12-plugin-attachment-points.md`
-  - `docs/guidebook/volume-4/15-plugin-conclusion.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-4/10-plugin-capability-surface.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-4/12-plugin-attachment-points.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-4/15-plugin-conclusion.md`
 - **必读源码文件**：
-  - `cc/src/plugins/`
-  - `cc/src/hooks/`
-  - `cc/src/mcp/`
-  - `cc/src/skills/`
-- **主证据链**：skills / hooks / MCP 分别提供方法组织 / 接缝 / 外部能力源 → plugins 代表更高一级封装层。
-- **必须有的 mermaid 主图**：plugins 与其它扩展对象层级图。
-- **这篇绝对不能空讲的硬货**：必须把 plugins 从“兜底概念”里切出来。
-- **禁止偷吃的相邻篇职责**：不把 24 的分发 / 复用成熟度讲完。
+  - `/Users/haha/.openclaw/workspace/cc/src/types/plugin.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/plugins/`
+  - `/Users/haha/.openclaw/workspace/cc/src/hooks/`
+  - `/Users/haha/.openclaw/workspace/cc/src/mcp/`
+  - `/Users/haha/.openclaw/workspace/cc/src/skills/`
+- **主证据链**：`LoadedPlugin` 从定义层就同时承载 commands / agents / skills / hooks / output styles / MCP / LSP / settings → hooks、skills、MCP 只是它能承载的组件面，而不是它的全部 → plugin 因而首先是统一运行时对象 / 统一能力承载对象，其次才可能进入安装与分发体系。
+- **必须有的 mermaid 主图**：LoadedPlugin 统一承载多能力面的结构图。
+- **这篇绝对不能空讲的硬货**：必须把“plugin 不是哪一种扩展点的壳”压回 `LoadedPlugin` 这种统一运行时对象，而不是只做概念分层。
+- **禁止偷吃的相邻篇职责**：不把 pluginLoader / schema / marketplace 的平台化收束讲成 24。
+- **标题下导语必须立住的一句话**：
+  - **plugin 先是统一运行时对象，后面才轮到安装、治理和分发。**
 
-## 24｜plugins 为什么代表更完整的封装、分发和复用形态
-- **这篇主问题**：为什么说 plugins 代表更完整的封装、分发和复用形态。
+## 24｜为什么 plugins 最后会长成一层平台边界
+- **这篇主问题**：为什么围绕 plugin 这个统一对象，系统最后还会继续长出 loader、schema、policy、install、marketplace，直到它变成一层平台边界。
 - **必须回收的旧文章**：
-  - `docs/guidebook/volume-4/11-plugin-loader.md`
-  - `docs/guidebook/volume-4/13-plugin-validate-schema-policy.md`
-  - `docs/guidebook/volume-4/14-plugin-cli-install-marketplace.md`
-  - `docs/guidebook/volume-4/15-plugin-conclusion.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-4/11-plugin-loader.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-4/13-plugin-validate-schema-policy.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-4/14-plugin-cli-install-marketplace.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-4/15-plugin-conclusion.md`
 - **必读源码文件**：
-  - `cc/src/plugins/`
-  - `cc/src/plugin-loader/`
-  - `cc/src/plugin-schema/`
-  - `cc/src/plugin-marketplace/`
-- **主证据链**：plugin 具备加载 / 校验 / 挂载 / 分发入口 → 扩展层从对象接入走向成熟封装、分发与复用。
-- **必须有的 mermaid 主图**：plugin 封装 / 分发 / 复用闭环图。
-- **这篇绝对不能空讲的硬货**：至少点出 loader、schema / policy、attachment、distribution 这些成熟度部件。
-- **禁止偷吃的相邻篇职责**：不把卷尾平台层总收束提前写完。
+  - `/Users/haha/.openclaw/workspace/cc/src/plugin-loader/`
+  - `/Users/haha/.openclaw/workspace/cc/src/plugin-schema/`
+  - `/Users/haha/.openclaw/workspace/cc/src/plugin-marketplace/`
+  - `/Users/haha/.openclaw/workspace/cc/src/plugins/`
+- **主证据链**：系统先有统一 `LoadedPlugin` 对象 → 再需要 `pluginLoader` 统一装配多来源插件 → 再需要 schema / validate / policy 守治理边界 → 再需要 install / update / marketplace 提供产品级分发链 → plugin 因而不再只是能力包，而开始承担整套扩展世界的平台边界。
+- **必须有的 mermaid 主图**：plugin contract / loader / validate / policy / install / marketplace 的平台化总图。
+- **这篇绝对不能空讲的硬货**：至少点出 `LoadedPlugin`、pluginLoader、schema/policy、install/marketplace 这四块是如何一起把 plugin 推成平台边界的。
+- **禁止偷吃的相邻篇职责**：不把卷尾平台层总收束提前写成 25。
+- **标题下导语必须立住的一句话**：
+  - **plugin 不是停在能力包这一步，而是会继续长成治理和分发都围着它转的平台边界。**
 
 ---
 
