@@ -143,7 +143,6 @@ nav:
       - 15 为什么主 agent 需要 spawn subagents: guidebookv2/volume-5/15-why-the-main-agent-needs-to-spawn-subagents.md
       - 16 为什么 forkSubagent 不只是启动另一个 agent: guidebookv2/volume-5/16-why-forksubagent-is-not-just-starting-another-agent.md
       - 17 主 agent 与 worker agent 的边界和信息流: guidebookv2/volume-5/17-boundaries-and-information-flow-between-main-agent-and-worker-agent.md
-      - 18 agent、skill、tool 之间的边界与协调: guidebookv2/volume-5/18-boundaries-and-coordination-between-agent-skill-and-tool.md
       - 19 为什么平台层需要 runtime seams，而不只是 capability objects: guidebookv2/volume-5/19-why-platform-layer-needs-runtime-seams-not-just-capability-objects.md
       - 20 hooks 在 Claude Code runtime 里扮演什么角色: guidebookv2/volume-5/20-what-role-hooks-play-in-claude-code-runtime.md
       - 21 不同 hooks 各自拦截、连接和修改什么: guidebookv2/volume-5/21-what-different-hooks-intercept-connect-and-modify-in-claude-code.md

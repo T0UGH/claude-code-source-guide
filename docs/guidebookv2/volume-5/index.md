@@ -38,7 +38,6 @@ updated: 2026-04-09
 15. [卷五 15｜为什么主 agent 需要 spawn subagents](./15-why-the-main-agent-needs-to-spawn-subagents.md)
 16. [卷五 16｜为什么 forkSubagent 不只是启动另一个 agent](./16-why-forksubagent-is-not-just-starting-another-agent.md)
 17. [卷五 17｜主 agent 与 worker agent 的边界和信息流](./17-boundaries-and-information-flow-between-main-agent-and-worker-agent.md)
-18. [卷五 18｜agent、skill、tool 之间的边界与协调](./18-boundaries-and-coordination-between-agent-skill-and-tool.md)
 19. [卷五 19｜为什么平台层需要 runtime seams，而不只是 capability objects](./19-why-platform-layer-needs-runtime-seams-not-just-capability-objects.md)
 20. [卷五 20｜hooks 在 Claude Code runtime 里扮演什么角色](./20-what-role-hooks-play-in-claude-code-runtime.md)
 21. [卷五 21｜不同 hooks 各自拦截、连接和修改什么](./21-what-different-hooks-intercept-connect-and-modify-in-claude-code.md)
