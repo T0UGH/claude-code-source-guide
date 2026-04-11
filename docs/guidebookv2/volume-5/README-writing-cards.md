@@ -655,47 +655,49 @@ plugins 不是兜底概念，而是更完整的扩展封装层。
 
 # Hooks 组（19-21）
 
-## 19｜为什么平台层不仅要有能力对象，还要有运行时接缝
-- **这篇主问题**：为什么平台层除了能力对象外，还必须有运行时接缝。
+## 19｜Claude Code 的 hooks，为什么不是挂几个脚本这么简单
+- **这篇主问题**：为什么 Claude Code 里的 hooks 不能被理解成顺手挂几段自动化脚本，而必须被看成正式 runtime 机制。
 - **必须回收的旧文章**：
-  - `docs/guidebook/volume-4/06-hooks-runtime-entry.md`
-  - `docs/guidebook/volume-4/09-hooks-conclusion.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-4/06-hooks-runtime-entry.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-4/09-hooks-conclusion.md`
 - **必读源码文件**：
-  - `cc/src/hooks/`
-  - `cc/src/runtime/`
-- **主证据链**：能力对象能扩动作 / 方法 / 执行者 → 但 runtime 仍需要结构化注入点与观察点 → hooks 成立。
-- **必须有的 mermaid 主图**：能力对象层 vs 运行时接缝层对比图。
-- **这篇绝对不能空讲的硬货**：必须说明“为什么不是有 skills / MCP / plugins 就够了”。
-- **禁止偷吃的相邻篇职责**：不把 hook 分类正文讲完。
+  - `/Users/haha/.openclaw/workspace/cc/src/types/hooks.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/utils/hooks.ts`
+- **主证据链**：hooks 不是“哪里都能随便塞脚本” → `types/hooks.ts` 先把事件空间和返回语义收紧 → `utils/hooks.ts` 再把 hook 执行与结果聚合成正式 runtime 行为 → hook 的影响结果随后回流给 query / tool / lifecycle 消费链 → 所以它不是附属脚本系统，而是受边界约束的运行时干预层。
+- **必须有的 mermaid 主图**：事件定义 → hook 执行 → 结果回流 runtime 的机制图。
+- **这篇绝对不能空讲的硬货**：必须把“事件怎么定义、返回值有什么语义、结果怎么回流 runtime”这三件事压清楚，不展开工具链和生命周期链正文。
+- **禁止偷吃的相邻篇职责**：不把工具执行链细节讲成 20，不把会话生命周期链细节讲成 21。
 
-## 20｜Claude Code 的 hooks 在 runtime 里到底扮演什么角色
-- **这篇主问题**：hooks 在 Claude Code runtime 里到底扮演什么角色。
+## 20｜工具怎么跑，hooks 其实真的插得上手
+- **这篇主问题**：为什么 `PreToolUse` / `PermissionRequest` / `PostToolUse` 这些 hooks 已经不是观察者，而是真的插进了工具执行决策链。
 - **必须回收的旧文章**：
-  - `docs/guidebook/volume-4/06-hooks-runtime-entry.md`
-  - `docs/guidebook/volume-4/07-pretooluse-posttooluse-hooks.md`
-  - `docs/guidebook/volume-4/08-sessionstart-stop-hooks.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-4/07-pretooluse-posttooluse-hooks.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-4/06-hooks-runtime-entry.md`
 - **必读源码文件**：
-  - `cc/src/hooks/`
-  - `cc/src/events/`
-  - `cc/src/runtime/`
-- **主证据链**：runtime 暴露关键接缝 → hooks 在这些位置观察 / 注入 / 干预 → 平台具备结构化接缝层。
-- **必须有的 mermaid 主图**：hooks 在 runtime 中的位置图。
-- **这篇绝对不能空讲的硬货**：必须点清 hooks 卡在哪些 runtime 阶段。
-- **禁止偷吃的相邻篇职责**：不把每类 hooks 细表全写完。
+  - `/Users/haha/.openclaw/workspace/cc/src/services/tools/toolExecution.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/utils/hooks.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/cli/structuredIO.ts`
+- **主证据链**：工具执行不是直接 `permission -> call -> result` 三步 → `runPreToolUseHooks(...)` 先改输入、补上下文、给权限判断甚至阻断继续 → `PermissionRequest` hook 与真实权限提示合流 → `PostToolUse / Failure` 再改写结果或补上下文 → hooks 因而进入工具执行决策链，而不只是执行前后通知。
+- **必须有的 mermaid 主图**：tool execution pipeline 中 hooks 插入点总图。
+- **这篇绝对不能空讲的硬货**：至少讲清三件事：谁能改输入、谁能参与 allow/deny/ask、谁能改结果回流。不能再重复证明 hooks 是正式 runtime 机制。
+- **禁止偷吃的相邻篇职责**：不把 SessionStart / Stop / UserPromptSubmit 生命周期链提前讲完。
 
-## 21｜Claude Code 里的各类 hooks 分别在拦什么、接什么、改什么
-- **这篇主问题**：不同 hooks 类型分别在拦什么、接什么、改什么。
+## 21｜一轮会话怎么起、怎么进、怎么收，hooks 其实都能插手
+- **这篇主问题**：为什么 hooks 不只管工具，还能进入 `SessionStart`、`UserPromptSubmit`、`Stop / SubagentStop` 这些会话生命周期位置。
 - **必须回收的旧文章**：
-  - `docs/guidebook/volume-4/07-pretooluse-posttooluse-hooks.md`
-  - `docs/guidebook/volume-4/08-sessionstart-stop-hooks.md`
-  - `docs/guidebook/volume-4/09-hooks-conclusion.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-4/08-sessionstart-stop-hooks.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-4/06-hooks-runtime-entry.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-4/09-hooks-conclusion.md`
 - **必读源码文件**：
-  - `cc/src/hooks/`
-  - `cc/src/events/`
-- **主证据链**：不同 hook 类型挂在不同事件接缝 → 拦截 / 注入 / 修改职责不同 → hooks 不是一个统一回调桶。
-- **必须有的 mermaid 主图**：不同 hooks 类型落点图。
-- **这篇绝对不能空讲的硬货**：至少把几类 hooks 的落点差异讲清楚。
-- **禁止偷吃的相邻篇职责**：不把 plugins 封装问题提前写进来。
+  - `/Users/haha/.openclaw/workspace/cc/src/utils/sessionStart.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/utils/processUserInput/processUserInput.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/query/stopHooks.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/query.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/utils/hooks.ts`
+- **主证据链**：hooks 已经证明能进入工具执行 → 再往下看，它还能塑造会话起点、用户输入入口和 query 尾部 stop 判定 → `SessionStart` 能补初始上下文 / 首条消息 / watchPaths，`UserPromptSubmit` 能拦截输入，`Stop / SubagentStop` 能影响这一轮怎么收 → hooks 因而覆盖整条会话生命周期，不只是工具链回调。
+- **必须有的 mermaid 主图**：SessionStart → UserPromptSubmit → query → Stop/SubagentStop 生命周期链图。
+- **这篇绝对不能空讲的硬货**：必须把“起点—入口—收口”三段都压清楚，不再回头讲 hooks 为什么重要。
+- **禁止偷吃的相邻篇职责**：不把 plugins 的更高一层封装问题提前写进来。
 
 ---
 
