@@ -1,7 +1,7 @@
 ---
 title: 卷五写作卡片
 status: draft
-updated: 2026-04-08
+updated: 2026-04-11
 ---
 
 # 卷五写作卡片
@@ -545,90 +545,96 @@ plugins 不是兜底概念，而是更完整的扩展封装层。
 
 # Agent 主轴（12-18）
 
-## 12｜为什么 agent 不是“另一个工具”
-- **这篇主问题**：为什么 agent 不能被理解成特殊一点的工具。
+## 12｜Claude Code 里的 agent，跟 tool 不是一回事
+- **这篇主问题**：为什么 Claude Code 里的 agent，不能被理解成更聪明一点、更复杂一点的 tool。
 - **必须回收的旧文章**：
-  - `docs/guidebook/volume-1/10-agenttool.md`
-  - `docs/guidebook/volume-1/30-skill-vs-agent.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/10-agenttool.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/30-skill-vs-agent.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/02-tool-system-overview.md`
 - **必读源码文件**：
-  - `cc/src/tools/AgentTool/AgentTool.tsx`
-  - `cc/src/tools/AgentTool/`
-- **主证据链**：tool 执行动作 → agent 组织执行者 → AgentTool 触发的是一个执行体，而不是一次工具动作。
-- **必须有的 mermaid 主图**：tool vs agent 的执行对象差异图。
-- **这篇绝对不能空讲的硬货**：必须讲清 agent 为什么是一种执行者结构，而不是高阶工具名词。
-- **禁止偷吃的相邻篇职责**：不把 subagent / fork worker 后半段讲完。
+  - `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/AgentTool.tsx`
+  - `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/`
+  - `/Users/haha/.openclaw/workspace/cc/src/tools/`
+- **主证据链**：tool 解决的是一次能力调用 → agent 解决的是把一个子任务交给另一个执行者去推进 → AgentTool 表面上挂在 tool 入口里，实际触发的是一个执行者单位，而不是一次普通工具动作。
+- **必须有的 mermaid 主图**：tool vs agent 的对象层级对照图；一次 tool call 与一次 agent 委派的执行差异图。
+- **这篇绝对不能空讲的硬货**：必须把“动作接口”和“执行者单位”切开，至少压回 `AgentTool.tsx` 的入口形态和 agent prompt / task 委派这一层，不能只写概念判断。
+- **禁止偷吃的相邻篇职责**：不展开 built-in agents / loadAgentsDir 的对象名册，不提前讲 subagent / worker 的运行时分叉。
 
-## 13｜Claude Code 是怎样长出更多执行者的
-- **这篇主问题**：Claude Code 怎样从单执行者走向更多执行者体系。
+## 13｜Claude Code 一开始就准备了一组 agent
+- **这篇主问题**：为什么 Claude Code 里的 agent 不是临时冒出来的角色，而是一开始就准备好的一组执行者对象。
 - **必须回收的旧文章**：
-  - `docs/guidebook/volume-1/10-agenttool.md`
-  - `docs/guidebook/volume-3/12-twenty-agent-design-takes.md`
-  - `docs/guidebook/volume-1/14-builtinagents.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/13-loadagentsdir.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/14-builtinagents.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-3/12-twenty-agent-design-takes.md`
 - **必读源码文件**：
-  - `cc/src/tools/AgentTool/`
-  - `cc/src/agents/`
-- **主证据链**：主线程执行压力上升 → 引入 agent 承担独立工作包 → runtime 开始长出更多执行者。
-- **必须有的 mermaid 主图**：从单执行者到多执行者的扩张图。
-- **这篇绝对不能空讲的硬货**：必须把“更多执行者”落回具体对象，不许只讲抽象协作。
-- **禁止偷吃的相邻篇职责**：不把 runAgent 和 forkSubagent 细节讲完。
+  - `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/loadAgentsDir.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/agents/`
+  - `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/agentToolUtils.ts`
+- **主证据链**：系统先有 agent definitions / built-in agents / loadAgentsDir 这条装载链 → runtime 里先成立一份执行者名册 → 所以后面出现的不是“突然多了个角色”，而是系统本来就承认一组可加载执行者。
+- **必须有的 mermaid 主图**：agent definitions → built-in agents → loadAgentsDir 的对象成立图；单 agent 幻觉 vs agent 名册现实图。
+- **这篇绝对不能空讲的硬货**：必须把“不是一个，是一组”压回具体 definitions / built-ins / load 过程，至少点清 GENERAL / PLAN / EXPLORE / VERIFICATION 这一类模板为何重要。
+- **禁止偷吃的相邻篇职责**：不把 runAgent 的运行时装配细节讲完，不把“为什么主 agent 还要继续拆活”提前解释掉。
 
-## 14｜runAgent 为什么像一条 agent runtime 装配线
-- **这篇主问题**：runAgent 在 agent 主轴里到底扮演什么角色。
+## 14｜这组 agent 是怎么被拉进当前任务的
+- **这篇主问题**：系统里已经准备好的这组 agent，是怎么在一次真实任务里被拉进当前运行主线的。
 - **必须回收的旧文章**：
-  - `docs/guidebook/volume-1/11-runagent-assembly-line.md`
-  - `docs/guidebook/volume-1/19-runagent-skill-mainline.md`
-  - `docs/guidebook/volume-1/13-loadagentsdir.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/11-runagent-assembly-line.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/19-runagent-skill-mainline.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/13-loadagentsdir.md`
 - **必读源码文件**：
-  - `cc/src/tools/AgentTool/runAgent.ts`
-  - `cc/src/tools/AgentTool/agentToolUtils.ts`
-  - `cc/src/tools/AgentTool/loadAgentsDir.ts`
-  - `cc/src/tools/AgentTool/AgentTool.tsx`
-- **主证据链**：agent 定义加载 → 上下文与工具面装配 → 权限 / skills / MCP / hooks 接入 → query 主循环启动。
-- **必须有的 mermaid 主图**：runAgent 装配主链图。
-- **这篇绝对不能空讲的硬货**：必须讲出 runAgent 至少装了哪些关键部件，不能只说“像装配线”。
-- **禁止偷吃的相邻篇职责**：不把 15-17 的 worker 分叉与回流讲完。
+  - `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/runAgent.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/agentToolUtils.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/loadAgentsDir.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/AgentTool.tsx`
+- **主证据链**：agent 名册先成立 → AgentTool / runAgent 在当前调用里选择并装配合适 agent → prompt、工具面、skills、权限、上下文一起进入这次运行 → 静态对象才真正变成当前任务里在场的执行者。
+- **必须有的 mermaid 主图**：agent 名册进入当前任务的进场图；runAgent 把 prompt / tools / contexts / constraints 装进一次 agent 运行的主链图。
+- **这篇绝对不能空讲的硬货**：必须讲出 runAgent 至少装了哪些关键部件，以及“系统里有一组 agent”和“这一轮任务里它们真的上场了”之间差在哪。
+- **禁止偷吃的相邻篇职责**：不把主 agent 的负载问题讲成 15，不把 forkSubagent 的继承与分叉细节讲成 16。
 
-## 15｜为什么主 agent 还要派生 subagent
-- **这篇主问题**：已经有 agent 了，为什么还需要 subagent / worker。
+## 15｜为什么主 agent 还要继续把活拆出去
+- **这篇主问题**：既然系统已经有 agent 了，为什么主 agent 在运行时还不能自己做完，还要继续把局部工作拆给 subagent / worker。
 - **必须回收的旧文章**：
-  - `docs/guidebook/volume-1/12-forksubagent.md`
-  - `docs/guidebook/volume-1/18-forkedagent.md`
-  - `docs/guidebook/volume-3/12-twenty-agent-design-takes.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/12-forksubagent.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/18-forkedagent.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-3/12-twenty-agent-design-takes.md`
 - **必读源码文件**：
-  - `cc/src/tools/AgentTool/forkSubagent.ts`
-  - `cc/src/tools/AgentTool/runAgent.ts`
-- **主证据链**：主 agent 不能无限吞任务 → 需要切出受控 worker → subagent 成为主线后半段必要结果。
-- **必须有的 mermaid 主图**：主 agent 到 worker 分叉必要性图。
-- **这篇绝对不能空讲的硬货**：必须解释“已有 agent 为什么还不够”。
-- **禁止偷吃的相邻篇职责**：不把 fork 特殊继承细节写完，不把回流篇写完。
+  - `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/forkSubagent.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/runAgent.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/agents/`
+- **主证据链**：agent 名册解决的是“系统里有哪些执行者” → 但真实任务里还会出现局部探索、验证、旁路试错、上下文隔离这些负担 → 主 agent 不能无限吞下所有局部工作 → 于是 subagent / worker 变成运行时继续拆活的结果。
+- **必须有的 mermaid 主图**：主 agent 负载增长到必须拆活的因果图；全局主线 vs 局部子任务分流图。
+- **这篇绝对不能空讲的硬货**：必须解释“为什么已经有一组 agent 还不够”，并把答案压回至少一种真实负载场景：探索、验证、局部执行或上下文隔离。
+- **禁止偷吃的相邻篇职责**：不把 forkSubagent 的继承结构细讲完，不把结果回流与收口机制提前讲完。
 
-## 16｜forkSubagent 为什么不是“再开一个 agent”
-- **这篇主问题**：forkSubagent 和普通 agent 调用差在哪。
+## 16｜subagent 不是另起一个指挥部
+- **这篇主问题**：fork 出来的 subagent，到底为什么不是再起一个平级总控，而更像主 agent 切出去的一段执行分支。
 - **必须回收的旧文章**：
-  - `docs/guidebook/volume-1/12-forksubagent.md`
-  - `docs/guidebook/volume-1/18-forkedagent.md`
-  - `docs/guidebook/volume-1/11-runagent-assembly-line.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/12-forksubagent.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/18-forkedagent.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/11-runagent-assembly-line.md`
 - **必读源码文件**：
-  - `cc/src/tools/AgentTool/forkSubagent.ts`
-  - `cc/src/tools/AgentTool/runAgent.ts`
-- **主证据链**：当前上下文切分 → 继承 prompt / 工具面 / 约束 → worker 分支运行 → 不是重新创建平级匿名 agent。
-- **必须有的 mermaid 主图**：forkSubagent 继承与分叉图。
-- **这篇绝对不能空讲的硬货**：必须讲继承什么、不继承什么，不能只说“更像 worker”。
-- **禁止偷吃的相邻篇职责**：不把 17 的职责边界与信息回流写完。
+  - `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/forkSubagent.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/runAgent.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/agentToolUtils.ts`
+- **主证据链**：主 agent 决定拆出局部任务 → forkSubagent 继承当前任务的一部分上下文、约束与目标 → 子分支只在局部边界内推进 → 所以它不是再起一个平级老板，而是带边界的执行支路。
+- **必须有的 mermaid 主图**：forkSubagent 的继承与裁切图；主 agent / subagent 的上下文与权限边界图。
+- **这篇绝对不能空讲的硬货**：必须点清继承什么、不继承什么，尤其是目标范围、上下文面、工具面或约束边界里至少两项，不能只说一句“更像 worker”。
+- **禁止偷吃的相邻篇职责**：不把主 agent / subagent 的最终收口关系讲成 17，不把三者边界总收束讲成 18。
 
-## 17｜主 agent / worker agent 的职责边界与信息回流
-- **这篇主问题**：主 agent 与 worker agent 的职责边界是什么，结果怎样回流。
+## 17｜拆出去的活，最后怎么回到主线
+- **这篇主问题**：主 agent 把活拆给 subagent / worker 之后，结果、状态和判断是怎样重新回到主线里的。
 - **必须回收的旧文章**：
-  - `docs/guidebook/volume-1/18-forkedagent.md`
-  - `docs/guidebook/volume-3/12-twenty-agent-design-takes.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/18-forkedagent.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-3/12-twenty-agent-design-takes.md`
+  - `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/11-runagent-assembly-line.md`
 - **必读源码文件**：
-  - `cc/src/tools/AgentTool/forkSubagent.ts`
-  - `cc/src/tools/AgentTool/runAgent.ts`
-  - `cc/src/agents/`
-- **主证据链**：主 agent 派工 → worker 执行特定子任务 → 结果 / 状态回流 → 主线程重新收口。
-- **必须有的 mermaid 主图**：主 agent / worker agent 边界与回流图。
-- **这篇绝对不能空讲的硬货**：必须把“职责边界”和“信息回流”落成结构，不许只讲协作价值。
-- **禁止偷吃的相邻篇职责**：不把 18 的三者边界总收束写完。
+  - `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/forkSubagent.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/runAgent.ts`
+  - `/Users/haha/.openclaw/workspace/cc/src/agents/`
+- **主证据链**：主 agent 派出局部任务 → subagent 在边界内完成探索 / 验证 / 局部执行 → 结果回到主 agent 的当前判断面 → 主线程据此继续决策与收口 → 多执行者结构才不会把主线拆散。
+- **必须有的 mermaid 主图**：主 agent → subagent → 主 agent 的回流闭环图；局部执行结果如何回到主线判断面的示意图。
+- **这篇绝对不能空讲的硬货**：必须把“谁负责全局目标、谁负责局部任务、结果怎样回流”压成一条结构链，不能只写协作价值或分工口号。
+- **禁止偷吃的相邻篇职责**：不把 18 的 agent / skill / tool 总边界写完。
 
 ## 18｜agent、skill、tool 之间的边界和协作关系
 - **这篇主问题**：agent、skill、tool 各自是什么层级，它们怎样协作。

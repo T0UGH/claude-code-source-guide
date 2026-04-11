@@ -1,31 +1,38 @@
 ---
-title: 卷五 14｜runAgent 为什么像一条 agent runtime 装配线
+title: 卷五 14｜这组 agent 是怎么被拉进当前任务的
 date: 2026-04-08
 tags: [Claude Code, runAgent, agent, runtime]
+source_files:
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/runAgent.ts
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/agentToolUtils.ts
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/loadAgentsDir.ts
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/AgentTool.tsx
 ---
 
-# 卷五 14｜runAgent 为什么像一条 agent runtime 装配线
+# 卷五 14｜这组 agent 是怎么被拉进当前任务的
 
 ## 这篇要回答的问题
 
-第 13 篇立住了“更多执行者”这条主线，但还差关键一步：
+第 13 篇已经先立住了“系统里有一组 agent”这件事，但那还只是静态层。
 
-> **这些执行者到底怎样从定义变成可运行体？**
+第 14 篇接着要回答的是：
 
-Claude Code 在这里的主角不是 agent 名字，而是 `runAgent.ts` 这条装配主干。
+> **这组已经存在的 agent，到底是怎么被拉进一次当前任务里的？**
+
+所以这篇的重点不是泛讲 agent，也不是提前讲为什么主 agent 还要继续拆活，而是盯住 `AgentTool.tsx` 和 `runAgent.ts` 这一段主线，看静态定义怎样真正进入运行中的当前任务。
 
 ## 旧文与源码锚点
 
 ### 旧文素材锚点
-- `docs/guidebook/volume-1/11-runagent-assembly-line.md`
-- `docs/guidebook/volume-1/19-runagent-skill-mainline.md`
-- `docs/guidebook/volume-1/13-loadagentsdir.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/11-runagent-assembly-line.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/19-runagent-skill-mainline.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/13-loadagentsdir.md`
 
 ### 源码锚点
-- `cc/src/tools/AgentTool/runAgent.ts`
-- `cc/src/tools/AgentTool/agentToolUtils.ts`
-- `cc/src/tools/AgentTool/loadAgentsDir.ts`
-- `cc/src/tools/AgentTool/AgentTool.tsx`
+- `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/runAgent.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/agentToolUtils.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/loadAgentsDir.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/AgentTool.tsx`
 
 ## 主图：runAgent 装配主链
 

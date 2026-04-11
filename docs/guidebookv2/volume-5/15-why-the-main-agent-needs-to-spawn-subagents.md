@@ -1,30 +1,36 @@
 ---
-title: 卷五 15｜为什么主 agent 还要派生 subagent
+title: 卷五 15｜为什么主 agent 还要继续把活拆出去
 date: 2026-04-08
 tags: [Claude Code, agent, subagent, worker]
+source_files:
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/forkSubagent.ts
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/runAgent.ts
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/AgentTool.tsx
 ---
 
-# 卷五 15｜为什么主 agent 还要派生 subagent
+# 卷五 15｜为什么主 agent 还要继续把活拆出去
 
 ## 这篇要回答的问题
 
-前半段已经立住：agent 不是 tool，Claude Code 也已经有了更多执行者，以及把执行者装起来的 `runAgent` 主干。
+第 14 篇已经回答了：系统里准备好的一组 agent，是怎么被真正拉进当前任务的。
 
-接下来必须回答：
+但这还不是后半段的终点，因为运行一旦开始，新的问题马上会冒出来：
 
-> **既然已经有 agent 了，为什么主 agent 还要继续派生 subagent？**
+> **既然系统已经有 agent 了，为什么主 agent 在执行时还不能自己做完，还要继续把活拆给 subagent / worker？**
+
+这篇的重点不是再解释“系统里有一组 agent”，而是解释：为什么真实任务会把问题从“有哪些执行者”继续推进到“为什么还要继续拆活”。
 
 ## 旧文与源码锚点
 
 ### 旧文素材锚点
-- `docs/guidebook/volume-1/12-forksubagent.md`
-- `docs/guidebook/volume-1/18-forkedagent.md`
-- `docs/guidebook/volume-3/12-twenty-agent-design-takes.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/12-forksubagent.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/18-forkedagent.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-3/12-twenty-agent-design-takes.md`
 
 ### 源码锚点
-- `cc/src/tools/AgentTool/forkSubagent.ts`
-- `cc/src/tools/AgentTool/runAgent.ts`
-- `cc/src/tools/AgentTool/AgentTool.tsx`
+- `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/forkSubagent.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/runAgent.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/AgentTool.tsx`
 
 ## 主图：主 agent 为什么需要 worker 后半段
 
@@ -138,13 +144,13 @@ subagent 的出现，就是为了让主 agent 保住：
 
 ## 这篇给下一篇留下什么坡度
 
-第 15 篇先回答“为什么需要派生 subagent”。
+第 15 篇先回答“为什么主 agent 还得继续拆活”。
 
-但它还没回答最关键的特殊性：
+但它还没回答最关键的对象问题：
 
-- 这种派生到底是不是“再开一个 agent”？
-- 它继承什么？
-- 为什么更像 worker 分叉？
+- 这个被拆出去的 subagent 到底算什么？
+- 它是不是又起了一个平级主脑？
+- 它继承什么，又没继承什么？
 
 这正是第 16 篇要接的地方。
 

@@ -1,36 +1,49 @@
 ---
-title: 卷五 13｜Claude Code 是怎样长出更多执行者的
+title: 卷五 13｜Claude Code 一开始就准备了一组 agent
 date: 2026-04-08
-tags: [Claude Code, agent, subagent, runtime]
+tags:
+  - Claude Code
+  - agent
+  - subagent
+  - runtime
+source_files:
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/AgentTool.tsx
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/loadAgentsDir.ts
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/builtInAgents.ts
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/built-in/generalPurposeAgent.ts
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/built-in/exploreAgent.ts
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/built-in/planAgent.ts
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/built-in/verificationAgent.ts
 ---
 
-# 卷五 13｜Claude Code 是怎样长出更多执行者的
+# 卷五 13｜Claude Code 一开始就准备了一组 agent
 
-## 这篇要回答的问题
+## 导读
 
-Agent 主轴的锚点不是“某个 agent 多强”，而是：
+- **所属卷**：卷五：外部扩展与多代理能力
+- **卷内位置**：13 / 25
+- **上一篇**：[卷五 12｜Claude Code 里的 agent，跟 tool 不是一回事](./12-why-agent-is-not-just-another-tool.md)
+- **下一篇**：[卷五 14｜这组 agent 是怎么被拉进当前任务的](./14-why-runagent-feels-like-an-agent-runtime-assembly-line.md)
 
-> **Claude Code 为什么会从单执行者，长成一套能持续派生更多执行者的体系？**
+第 12 篇已经先回答了一个问题：
 
-这篇必须先把整条主线立成：**执行者扩展重轴**。
+> **agent 是什么？——它是执行者，不是工具。**
 
-## 旧文与源码锚点
+那第 13 篇要继续回答的是另一件事：
 
-### 旧文素材锚点
-- `docs/guidebook/volume-1/10-agenttool.md`
-- `docs/guidebook/volume-3/12-twenty-agent-design-takes.md`
-- `docs/guidebook/volume-1/14-builtinagents.md`
+> **Claude Code 里为什么不是只有一个 agent，而是一开始就准备了一组 agent？**
 
-### 源码锚点
-- `cc/src/tools/AgentTool/AgentTool.tsx`
-- `cc/src/tools/AgentTool/loadAgentsDir.ts`
-- `cc/src/tools/AgentTool/builtInAgents.ts`
-- `cc/src/tools/AgentTool/built-in/generalPurposeAgent.ts`
-- `cc/src/tools/AgentTool/built-in/exploreAgent.ts`
-- `cc/src/tools/AgentTool/built-in/planAgent.ts`
-- `cc/src/tools/AgentTool/built-in/verificationAgent.ts`
+而第 14 篇才会再回答第三件事：
 
-## 主图：Claude Code 怎样从单执行者走向多执行者
+> **这组执行者在 runtime 里是怎样被真正拉进当前任务的？**
+
+把这三问切开之后，第 13 篇的职责就很明确了：它不是再证明 agent 是什么，也不是提前展开 runAgent，更不是解释为什么主 agent 还要继续往下派工；它只负责把“执行者名册是怎么先成立的”这条主线立住。
+
+---
+
+## 先把执行者扩张图压出来
+
+先看总图：
 
 ```mermaid
 flowchart LR
@@ -41,71 +54,115 @@ flowchart LR
     E --> F[主 agent 继续派生 subagent / worker]
 ```
 
-## 先给结论
+再压成一张最短判断表：
 
-- Claude Code 长出的不只是更多能力，而是**更多承担工作的执行者**。
-- `agent / subagent / fork worker` 不是两组平级对象，而是**同一条执行者主线的前半段 / 后半段**。
-- 第 13 篇不讲细节机制，只先把“更多执行者怎样成立”立住。
+| 系统现在发生了什么 | 这意味着什么 |
+|---|---|
+| 不再只有主线程自己做完全部工作 | 执行责任开始外化 |
+| 系统能识别多种 agent definition | 执行者成为正式 runtime 对象 |
+| 不同 agent 带不同工具池、权限、背景模式 | 执行者开始分工 |
+| 主执行者还能继续派生别的执行者 | 系统开始长出执行者结构，而不只是更多动作 |
 
-## 主证据链
+这张表就是第 13 篇最该让读者先记住的骨架。
 
-复杂任务中的压力先表现为主线程负担过重 → 系统需要把某些工作交给别的承担者 → `AgentTool` 把任务委派做成正式入口 → `loadAgentsDir` / `builtInAgents` 把执行者做成可发现的 runtime 对象 → Claude Code 不再只有一个执行者，而开始拥有一组可分工的执行者。
+---
 
-## 为什么系统会需要“更多执行者”
+## 先用一个最短场景把“更多执行者”讲透
 
-### 第一，复杂任务的问题不只是不够会做，还可能是一条执行线不够用
+还是先不用急着看源码，先看一个真实场景。
 
-当任务同时要求：
+### 场景：主线程要完成一项比较复杂的工程任务
+
+这类任务往往同时要求：
 
 - 查材料
 - 规划结构
 - 修改文件
 - 验证结果
-- 保持总体目标
+- 还要始终守住总体目标
 
-问题就不再只是“有没有工具”，而是“**要不要把工作交给不同承担者**”。
+如果整个过程都只由主线程自己做，会发生什么？
 
-### 第二，光有 tools 和 skills，还不等于光有分工结构
+- 主线程要同时盯所有局部动作
+- 上下文会越来越厚
+- 局部探索和全局判断会互相打架
+- 验证和执行也会混在一起
 
-- tool 解决动作
-- skill 解决方法
+这时候问题往往已经不是“有没有工具”，而是：
 
-但复杂任务继续往上走，还会碰到第三层问题：
+> **要不要把某些工作正式交给别的承担者。**
 
-- 哪些工作主线自己扛
-- 哪些工作应该拆出去
-- 结果回来之后由谁整合
+这就是 Claude Code 开始需要“更多执行者”的起点。
 
-这一层必须引入**执行者对象**。
+也就是说，系统往上长出来的，不再只是：
 
-## 源码证据：Claude Code 已经在组织执行者谱系
+- 更多 tool
+- 更多 skill
+- 更多外部能力
 
-### 证据 1：`loadAgentsDir.ts` 把 agent 当正式定义对象加载
+而是：
 
-`loadAgentsDir.ts` 并不是只读一个 prompt 文件夹。它统一处理：
+- **更多正式承接工作的执行者**
+
+这就是第 13 篇最该先立住的系统压力。
+
+---
+
+## 主证据链一：`AgentTool` 让任务委派成为正式入口
+
+从源码上看，执行者扩张主线的第一块地基仍然是 `AgentTool.tsx`。
+
+卷一 10 已经讲得很清楚：`AgentTool` 的输入不是某个动作参数，而是一项要被委派出去的任务：
+
+- `description`
+- `prompt`
+- `subagent_type`
+- `model`
+- `run_in_background`
+- `isolation`
+- `cwd`
+
+这意味着 Claude Code 在这里第一次明确做了一件事：
+
+> **把“把工作交给另一个执行者”做成了系统正式入口。**
+
+所以执行者扩张不是从“很多 agent 文件”开始，而是从：
+
+> **任务委派成为 runtime 一等能力**
+
+开始。
+
+---
+
+## 主证据链二：`loadAgentsDir.ts` 让执行者集合成为正式对象
+
+如果只有 `AgentTool`，系统仍然只是“能派任务”。
+
+真正让“更多执行者”变成系统对象的，是 `loadAgentsDir.ts` 这一层。
+
+Claude Code 不只是现场随便拉一个新会话，而是会先把 agent 定义加载进系统，正式处理：
 
 - built-in agents
 - plugin agents
 - user / project / policy agents
 
-然后再得到 `activeAgents`。这说明 Claude Code 运行前，已经把“有哪些执行者可被系统感知”做成正式定义层。
+然后得到当前可见、可用的一组执行者对象。
 
-### 证据 2：agent 的定义字段说明它们不是名字列表，而是工作模板
+这一步的真正意义是：
 
-`BaseAgentDefinition` 里包含：
+> **执行者从“这次临时派出去的人”变成了“系统预先知道的一组可选承担者”。**
 
-- tools / disallowedTools
-- skills
-- mcpServers
-- hooks
-- model / permissionMode / maxTurns
-- background / isolation
+也就是说，多执行者成立的第二块地基不是“多开几个会话”，而是：
 
-这不是“人设列表”，而是**不同执行体的工作边界模板**。
+> **执行者集合先作为 runtime 对象成立。**
 
-### 证据 3：`builtInAgents.ts` 说明官方已经内建多种工作模式执行者
+---
 
-`builtInAgents.ts` 会按入口、feature gate、运行环境，把以下执行者装进系统：
+## 主证据链三：`builtInAgents.ts` 和 definition fields 让分工真正发生
+
+第 13 篇最能让“更多执行者”变得具象的，不是抽象判断，而是 `builtInAgents.ts` 和 agent definition 本身。
+
+Claude Code 官方并不是只给一个通用执行者，而是已经开始内建多种不同工作模式的执行者：
 
 - `GENERAL_PURPOSE_AGENT`
 - `EXPLORE_AGENT`
@@ -113,39 +170,84 @@ flowchart LR
 - `VERIFICATION_AGENT`
 - 以及其它内建角色
 
-也就是说，Claude Code 的“更多执行者”不是抽象口号，而已经落成：
+这里最关键的不是“名字多了”，而是：
 
-- 通用执行者
-- 只读探索执行者
-- 规划执行者
-- 验证执行者
+> **系统已经把不同工作姿态，正式做成了不同执行者模板。**
 
-这是实打实的对象增殖。
+如果再往下看 definition fields，会更清楚这一点。真正重的不是语气，而是边界：
 
-## 为什么第 13 篇必须先于 12 / 14 / 15-17 被写出来
+- `tools`
+- `disallowedTools`
+- `skills`
+- `mcpServers`
+- `hooks`
+- `model`
+- `permissionMode`
+- `maxTurns`
+- `background`
+- `isolation`
 
-因为 Agent 主轴后面的所有篇目，都默认这件事已经成立：
+这些字段说明的不是“人设”，而是：
 
-- 第 12 篇只是先打掉误解：agent 不是工具。
-- 第 14 篇才展开：这些执行者怎样被 `runAgent` 装起来。
-- 第 15-17 篇才进入后半段：主执行者怎样继续派生 worker。
+- 它带什么能力面
+- 它受什么权限边界约束
+- 它在哪种执行模式里工作
+- 它的回合和成本边界在哪里
 
-如果没有第 13 篇，后面几篇都会变成零散局部机制；有了第 13 篇，后面才会落回同一条主线。
+所以 agent definition 真正像的不是角色名录，而是：
 
-## 这条主线的前半段与后半段
+> **执行体的工作模板。**
 
-### 前半段：更多执行者怎样成立
+---
+
+## 这篇只先把“执行者名册”立住
+
+第 13 篇到这里就应该收住，不再继续往后讲运行时派工。
+
+因为只要这篇已经立住三件事，就够了：
+
+- 系统里不是只有一个抽象主脑
+- agent definitions 是正式对象，不是口头约定
+- built-in agents / loadAgentsDir 让一组执行者模板先成立
+
+也就是说，这篇真正补上的不是“为什么后面一定会出现 subagent / worker”，而是：
+
+> **Claude Code 在运行之前，就已经承认一组可被识别、可被加载、可被选择的执行者对象。**
+
+至于这组对象怎样进入当前任务，为什么主 agent 还要继续拆活，那是第 14、15 篇才回答的问题。
+
+---
+
+## 从卷五地图看，13 真正补上的是什么
+
+卷五前面已经有：
+
+- skills：方法组织
+- MCP：外部能力源接入
 - 12：agent 不是工具
-- 13：系统怎样长出更多执行者
-- 14：`runAgent` 怎样把执行者装起来
 
-### 后半段：执行者怎样继续分叉成 worker 协作
-- 15：为什么主 agent 还要派 subagent
-- 16：为什么 `forkSubagent` 更像 worker 分叉
-- 17：主 agent / worker agent 的边界与回流
+那 13 再往前走一步，真正补上的，不是某个具体执行机制，而是：
 
-这里最重要的纪律是：**不要把 subagent 再拆成另一组对象。**
+> **Claude Code 不再只有一个承担者，而开始拥有一组可分工、可扩张、可继续派生的执行者。**
+
+也就是说，卷五在这里第一次把“谁来做这段工作”正式推成了系统主线。
+
+这才是 13 的真正重量。
+
+---
+
+## 这篇不展开什么
+
+- **不展开** `runAgent` 的装配细节——那是第 14 篇
+- **不展开** subagent / worker 的后半段——那是第 15-17 篇
+- **不把** subagent 再拆成另一组平级对象
+
+第 13 篇只做一件事：
+
+> **先把“更多执行者怎样成立”立成 Agent 主轴的锚点。**
+
+---
 
 ## 一句话收口
 
-> Claude Code 长出的不只是更多能力，而是更多承担工作的执行者；`AgentTool`、agent definitions 和 built-in agents 让“谁来接这段工作”正式进入 runtime，于是 agent / subagent / worker 才能被写成同一条执行者主线。
+> **Claude Code 长出的不只是更多能力，而是更多承担工作的执行者：`AgentTool` 让任务委派成为正式入口，`loadAgentsDir` 让执行者变成可加载的 runtime 对象，`builtInAgents` 则把不同工作模式做成不同执行者模板，于是 agent / subagent / worker 才能被写成同一条执行者主线，而不是几类平级名词。**

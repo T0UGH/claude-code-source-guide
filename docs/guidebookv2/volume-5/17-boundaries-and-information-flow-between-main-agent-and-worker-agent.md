@@ -1,30 +1,35 @@
 ---
-title: 卷五 17｜主 agent / worker agent 的职责边界与信息回流
+title: 卷五 17｜拆出去的活，最后怎么回到主线
 date: 2026-04-08
 tags: [Claude Code, agent, worker, subagent, runtime]
+source_files:
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/forkSubagent.ts
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/runAgent.ts
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/AgentTool.tsx
+  - /Users/haha/.openclaw/workspace/cc/src/tasks/LocalAgentTask/LocalAgentTask.js
 ---
 
-# 卷五 17｜主 agent / worker agent 的职责边界与信息回流
+# 卷五 17｜拆出去的活，最后怎么回到主线
 
 ## 这篇要回答的问题
 
-后半段主线走到这里，真正要收的不是“还能分叉多少 worker”，而是：
+后半段主线走到这里，真正要收的已经不是“还能分叉多少 worker”，而是：
 
-> **主 agent 和 worker agent 的职责边界怎么切，结果又怎样回流主线？**
+> **活都拆出去了，最后谁来收口，结果又是怎么重新回到主线里的？**
 
 如果边界切不住、回流收不回来，subagent 结构就会变成失控分叉。
 
 ## 旧文与源码锚点
 
 ### 旧文素材锚点
-- `docs/guidebook/volume-1/18-forkedagent.md`
-- `docs/guidebook/volume-3/12-twenty-agent-design-takes.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/18-forkedagent.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-3/12-twenty-agent-design-takes.md`
 
 ### 源码锚点
-- `cc/src/tools/AgentTool/forkSubagent.ts`
-- `cc/src/tools/AgentTool/runAgent.ts`
-- `cc/src/tools/AgentTool/AgentTool.tsx`
-- `cc/src/tasks/LocalAgentTask/LocalAgentTask.js`
+- `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/forkSubagent.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/runAgent.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/AgentTool.tsx`
+- `/Users/haha/.openclaw/workspace/cc/src/tasks/LocalAgentTask/LocalAgentTask.js`
 
 ## 主图：主线与 worker 的边界和回流
 

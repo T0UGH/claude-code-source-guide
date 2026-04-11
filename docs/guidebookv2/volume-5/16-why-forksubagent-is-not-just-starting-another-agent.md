@@ -1,30 +1,34 @@
 ---
-title: 卷五 16｜forkSubagent 为什么不是“再开一个 agent”
+title: 卷五 16｜subagent 不是另起一个指挥部
 date: 2026-04-08
 tags: [Claude Code, forkSubagent, worker, runtime]
+source_files:
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/forkSubagent.ts
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/runAgent.ts
+  - /Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/AgentTool.tsx
 ---
 
-# 卷五 16｜forkSubagent 为什么不是“再开一个 agent”
+# 卷五 16｜subagent 不是另起一个指挥部
 
 ## 这篇要回答的问题
 
-第 15 篇已经说明：主 agent 需要把一部分工作切给 subagent。现在还要再往前走一步：
+第 15 篇已经说明：主 agent 为什么还得继续把活拆出去。现在还要再往前走一步：
 
-> **`forkSubagent` 和“再开一个 agent”到底差在哪？**
+> **这个被拆出去的 subagent，到底为什么不是又起了一个平级总控？**
 
-这篇的任务，就是把 fork 写成**worker 分叉**，而不是写成对象横向新增。
+这篇的任务，就是把 fork 写成**执行支路**，而不是写成横向新增的第二个老板。
 
 ## 旧文与源码锚点
 
 ### 旧文素材锚点
-- `docs/guidebook/volume-1/12-forksubagent.md`
-- `docs/guidebook/volume-1/18-forkedagent.md`
-- `docs/guidebook/volume-1/11-runagent-assembly-line.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/12-forksubagent.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/18-forkedagent.md`
+- `/Users/haha/.openclaw/workspace/claude-code-source-guide/docs/guidebook/volume-1/11-runagent-assembly-line.md`
 
 ### 源码锚点
-- `cc/src/tools/AgentTool/forkSubagent.ts`
-- `cc/src/tools/AgentTool/runAgent.ts`
-- `cc/src/tools/AgentTool/AgentTool.tsx`
+- `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/forkSubagent.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/runAgent.ts`
+- `/Users/haha/.openclaw/workspace/cc/src/tools/AgentTool/AgentTool.tsx`
 
 ## 主图：forkSubagent 的继承与分叉
 
