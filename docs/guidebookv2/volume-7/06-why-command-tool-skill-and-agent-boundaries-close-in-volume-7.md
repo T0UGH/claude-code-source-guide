@@ -18,6 +18,21 @@ status: draft
 
 # 卷七 06｜command、tool、skill、agent 的边界为什么最终要在卷七收口
 
+## 导读
+
+- **所属卷**：卷七：命令、工作流与产品层整合
+- **卷内位置**：06 / 08
+- **上一篇**：[卷七 05｜工作流控制层是怎样在 Claude Code 里成立的](./05-how-the-workflow-control-layer-forms-in-claude-code.md)
+- **下一篇**：[卷七 07｜为什么 Claude Code 的产品形态本质上是 runtime 被包装给用户的方式](./07-why-claude-codes-product-form-is-runtime-packaged-for-users.md)
+
+第 05 篇已经把 workflow control layer 立住了。
+
+第 06 篇接着要解决的，是卷七的边界总收口：
+
+> **为什么 command、tool、skill、agent 的边界，必须站在控制层视角，最终在卷七统一收口？**
+
+这篇只负责从控制层视角重排四者职责，不提前展开产品形态正文。
+
 ## 这篇要回答的问题
 
 到卷七这里，如果还沿用前面几卷各自的局部视角去看 Claude Code，很容易得到四句都对、但拼不成系统的话：

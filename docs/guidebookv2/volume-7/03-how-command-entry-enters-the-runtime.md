@@ -19,6 +19,21 @@ status: draft
 
 # 卷七 03｜命令入口是怎样接进 runtime 的
 
+## 导读
+
+- **所属卷**：卷七：命令、工作流与产品层整合
+- **卷内位置**：03 / 08
+- **上一篇**：[卷七 02｜为什么 slash / prompt commands 不只是快捷方式](./02-why-slash-and-prompt-commands-are-not-just-shortcuts.md)
+- **下一篇**：[卷七 04｜为什么 frontmatter 与 command interface 是运行时接口](./04-why-frontmatter-and-command-interface-are-runtime-interfaces.md)
+
+第 02 篇已经把 command 立成了正式用户入口。
+
+第 03 篇接着要回答的是：
+
+> **命令被识别之后，到底是怎样接进 Claude Code 当前这一轮 runtime 的？**
+
+这篇只负责把命令从输入层一路压进 turn、query 与上下文装配主链，证明它会真实改写后续运行。
+
 ## 这篇真正要回答的问题
 
 上一篇已经把一个判断立住了：slash command / prompt command 不是普通快捷方式，而是正式用户入口。
@@ -490,10 +505,6 @@ prependUserContext + appendSystemContext]
 
 > **命令先在输入层被识别，再在 `processSlashCommand.tsx` 中被展开为结构化运行材料，随后通过 `handlePromptSubmit.ts` / `QueryEngine.ts` 并入当前 turn，最后在 `query.ts` 的上下文装配里进入真实模型调用，并以权限、模型、effort 与消息内容一起改写后续运行。**
 
-## 给下一篇留的入口
+## 这篇收住什么
 
-这一篇讲清之后，下一篇最自然的问题就出来了：
-
-> **如果命令这种显式入口能以结构化方式接进 runtime，那 skill frontmatter / command interface 这些声明式字段，为什么也应该被看成 runtime interface，而不只是附属元数据？**
-
-这正是卷七第 04 篇该接的位置。
+这一篇只把“命令怎样从输入层接进当前 turn / query / 上下文装配主链”讲清。至于 skill frontmatter / command interface 这些声明式字段，为什么也属于 runtime interface，要留给第 04 篇继续展开。

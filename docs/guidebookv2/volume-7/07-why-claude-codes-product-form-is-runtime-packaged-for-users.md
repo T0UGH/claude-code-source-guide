@@ -22,6 +22,21 @@ status: draft
 
 # 卷七 07｜为什么说 Claude Code 的产品形态，本质上是 runtime 被包装给用户的方式
 
+## 导读
+
+- **所属卷**：卷七：命令、工作流与产品层整合
+- **卷内位置**：07 / 08
+- **上一篇**：[卷七 06｜为什么 command、tool、skill、agent 的边界要在卷七收口](./06-why-command-tool-skill-and-agent-boundaries-close-in-volume-7.md)
+- **下一篇**：[卷七 08｜为什么用户入口、运行时接口和工作流控制会收成今天这个产品](./08-why-user-entry-runtime-interface-and-workflow-control-become-todays-product.md)
+
+第 06 篇已经把入口、执行、方法和执行责任的边界重新切开了。
+
+第 07 篇现在要再往上推一步：
+
+> **为什么 Claude Code 会长成今天这个产品形态，而且这个产品形态本质上不是 runtime 外面再套一层 UI，而是 runtime 被重新组织后暴露给用户的方式？**
+
+这篇只负责解释“包装”到底包装了什么，不提前写卷尾总收束。
+
 ## 这篇要回答的问题
 
 到卷七第 06 篇为止，入口、接口、工作流控制和执行责任已经都各自立住了：

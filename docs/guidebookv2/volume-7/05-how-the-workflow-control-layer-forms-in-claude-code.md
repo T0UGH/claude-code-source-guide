@@ -17,6 +17,21 @@ status: draft
 
 # 卷七 05｜工作流控制层是怎样在 Claude Code 里成立的
 
+## 导读
+
+- **所属卷**：卷七：命令、工作流与产品层整合
+- **卷内位置**：05 / 08
+- **上一篇**：[卷七 04｜为什么 frontmatter 与 command interface 是运行时接口](./04-why-frontmatter-and-command-interface-are-runtime-interfaces.md)
+- **下一篇**：[卷七 06｜为什么 command、tool、skill、agent 的边界要在卷七收口](./06-why-command-tool-skill-and-agent-boundaries-close-in-volume-7.md)
+
+前四篇已经把入口与接口两层立住了。
+
+第 05 篇现在要继续回答：
+
+> **Claude Code 的工作流控制层，是怎样在 runtime 里成立的？**
+
+也就是说，这篇只负责把 verify / debug / plan / orchestration 从散功能压成控制动作，并说明它们怎样改变执行回路。
+
 ## 这篇要回答的问题
 
 卷七前四篇已经把两件事立住了：
