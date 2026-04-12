@@ -115,15 +115,15 @@ ToolSearchTool 更像把系统推到一条更合适的执行路径上。
 
 所以它更准确的角色，不是“搜索结果器”，而是“路线发现器”。
 
-## 图 2：执行层“从问题到路线”的流程图
+## 图 2：ToolSearchTool 和 GrepTool 的边界对照图
 
 ```mermaid
-flowchart LR
-    A[当前问题] --> B[不知道该调什么工具]
-    B --> C[ToolSearchTool]
-    C --> D[候选能力与使用线索]
-    D --> E[选定后续执行对象]
-    E --> F[继续主执行链]
+flowchart TD
+    A[当前问题] --> B{缺的到底是什么?}
+    B -->|缺执行路线| C[ToolSearchTool]
+    B -->|缺现实证据| D[GrepTool]
+    C --> E[候选能力 / 使用线索]
+    D --> F[命中位置 / 证据候选]
 ```
 
 ## 这篇不展开什么

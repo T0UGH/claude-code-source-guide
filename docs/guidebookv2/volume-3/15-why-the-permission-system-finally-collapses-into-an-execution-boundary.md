@@ -127,14 +127,16 @@ tags:
 
 ```mermaid
 flowchart TD
-    A[assistant 形成 tool_use] --> B[orchestration 接住调用]
-    B --> C[permission decision]
-    C --> D[Bash / path / rule 等本地判断]
-    D --> E[长期授权与规则沉淀]
-    E --> F[policy limits 等更高层限制]
-    F --> G[最终可执行范围]
-    G --> H[tool execution 真正发生]
-    H --> I[tool_result 回流]
+    A[assistant 形成 tool_use] --> B[即时边界
+这次动作能不能执行]
+    B --> C[语义边界
+Bash / path / rule 等本地判断]
+    C --> D[长期边界
+授权与规则沉淀]
+    D --> E[更高层边界
+policy limits]
+    E --> F[最终可执行范围]
+    F --> G[tool execution 真正发生]
 ```
 
 这张图最关键的不是节点数量，而是语义变化：

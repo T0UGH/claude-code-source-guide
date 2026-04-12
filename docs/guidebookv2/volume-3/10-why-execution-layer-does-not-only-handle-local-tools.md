@@ -123,12 +123,14 @@ SkillTool / AgentTool 的加入，补全的正是这张谱系图。
 
 ```mermaid
 flowchart TD
-    A[tool runtime] --> B1[直接执行对象: Bash / File / Search]
-    A --> B2[高阶执行对象: SkillTool / AgentTool]
-    B1 --> C[直接碰现实材料或系统对象]
-    B2 --> D[转交方法链或子任务执行]
-    C --> E[tool_result 回流]
-    D --> E
+    A[tool runtime] --> B1[本地执行对象]
+    A --> B2[高阶执行对象]
+    B1 --> C[Bash / File / Search]
+    B2 --> D[SkillTool / AgentTool]
+    C --> E[直接碰现实材料或系统对象]
+    D --> F[转交方法链或子任务执行]
+    E --> G[tool_result 回流]
+    F --> G
 ```
 
 这张图的重点不是“本地 / 非本地”的分类，而是：**它们都已经属于同一张执行对象谱系图。**

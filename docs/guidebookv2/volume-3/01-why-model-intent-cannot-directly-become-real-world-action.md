@@ -171,7 +171,7 @@ tool runtime 就夹在这两次翻译中间。
 ## 图 2：tool runtime 作为中间层的位置图
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[当前工作面里的模型判断] --> B[tool_use]
     B --> C[tool runtime]
     C --> D[orchestration]

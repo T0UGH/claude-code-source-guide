@@ -160,14 +160,14 @@ flowchart TD
 ## 图 2：分发到具体执行对象的桥接图
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[tool_use] --> B[orchestration]
     B --> C1[BashTool]
     B --> C2[FileReadTool]
     B --> C3[FileEdit / FileWrite]
     B --> C4[GrepTool]
     B --> C5[ToolSearchTool]
-    B --> C6[SkillTool / AgentTool]
+    B --> C6[其他正式执行对象]
     C1 --> D[tool_result]
     C2 --> D
     C3 --> D

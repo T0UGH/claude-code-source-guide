@@ -116,14 +116,15 @@ GrepTool 往往并不给最终答案。
 
 所以它的角色，更接近“证据入口”而不是“搜索结果终点”。
 
-## 图 2：从问题到证据的定位链图
+## 图 2：GrepTool 和 ToolSearchTool 的边界对照图
 
 ```mermaid
-flowchart LR
-    A[当前问题] --> B[GrepTool]
-    B --> C[命中位置 / 证据候选]
-    C --> D[FileRead / 局部分析]
-    D --> E[形成更稳的当前判断]
+flowchart TD
+    A[当前问题] --> B{缺的到底是什么?}
+    B -->|缺现实证据| C[GrepTool]
+    B -->|缺执行路线| D[ToolSearchTool]
+    C --> E[命中位置 / 证据候选]
+    D --> F[候选能力 / 使用线索]
 ```
 
 ## 这篇不展开什么

@@ -126,14 +126,14 @@ FileRead 会改变判断依据，但不会改变现实文件本身。
 
 FileEdit / FileWrite 则会让现实工作对象产生新状态。这个差异足够大，值得单独成篇。
 
-## 图 2：当前判断落回现实文件示意图
+## 图 2：文件家族的往返链
 
 ```mermaid
-flowchart LR
-    A[当前工作面中的判断] --> B[FileEditTool / FileWriteTool]
-    B --> C[文件系统中的新状态]
-    C --> D[后续读取 / 搜索 / 验证]
-    D --> E[继续当前 turn 或下一轮执行]
+flowchart TD
+    A[FileReadTool 先把现实材料接进来] --> B[形成当前判断]
+    B --> C[FileEditTool / FileWriteTool 落回现实文件]
+    C --> D[文件系统得到新状态]
+    D --> E[后续读取 / 搜索 / 验证]
 ```
 
 ## 这篇不展开什么
