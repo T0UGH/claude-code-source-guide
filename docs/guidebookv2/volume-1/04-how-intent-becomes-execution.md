@@ -46,14 +46,14 @@ tags:
 可以先看这张总图：
 
 ```mermaid
-flowchart LR
-    M[模型形成结构化意图] --> TU[tool_use]
-    TU --> O[orchestration]
-    O --> E[execution]
-    E --> C[tool.call]
-    C --> R[tool_result]
-    R --> A[当前 turn 内本地累积结果]
-    A --> RT[assistant + tool_results 组织下一轮 continuation]
+flowchart TB
+    M[模型形成<br/>结构化意图] --> TU[tool_use]
+    TU --> O[runtime 编排<br/>orchestration]
+    O --> E[开始执行<br/>execution]
+    E --> C[触发具体工具<br/>tool.call]
+    C --> R[得到结果<br/>tool_result]
+    R --> A[结果先收进<br/>当前 turn 本地状态]
+    A --> RT[组织下一轮<br/>continuation]
     RT --> M2[模型继续当前 turn]
 ```
 
