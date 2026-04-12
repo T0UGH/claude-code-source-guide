@@ -21,12 +21,13 @@ updated: 2026-04-12
 7. [卷四 07｜compact / compaction 是主动减载机制](./07-compact-and-compaction-as-the-active-load-shedding-mechanism.md)
 8. [卷四 08｜restore / session recovery 怎么让系统恢复工作](./08-restore-and-session-recovery-how-the-system-resumes-work.md)
 
-### 长期记忆组：从“不是长上下文”到“后台持续认识”
+### 长期记忆组：从“不是长上下文”到“回注新 runtime”
 
 9. [卷四 09｜为什么 Claude Code 的 memory 不是 context 的别名](./09-why-memory-is-not-just-another-name-for-context.md)
 10. [卷四 10｜working memory / transcript / long-term memory 为什么不是一回事](./10-why-working-memory-transcript-and-long-term-memory-are-not-the-same.md)
 11. [卷四 11｜MEMORY.md / memdir 为什么不是普通文件，而是正式长期记忆层](./11-why-memory-md-and-memdir-are-a-formal-long-term-memory-layer.md)
 12. [卷四 12｜为什么自动记忆提取不是小功能，而是系统持续性的后台 runtime](./12-why-automatic-memory-extraction-is-a-background-runtime-for-system-continuity.md)
+13. [卷四 13｜长期记忆是按什么边界回注到新 runtime 的](./13-how-long-term-memory-is-injected-back-into-a-new-runtime.md)
 
 ## 这一卷不重点展开什么
 

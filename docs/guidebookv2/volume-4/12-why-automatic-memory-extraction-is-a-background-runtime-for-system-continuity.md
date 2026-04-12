@@ -17,7 +17,7 @@ tags:
 - **卷内位置**：12 / 12
 - **在长期记忆组中的位置**：04 / 04
 - **上一篇**：[卷四 11｜MEMORY.md / memdir 为什么不是普通文件，而是正式长期记忆层](./11-why-memory-md-and-memdir-are-a-formal-long-term-memory-layer.md)
-- **下一篇**：无；这是长期记忆组收口篇
+- **下一篇**：[卷四 13｜长期记忆是按什么边界回注到新 runtime 的](./13-how-long-term-memory-is-injected-back-into-a-new-runtime.md)
 
 到上一篇为止，长期记忆组已经完成了三步：拆掉 memory ≠ context 的误解、拆开三层连续性容器、把 `MEMORY.md` / memdir 立成正式长期记忆层。
 
