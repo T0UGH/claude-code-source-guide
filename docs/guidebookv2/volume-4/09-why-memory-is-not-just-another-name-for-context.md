@@ -115,6 +115,21 @@ flowchart TD
 
 前者是当前工作条件，后者是跨任务持续认识。
 
+## 补图：memory / context / transcript 三分图
+
+```mermaid
+flowchart TD
+    A[transcript] --> A1[过去发生过什么]
+    B[context] --> B1[这一轮现在怎么工作]
+    C[memory] --> C1[系统长期记住了什么]
+
+    A1 --> D[当前与未来都可被引用]
+    B1 --> D
+    C1 --> D
+```
+
+这张补图最重要的作用，是把三个经常被糊成一团的对象直接分开：**transcript 更像档案，context 更像当前工作面，memory 更像跨任务持续认识。**
+
 ## 卷四前八篇已经把 context 讲得很清楚，但还没自动推出 memory
 
 这也是这篇最容易被误读的地方。

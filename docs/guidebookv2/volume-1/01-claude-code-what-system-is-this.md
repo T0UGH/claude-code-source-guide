@@ -29,6 +29,21 @@ tags:
 
 ---
 
+## 补图：Claude Code vs 普通聊天壳
+
+```mermaid
+flowchart TD
+    A[普通聊天壳] --> A1[用户输入]
+    A1 --> A2[模型回复]
+    A2 --> A3[输出结束]
+
+    B[Claude Code] --> B1[用户输入]
+    B1 --> B2[query / context / tool / agent / memory]
+    B2 --> B3[输出 + 执行 + 后续继续]
+```
+
+这张补图最想压住的不是“Claude Code 功能更多”，而是：**普通聊天壳更像一次输入对应一次回复，Claude Code 中间站着的是一层真正负责组织运行的 runtime。**
+
 ## 为什么 Claude Code 最容易先被看浅
 
 Claude Code 最先暴露给用户的，往往只是它最表面的一层：

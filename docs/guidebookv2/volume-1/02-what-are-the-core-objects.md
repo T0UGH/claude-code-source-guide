@@ -88,6 +88,24 @@ flowchart TD
 
 ---
 
+## 补图：核心对象分层图
+
+```mermaid
+flowchart TD
+    A[入口层] --> A1[Prompt / Command / Slash Command]
+    B[运行层] --> B1[Runtime / Session / Context / Query]
+    C[执行层] --> C1[Tool / Agent / Subagent]
+    D[扩展层] --> D1[Skill / MCP / Plugin]
+    E[持续性层] --> E1[History / Memory / State]
+
+    A1 --> B1
+    B1 --> C1
+    B1 --> D1
+    B1 --> E1
+```
+
+这张补图的作用，是把“对象有哪些”推进成“对象分别站在哪一层”。这样后面再看主循环、工具、上下文和扩展能力时，读者更容易把它们收回同一张对象地图。
+
 ## 再把这些对象压成一张分层图
 
 如果把关系先收一收，只看它们各自站位，可以先记成下面这样：

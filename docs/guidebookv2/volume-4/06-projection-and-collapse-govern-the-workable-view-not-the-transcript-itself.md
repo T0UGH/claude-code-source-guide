@@ -72,6 +72,19 @@ transcript 更靠近第一个目标，当前工作视图更靠近第二个目标
 
 一旦把这层分开，很多误读会自动消失。当前 query 不再原样带着某段旧内容，并不等于那段历史不存在了；它更可能只是在说：那段历史此刻不该再用原始密度压住当前工作面。
 
+## 补图：transcript vs workable view 边界图
+
+```mermaid
+flowchart TD
+    A[transcript
+过去发生过什么] --> C[档案层继续保留]
+    B[workable view
+这一轮拿什么继续开工] --> D[视图层继续治理]
+    E[projection / collapse] --> D
+```
+
+这张补图把本篇最该校正的东西压成最短边界：**transcript 回答“过去发生了什么”，workable view 回答“这一轮拿什么继续工作”，projection / collapse 管的是后者，不是前者。**
+
 ## projection：处理的是“旧材料怎样进入当前这一轮”
 
 projection 更像一种重投影。它不重新定义过去发生了什么，而是决定：

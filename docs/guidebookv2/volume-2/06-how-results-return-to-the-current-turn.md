@@ -100,6 +100,18 @@ flowchart TD
 
 ---
 
+## 补图：result 回流责任图
+
+```mermaid
+flowchart TD
+    A[tool / action 执行] --> B[产生执行产物]
+    B --> C[包装成 tool_result]
+    C --> D[并回当前 turn 的消息链]
+    D --> E[continuation 继续组织下一轮判断]
+```
+
+这张补图补的是责任边界：**执行产物** 只是外部动作有了结果，**tool_result 并回当前 turn** 才代表主循环重新拿回了这份结果，**continuation** 则负责把它变成下一轮判断的输入。
+
 ## 关键点一：回流的对象不是“底层返回值”，而是可进入消息协议的结果块
 
 Claude Code 不是直接把某个 JavaScript 返回值塞回模型。

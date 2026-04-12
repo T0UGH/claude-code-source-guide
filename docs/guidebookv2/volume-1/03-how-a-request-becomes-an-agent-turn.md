@@ -95,6 +95,20 @@ flowchart LR
 
 ---
 
+## 补图：request 和 agent turn 的边界
+
+```mermaid
+flowchart TD
+    A[request
+用户送进来的一次输入] --> B[运行时接入]
+    B --> C[当前 query / 当前判断形成]
+    C --> D[是否调用能力 / 是否继续]
+    D --> E[一轮 agent turn
+生成判断 → 执行动作 → 结果回流 → 再判断]
+```
+
+这张补图要切开的，是两个经常被混成一件事的对象：**request 是入口对象，agent turn 是运行单位。** 请求进来之后，只有被 runtime 组织成可持续推进的一轮工作回合，它才真正变成 turn。
+
 ## 为什么这里一定要叫 Agent Turn
 
 这里不用“单次回复”，而用“agent turn”，不是为了显得高级，而是因为两者关心的根本不是同一件事。

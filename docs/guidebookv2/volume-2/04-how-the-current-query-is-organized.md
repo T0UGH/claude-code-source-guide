@@ -55,6 +55,19 @@ tags:
 
 ---
 
+## 补图：当前 query 的构成图
+
+```mermaid
+flowchart TD
+    A[当前 messages 视图] --> F[当前可工作 query]
+    B[userContext] --> F
+    C[systemPrompt] --> F
+    D[systemContext] --> F
+    E[当前输入归位后的消息结果] --> F
+```
+
+这张补图要压住的判断是：**current query 不是一句输入，也不是单独一段 prompt，而是当前 messages、userContext、systemPrompt、systemContext 与当前输入归位结果一起构成的本轮工作面。**
+
 ## 第一步：请求进入 QueryEngine 后，先被放进持续存在的消息面里
 
 从 `cc/src/QueryEngine.ts` 看，`submitMessage(...)` 处理当前请求时，最重要的背景之一，是 QueryEngine 手里已经持有一份会话级的 `mutableMessages`。
