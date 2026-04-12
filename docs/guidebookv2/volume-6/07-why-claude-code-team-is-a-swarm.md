@@ -19,6 +19,21 @@ status: draft
 
 # 卷六 07｜为什么说 Claude Code 的 team 系统本质上是一个 swarm
 
+## 导读
+
+- **所属卷**：卷六：多 agent 协作运行时
+- **卷内位置**：07 / 07
+- **上一篇**：[卷六 06｜local、remote、teammate task 的边界](./06-boundaries-between-local-remote-and-teammate-tasks.md)
+- **下一篇**：卷七入口待接续
+
+到第 07 篇，卷六前面的对象、运行体、协议和边界四层都已经分别立住了。
+
+卷尾真正要回答的，不再是某一个机制怎么实现，而是：
+
+> **为什么这些对象、运行体、协议和边界一旦被重新压回同一张图，Claude Code 的 team 系统就不该再被叫成“team 功能”，而更像一个 swarm？**
+
+这篇只负责把卷六前文重新压回同一条协作 runtime 因果链，把整卷从 team 机制卷收成 swarm runtime 卷。
+
 ## 这篇要回答的问题
 
 到这里，卷六前六篇已经把四条线分别钉住了：

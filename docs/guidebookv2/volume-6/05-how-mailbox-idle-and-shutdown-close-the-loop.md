@@ -18,6 +18,21 @@ status: draft
 
 # 卷六 05｜mailbox + idle / shutdown 协议：teammate 之间是怎么通信和收尾的
 
+## 导读
+
+- **所属卷**：卷六：多 agent 协作运行时
+- **卷内位置**：05 / 07
+- **上一篇**：[卷六 04｜InProcessTeammate runtime 是怎么真正跑起来的](./04-how-inprocess-teammate-runtime-actually-runs.md)
+- **下一篇**：[卷六 06｜local、remote、teammate task 的边界](./06-boundaries-between-local-remote-and-teammate-tasks.md)
+
+第 04 篇已经把 teammate 立成了正式运行体。
+
+第 05 篇现在要继续回答：
+
+> **mailbox、idle、shutdown 为什么不是零碎机制，而是 teammate 协作闭环成立的三段协议？**
+
+这篇只负责把协作协议压实：通信怎样发生、状态怎样回报、退场怎样闭合。
+
 ## 这篇要回答的问题
 
 前一篇已经把 `InProcessTeammateTask` 立成了正式运行体：teammate 不是一个名字，不是 worker wrapper，而是会真的被装进当前 runtime、接进 `query(...)`、持有自己的消息与状态的运行成员。
@@ -336,7 +351,7 @@ Claude Code 现在做成的是这样一条链：
 
 ### 1. 不能把 06 的承载体边界顺手写完
 
-这里可以顺手提醒：teammate 的 stop / idle / shutdown 语义，明显比普通 background task 更重。但不能在本篇里把 `LocalAgentTask`、`RemoteAgentTask` 和 teammate runtime 的系统边界完整切掉，那是下一篇的职责。
+这里先把 teammate 的 stop / idle / shutdown 写成协作协议即可；`LocalAgentTask`、`RemoteAgentTask` 和 teammate runtime 的系统边界，要留给下一篇单独切开。
 
 ### 2. 不能提前把 07 的 swarm 判断收完
 

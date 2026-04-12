@@ -16,6 +16,21 @@ status: draft
 
 # 卷六 01｜为什么说 Claude Code 的多 agent 能力本质上是一层协作 runtime
 
+## 导读
+
+- **所属卷**：卷六：多 agent 协作运行时
+- **卷内位置**：01 / 07
+- **上一篇**：无
+- **下一篇**：[卷六 02｜team 与 teammate runtime 在 Claude Code 里处在哪](./02-where-team-and-teammate-runtime-sit-in-claude-code.md)
+
+卷五已经把“系统怎样长出更多执行者、并把扩展能力写回 runtime”立住了。
+
+卷六往前推进的，不再是对象数量，而是结构判断：
+
+> **当系统已经能长出更多执行者时，为什么 Claude Code 的多 agent 能力不能只理解成“多开几个 agent”，而必须进一步理解成一层协作 runtime？**
+
+这篇只负责立卷六总判断：后面团队对象、成员运行体、mailbox 协议、idle / shutdown 收尾，以及最后的 swarm 收束，为什么都属于同一条协作 runtime 主线。
+
 ## 这篇要回答的问题
 
 卷五已经讲清楚：Claude Code 不只是会调用工具，也不只是能不断接入 skills、MCP、hooks、plugins 这些新能力。系统甚至已经能把 **新的执行者** 正式接进 runtime。
@@ -219,7 +234,7 @@ flowchart TD
 
 ### 第一，不提前把 lifecycle 讲完
 
-本篇只需要说明 team 已经是正式对象，但不能抢讲创建、注册、清理的细部链路。那是下一篇之后要正式展开的对象成立问题。
+这里先把 team 作为正式对象的必要性点出来就够了；创建、注册、清理的完整生命周期，要留给下一篇单独展开。
 
 ### 第二，不提前把 mailbox / shutdown 讲完
 

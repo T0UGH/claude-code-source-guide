@@ -15,6 +15,21 @@ status: draft
 
 # 卷六 03｜team 是怎么被创建、注册和清理的
 
+## 导读
+
+- **所属卷**：卷六：多 agent 协作运行时
+- **卷内位置**：03 / 07
+- **上一篇**：[卷六 02｜team 与 teammate runtime 在 Claude Code 里处在哪](./02-where-team-and-teammate-runtime-sit-in-claude-code.md)
+- **下一篇**：[卷六 04｜InProcessTeammate runtime 是怎么真正跑起来的](./04-how-inprocess-teammate-runtime-actually-runs.md)
+
+前两篇已经把卷六的总判断和系统位置立住了。
+
+第 03 篇现在要把 team 从结构判断继续压回源码对象链：
+
+> **如果 team 真是协作 runtime 里的正式对象，那它到底是怎么被创建、注册和清理的？**
+
+也就是说，这篇只负责证明 team 不是协作说法，而是一类会被创建、会被系统记住、也会被系统统一清理的正式运行时对象。
+
 ## 这篇要回答的问题
 
 前两篇已经把卷六最上面的骨架钉住了：
@@ -45,7 +60,7 @@ status: draft
 ## 主图：team lifecycle 主图
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[teammate 列表] --> B[createTeam]
     B --> C[生成 team.id]
     C --> D[给每个 teammate 写入 teamId]
@@ -217,7 +232,7 @@ flowchart LR
 
 ### 1. 不能把 InProcessTeammateTask 的运行细节讲完
 
-本篇只需要说明 lifecycle 如何为 teammate runtime 铺路，不能把 `query(...)`、mailbox、idle、shutdown 的运行链全部抢写掉。那是下一篇和后面的协议篇要接手的事。
+这里先把 lifecycle 作为对象成立证据写稳就够了；`query(...)`、mailbox、idle、shutdown 的运行链，要留给后面的运行体篇和协议篇继续展开。
 
 ### 2. 不能把 mailbox 协议提前吃掉
 

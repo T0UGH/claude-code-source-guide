@@ -17,6 +17,21 @@ status: draft
 
 # 卷六 02｜Claude Code 的 team / teammate runtime 到底在系统里处在什么位置
 
+## 导读
+
+- **所属卷**：卷六：多 agent 协作运行时
+- **卷内位置**：02 / 07
+- **上一篇**：[卷六 01｜为什么说 Claude Code 的多 agent 能力本质上是一层协作 runtime](./01-why-claude-code-multi-agent-is-a-collaboration-runtime.md)
+- **下一篇**：[卷六 03｜teams 是怎么被创建、注册与清理的](./03-how-teams-are-created-registered-and-cleaned-up.md)
+
+第 01 篇已经先把卷六的总判断立住了：Claude Code 的多 agent 能力，不只是“多开几个 agent”，而是内部已经长出一层协作 runtime。
+
+第 02 篇继续要回答的是：
+
+> **team / teammate runtime 在整套 Claude Code 系统里，到底处在什么位置？**
+
+这篇只负责把位置切清：它既不是最外层产品功能，也不是最底层执行壳，而是夹在 agent runtime 与更高层产品控制结构之间的一层正式协作结构。
+
 ## 这篇要回答的问题
 
 上一篇已经先把卷六的总判断立住了：Claude Code 的多 agent 能力，不只是“多开几个 agent”，而是系统内部已经长出一层协作 runtime。

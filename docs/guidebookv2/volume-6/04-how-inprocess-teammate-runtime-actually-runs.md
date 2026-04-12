@@ -18,6 +18,21 @@ status: draft
 
 # 卷六 04｜InProcessTeammateTask：真正的 teammate runtime 是怎么在同进程里跑起来的
 
+## 导读
+
+- **所属卷**：卷六：多 agent 协作运行时
+- **卷内位置**：04 / 07
+- **上一篇**：[卷六 03｜teams 是怎么被创建、注册与清理的](./03-how-teams-are-created-registered-and-cleaned-up.md)
+- **下一篇**：[卷六 05｜mailbox / idle / shutdown 怎么把闭环合上](./05-how-mailbox-idle-and-shutdown-close-the-loop.md)
+
+第 03 篇已经把 team 从概念推进成正式对象。
+
+第 04 篇接着要回答的是：
+
+> **真正的 teammate runtime，到底是怎么在同进程里被装配成正式运行体，并真正跑起来的？**
+
+这篇只负责把 teammate 从 team 容器里的成员名，推进成带上下文、leader 关系、mailbox 和 shutdown 行为的正式运行体。
+
 ## 这篇要回答的问题
 
 前一篇已经把 team 从协作概念推进成了正式对象：它会被创建、会被注册、会被查询，也会被统一清理。
@@ -257,7 +272,7 @@ flowchart TD
 
 ### 1. 不能把 mailbox / shutdown 全部讲完
 
-这里只能证明 mailbox 与 shutdown 已经是运行体的一部分，具体协议逻辑要留到下一篇之后再展开。
+这里先证明 mailbox 与 shutdown 已经嵌进运行体就够了；具体协议逻辑，要留给下一篇专门展开。
 
 ### 2. 不能把 Local / Remote / Teammate 边界写掉
 

@@ -18,6 +18,21 @@ status: draft
 
 # 卷六 06｜LocalAgentTask、RemoteAgentTask 和 teammate runtime 的边界是什么
 
+## 导读
+
+- **所属卷**：卷六：多 agent 协作运行时
+- **卷内位置**：06 / 07
+- **上一篇**：[卷六 05｜mailbox / idle / shutdown 怎么把闭环合上](./05-how-mailbox-idle-and-shutdown-close-the-loop.md)
+- **下一篇**：[卷六 07｜为什么 Claude Code team 本质上是一种 swarm](./07-why-claude-code-team-is-a-swarm.md)
+
+前五篇已经把对象、运行体和协议三层压住了。
+
+第 06 篇要解决的，是卷六最后一个容易混桶的问题：
+
+> **既然已经有 teammate runtime，为什么源码里还会同时出现 `LocalAgentTask` 和 `RemoteAgentTask`？**
+
+也就是说，这篇只负责切清三类承载体各自服务什么问题：本地执行、远程执行、协作执行，避免把它们混写成一种“agent task 类型”。
+
 ## 这篇要回答的问题
 
 前四篇已经把卷六的骨架立起来了：
@@ -215,7 +230,7 @@ flowchart TD
 
 ### 3. 它更接近卷五的 worker agent 线，而不是卷六的 team member 线
 
-如果要给 `LocalAgentTask` 找更稳的卷内位置，它其实更贴近卷五已经讲过的那条主线：
+更准确地说，`LocalAgentTask` 更贴近卷五已经讲过的那条执行承载主线：
 
 - 主 agent 派出 worker
 - worker 在清晰 scope 内推进
