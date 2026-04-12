@@ -114,6 +114,10 @@ nav:
       - 09 ToolSearchTool 怎么找该用什么工具: guidebookv2/volume-3/09-how-toolsearchtool-finds-what-tool-to-use.md
       - 10 为什么执行层不只处理本地工具: guidebookv2/volume-3/10-why-execution-layer-does-not-only-handle-local-tools.md
       - 11 把执行层重新压成一张稳定运行图: guidebookv2/volume-3/11-stable-execution-layer-map.md
+      - 12 为什么 Claude Code 的执行层必须先长出权限管线: guidebookv2/volume-3/12-why-execution-layer-must-grow-a-permission-pipeline-first.md
+      - 13 permission decision 是怎样接到 tool execution 之前的: guidebookv2/volume-3/13-how-permission-decision-connects-before-tool-execution.md
+      - 14 为什么 allow / deny / ask 不是 UI 选项，而是 runtime 决策面: guidebookv2/volume-3/14-why-allow-deny-ask-are-a-runtime-decision-surface.md
+      - 15 为什么权限系统最后收口成执行边界: guidebookv2/volume-3/15-why-the-permission-system-finally-collapses-into-an-execution-boundary.md
   - 卷四｜上下文与状态怎么维持系统持续工作:
       - 导读: guidebookv2/volume-4/index.md
       - 01 为什么 Claude Code 不是一轮一重置系统: guidebookv2/volume-4/01-why-claude-code-is-not-a-one-turn-reset-system.md
@@ -124,6 +128,11 @@ nav:
       - 06 projection 与 collapse 管的是可工作视图，不是 transcript 本身: guidebookv2/volume-4/06-projection-and-collapse-govern-the-workable-view-not-the-transcript-itself.md
       - 07 compact / compaction 是主动减载机制: guidebookv2/volume-4/07-compact-and-compaction-as-the-active-load-shedding-mechanism.md
       - 08 restore / session recovery 怎么让系统恢复工作: guidebookv2/volume-4/08-restore-and-session-recovery-how-the-system-resumes-work.md
+      - 09 为什么 Claude Code 的 memory 不是 context 的别名: guidebookv2/volume-4/09-why-memory-is-not-just-another-name-for-context.md
+      - 10 working memory / transcript / long-term memory 为什么不是一回事: guidebookv2/volume-4/10-why-working-memory-transcript-and-long-term-memory-are-not-the-same.md
+      - 11 MEMORY.md / memdir 为什么不是普通文件，而是正式长期记忆层: guidebookv2/volume-4/11-why-memory-md-and-memdir-are-a-formal-long-term-memory-layer.md
+      - 12 为什么自动记忆提取不是小功能，而是系统持续性的后台 runtime: guidebookv2/volume-4/12-why-automatic-memory-extraction-is-a-background-runtime-for-system-continuity.md
+      - 13 长期记忆是按什么边界回注到新 runtime 的: guidebookv2/volume-4/13-how-long-term-memory-is-injected-back-into-a-new-runtime.md
   - 卷五｜外部扩展与多代理能力:
       - 导读: guidebookv2/volume-5/index.md
       - 01 为什么复杂场景会逼 Claude Code 长出扩展层: guidebookv2/volume-5/01-why-complex-scenarios-force-claude-code-to-grow-an-extension-layer.md
