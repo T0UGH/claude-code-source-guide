@@ -65,18 +65,18 @@ tags:
 ```mermaid
 flowchart TD
     A[新用户输入 / 新 tool result] --> B[并入当前 session]
-    B --> C[messages 累积]
-    C --> D[runtime 组织当前 context]
+    B --> C[工作材料累积<br/>messages]
+    C --> D[runtime 重建当前<br/>工作视图 / context]
     S[system prompt] --> D
     D --> E[模型继续当前 turn]
     E --> F[产生新消息 / 新动作 / 新结果]
     F --> C
     C --> G{上下文是否过重?}
     G -- 否 --> D
-    G -- 是 --> H[collapse / compact 等治理]
+    G -- 是 --> H[collapse / compact<br/>减负与重组]
     H --> D
-    B --> I[必要时等待后续 restore]
-    I --> J[restore 后重新接回 runtime]
+    B --> I[中断后保留<br/>可续接状态]
+    I --> J[restore 把工作线<br/>重新接回 runtime]
     J --> D
 ```
 
@@ -89,6 +89,20 @@ flowchart TD
 - **collapse / compact / restore** 在必要时减负或续接
 
 也就是说，Claude Code 的“持续工作”不是某个单点功能，而是几层东西一起在维持。
+
+这里最好再把全文最容易误解的一点先钉死：
+
+> **Claude Code 不是把历史原样越背越多，而是 runtime 每继续一轮，都会从已有 messages、当前有效状态、system prompt 和 session 里，重新组织出一条当前还能继续跑的工作线。**
+
+这条工作线会随着任务推进不断变重，所以系统接下来才需要做三件事：
+
+- 让真正相关的内容继续带着跑
+- 在过重时做折叠、压缩和重组
+- 在中断后把这条工作线重新接回 runtime
+
+所以这一篇真正要解释的，不是“系统记住了多少历史”，而是：
+
+> **runtime 怎样持续维护一条可减负、可续接、可继续执行的运行骨架。**
 
 ---
 
@@ -274,24 +288,21 @@ restore 处理的不是“当前太重”，而是“中断之后怎么续上”
 
 ---
 
-## 把 messages / prompt / compact / restore 再压成一张关系图
+## 把 `restore` 的边界再压成一句话
 
-```mermaid
-flowchart LR
-    M[历史 messages / 新 messages] --> C[当前 context 组织]
-    S[system prompt] --> C
-    C --> Q[当前 query / 当前判断]
-    Q --> N[继续产生新消息]
-    N --> M
-    M --> P{上下文是否过重?}
-    P -- 是 --> X[collapse / compact]
-    X --> C
-    C --> R[可续接工作状态\nmessages/tool_use/tool_result 的有效投影]
-    R --> T[restore]
-    T --> C
-```
+如果把前面的内容再往下压一步，`restore` 最容易误解的地方，其实不是“会不会恢复历史”，而是：
 
-这张图只表达一件事：Claude Code 的上下文不是一团静态记忆，而是一条会不断累积、治理、减负和续接的工作链。
+> **系统恢复回来的，到底是不是一条还能继续推进的工作线。**
+
+所以这里最稳的判断不是“把上一次对话重新打开”，而是：
+
+- 当前任务做到哪一步了
+- 哪些 messages / tool use / tool result 仍然构成有效工作材料
+- 重新接回后，runtime 还能不能继续判断、继续执行、继续往下跑
+
+换句话说，`restore` 真正恢复的重点不是展示层，而是：
+
+> **一条可继续工作的运行状态。**
 
 ---
 
