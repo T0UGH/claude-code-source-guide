@@ -57,6 +57,21 @@ flowchart TD
 
 一旦换成这个问题，四个机制的关系就会从“并排名词”变成“连续分工”。
 
+## 补图：治理链的三段职责图
+
+```mermaid
+flowchart TD
+    A[projection / collapse] --> A1[调当前工作视图]
+    B[compact / compaction] --> B1[重设下一段工作条件]
+    C[restore / recovery] --> C1[把工作线重新接回当前 runtime]
+
+    A1 --> D[维持可工作性]
+    B1 --> D
+    C1 --> D
+```
+
+这张补图把卷四后半最该留下来的东西压成了三段职责，而不是四个并列名词：**先治理当前视图，再重设下一段条件，最后把工作线重新接活。**
+
 ## 第一段：projection / collapse 先处理“当前工作面怎么看”
 
 projection 和 collapse 更靠近视图层。它们首先回答的不是“历史是否被删除”，而是：

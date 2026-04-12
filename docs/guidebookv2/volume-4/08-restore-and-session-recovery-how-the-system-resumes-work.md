@@ -72,6 +72,20 @@ flowchart LR
 
 这张图能把 recovery 和 restore 的分工压清：前者偏读取与整理，后者偏接回与落地。
 
+## 补图：restore 和 transcript replay 的区别
+
+```mermaid
+flowchart TD
+    A[只把旧 transcript 翻出来] --> A1[看见过去发生过什么]
+    A1 --> A2[不等于当前就能继续工作]
+
+    B[recovery / restore] --> B1[整理可接的工作包]
+    B1 --> B2[接回当前 runtime]
+    B2 --> B3[重新进入可继续推进的工作线]
+```
+
+这张补图值在它能把 restore 最容易被误解的一点直接打掉：**restore 不是重新展示过去，而是把一条还能继续推进的工作线重新接回当前现场。**
+
 ## 为什么恢复不是附属功能，而是持续工作闭环的最后一环
 
 如果把恢复理解成一个可有可无的附属能力，卷四就会在 07 停住：

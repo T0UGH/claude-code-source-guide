@@ -61,6 +61,23 @@ flowchart TD
 
 ---
 
+## 补图：submitMessage 和 query 的边界
+
+```mermaid
+flowchart TD
+    A[submitMessage(...)] --> A1[建立 turn 运行边界]
+    A --> A2[拉 system prompt parts]
+    A --> A3[处理输入并推进 mutableMessages]
+    A --> A4[决定本轮初始 model / thinking / state]
+
+    A4 --> B[query(...)]
+    B --> B1[开始主循环]
+    B --> B2[继续形成当前判断]
+    B --> B3[决定是否进入执行路径]
+```
+
+这张补图最值的地方，是把卷二第 03 篇最容易混掉的边界直接切开：**真正的运行入口在 `submitMessage(...)`，而 `query(...)` 是这次运行请求被装配完成之后才进入的主循环本体。**
+
 ## QueryEngine 为什么值得单独讲
 
 如果只看名字，`QueryEngine` 很容易被误解成一个“负责 query 的地方”。这种理解不能说错，但太薄了。

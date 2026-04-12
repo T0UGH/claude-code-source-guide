@@ -131,6 +131,20 @@ flowchart TD
 
 这张图最该记住的不是“分发”两个字，而是：**调用必须先被正式接住，后面那些执行对象才有机会开始工作。**
 
+## 补图：orchestration 的责任边界
+
+```mermaid
+flowchart TD
+    A[assistant 给出 tool_use] --> B[orchestration]
+    B --> B1[认领这是一条正式调用]
+    B --> B2[匹配正确 Tool 对象]
+    B --> B3[维持调用与结果的可追踪关系]
+    B --> C[execution]
+    C --> D[tool_result 回流]
+```
+
+这张补图最想压住的是一句话：**orchestration 不替工具做事，它负责先把这次调用正式接进执行层。** 没有这层认领和分发，后面的 execution 和 tool_result 都会在入口处断掉。
+
 ## 没有 orchestration，会坏在哪里
 
 ### 第一，调用会重新退化成“谁爱接谁接”
