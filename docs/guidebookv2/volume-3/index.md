@@ -43,6 +43,9 @@ updated: 2026-04-07
 在执行层总图立稳之后，卷三补一组“执行前护栏”文章，把问题从“意图怎么变执行”推进到“意图怎么在边界内变执行”。
 
 12. [卷三 12｜为什么 Claude Code 的执行层必须先长出权限管线](./12-why-execution-layer-must-grow-a-permission-pipeline-first.md)
+13. [卷三 13｜permission decision 是怎样接到 tool execution 之前的](./13-how-permission-decision-connects-before-tool-execution.md)
+14. [卷三 14｜为什么 `allow / deny / ask` 不是 UI 选项，而是 runtime 决策面](./14-why-allow-deny-ask-are-a-runtime-decision-surface.md)
+15. [卷三 15｜为什么权限系统最后收口成执行边界](./15-why-the-permission-system-finally-collapses-into-an-execution-boundary.md)
 
 ## 这一卷不重点展开什么
 
