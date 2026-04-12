@@ -38,11 +38,19 @@ updated: 2026-04-07
 10. [卷三 10｜为什么执行层不只接本地工具：SkillTool / AgentTool 的位置](./10-why-execution-layer-does-not-only-handle-local-tools.md)
 11. [卷三 11｜把整条执行层重新压成一张稳定运行图](./11-stable-execution-layer-map.md)
 
+## 新增：权限管线组
+
+在执行层总图立稳之后，卷三补一组“执行前护栏”文章，把问题从“意图怎么变执行”推进到“意图怎么在边界内变执行”。
+
+12. [卷三 12｜为什么 Claude Code 的执行层必须先长出权限管线](./12-why-execution-layer-must-grow-a-permission-pipeline-first.md)
+
 ## 这一卷不重点展开什么
 
 - 不主讲长期上下文治理与持续工作
 - 不主讲技能 / 代理 / MCP 的扩展平台结构
-- 不主讲权限、命令入口与控制层整合
+- 不主讲权限系统在产品入口、命令模式与控制层里的整合
+
+这里新增的权限管线组，重点仍然放在**执行前边界如何长进 execution runtime**，而不是展开更高层的产品控制面。
 
 这些问题会分别留给：
 - 卷四：上下文与状态怎么维持系统持续工作
