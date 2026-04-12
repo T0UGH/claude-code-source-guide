@@ -267,7 +267,7 @@ Claude Code 一旦有了权限管线，系统行为就不再是：
 ## 图 2：真正被裁决的不是“用户想点什么”，而是“动作接下来怎么活”
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[模型提出 action] --> B[runtime 收到动作请求]
     B --> C[多方约束汇合]
     C --> D{allow / ask / deny}

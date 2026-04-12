@@ -76,6 +76,9 @@ validation:
   absolute_links: warn
   unrecognized_links: warn
 
+extra_css:
+  - stylesheets/mermaid.css
+
 extra_javascript:
   - https://unpkg.com/mermaid@10/dist/mermaid.min.js
   - javascripts/mermaid-init.js

@@ -306,7 +306,7 @@ Bash 会逼系统回答：
 ## 图 2：从 permission decision 到 execution boundary 的收口图
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[单次 decision: allow / ask / deny] --> B[高风险能力的语义判断]
     B --> C[本地规则与长期授权]
     C --> D[更高层 policy limits]
