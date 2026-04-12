@@ -177,25 +177,6 @@ Claude Code 不是直接把某个 JavaScript 返回值塞回模型。
 
 ---
 
-## 图 2：结果回流主循环示意图
-
-```mermaid
-flowchart LR
-    A[assistant 产出 tool_use] --> B[执行层完成 action]
-    B --> C[得到 tool_result]
-    C --> D[写回 messages / mutableMessages]
-    D --> E[当前工作面被更新]
-    E --> F[主循环重新获得下一轮输入]
-```
-
-这张图最重要的，是中间这一跳：
-
-> **结果回流的作用，不是追加一段执行记录，而是更新当前工作面。**
-
-没有这一步，执行层和主循环之间就只是一次松散调用；有了这一步，Claude Code 才形成真正的动态闭环。
-
----
-
 ## 一句话收口
 
 > Claude Code 的关键不只是发起 `tool_use`，而是把执行得到的 `tool_result` 重新写回当前消息链，让主循环拿回新的现实结果，并据此形成下一轮当前判断。结果回流不是附属细节，而是当前 turn 能继续成立的闭环接口。

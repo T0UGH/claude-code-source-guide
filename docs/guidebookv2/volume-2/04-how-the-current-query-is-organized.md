@@ -45,20 +45,11 @@ tags:
 
 ---
 
-## 先看总图：当前 query 不是一句话，而是一块被装配好的工作面
+## 先把总判断立住：当前 query 不是一句话，而是一块被装配好的工作面
 
-如果把这一层压成一张图，Claude Code 当前面对的大致是下面这个结构：
+这篇最重要的一句，其实可以先直接说死：
 
-```mermaid
-flowchart TD
-    A[当前输入经过 processUserInput 整理后进入 messages] --> E[当前工作面]
-    B[当前 messages 历史视图 messagesForQuery] --> E
-    C[systemPrompt 基底 + systemContext] --> E
-    D[userContext 以前置消息形式并入] --> E
-    E --> F[本轮真正交给 query 主循环处理的 current query]
-```
-
-这张图最重要的一点是：**current query 不是输入框里那一句话，而是这一轮真正交给系统处理的工作面。**
+> **current query 不是输入框里那一句话，而是这一轮真正交给系统处理的工作面。**
 
 换句话说，用户看到的是一句输入；运行时接住的，是一块已经按位置组织过的材料组合。
 
@@ -169,12 +160,12 @@ flowchart TD
 因此，如果把本轮工作面更精确地拆开，可以得到这样一个结构：
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[systemPrompt 基底] --> D[system 侧规则面]
     B[systemContext] --> D
     C[userContext] --> E[user / 会话背景前缀]
     F[messagesForQuery] --> G[当前消息历史视图]
-    D --> H[current query 当前工作面]
+    D --> H[current query<br/>当前工作面]
     E --> H
     G --> H
 ```
@@ -235,27 +226,16 @@ flowchart LR
 
 ---
 
-## 第八步：有些与 prompt 相关的东西其实只属于 UI 组织，不属于当前 query 本体
+## 第八步：有些与 prompt 相关的东西只属于 UI 组织，不属于当前 query 本体
 
-这篇还有一个边界特别值得顺手讲清，不然很容易把“界面上围着 prompt 转的东西”全都误算进 current query。
+这篇还有一个边界值得顺手讲清，不然很容易把“凡是和 prompt 有关的东西”都误算进 current query。
 
-`cc/src/context/promptOverlayContext.tsx` 管的是 prompt overlay：
+像 `promptOverlayContext.tsx`、`promptSuggestion.ts` 这类机制，解决的是：
 
-- slash-command suggestion data
-- dialog node
-- 以及它们怎样浮在 prompt 上方显示
+- 用户在输入框附近看到什么
+- 系统要不要给出下一步输入建议
 
-这类结构的作用，是组织交互界面，而不是组织模型本轮要处理的 current query。它解决的是“用户在输入框附近看到什么”，不是“模型此刻实际拿到什么”。
-
-同样，`cc/src/services/PromptSuggestion/promptSuggestion.ts` 里的 prompt suggestion，也是在预测用户下一步可能会输入什么，并在合适条件下展示建议。它的核心逻辑是：
-
-- 当前会话是否允许生成建议
-- 最近 assistant 响应是否适合做建议
-- 如果适合，就 fork 一次 suggestion generation
-
-这类机制虽然也围绕 prompt 展开，但它服务的是**下一次可能的用户输入**，而不是本轮 current query 的装配本体。
-
-把这一层边界立住很重要。否则很容易把“凡是和 prompt 有关的东西”都误装进 current query，最后文章就会从运行时组织一路滑到 UI 百科。
+它们服务的是交互界面或下一次可能输入的组织，不是本轮 current query 的装配本体。
 
 所以更准确地说：**current query 关注的是运行时当前工作面，不是输入框周围所有相关机制。**
 
