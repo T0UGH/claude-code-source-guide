@@ -30,11 +30,13 @@ tags:
 
 ```mermaid
 flowchart TD
-    A[system prompt] --> D[当前可工作上下文]
-    B[system / user context] --> D
-    C[活动 messages 视图] --> D
-    D --> E[当前 query]
-    E --> F[继续推进当前工作]
+    A[transcript / 历史档案] --> B[不是整段原样送模]
+    C[system prompt] --> F[当前可工作上下文]
+    D[system / user context] --> F
+    E[活动 messages 视图] --> F
+    B --> E
+    F --> G[当前 query]
+    G --> H[继续推进当前工作]
 ```
 
 这里故意没有把 transcript 直接放进图中心，因为 transcript 更像材料库；真正被送进当前 turn 的，是经过选择、拼装和约束后的工作面。

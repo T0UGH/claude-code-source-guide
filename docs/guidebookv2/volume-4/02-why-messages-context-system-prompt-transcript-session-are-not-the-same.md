@@ -31,11 +31,11 @@ tags:
 
 ```mermaid
 flowchart TD
-    A[session\n这条工作线的单位] --> B[transcript\n会话档案中的事件轨迹]
-    B --> C[messages\n最基本的消息材料]
-    D[system prompt\n本轮规则层] --> E[context\n当前可工作的面]
-    C --> E
-    F[system / user context\n消息外的附加条件] --> E
+    A[session<br/>工作线单位] --> A1[回答: 这条线有没有壳]
+    B[transcript<br/>历史档案] --> B1[回答: 过去发生了什么]
+    C[messages<br/>材料单位] --> C1[回答: 系统拿什么表达输入与结果]
+    D[system prompt<br/>规则层] --> D1[回答: 这一轮按什么规则工作]
+    E[context<br/>当前工作面] --> E1[回答: 这一轮怎样真正开工]
 ```
 
 这张图最重要的作用，不是定义名词，而是先回答：**这些对象各自在解决什么问题。**

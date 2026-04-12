@@ -150,7 +150,7 @@ long-term memory 再往前走了一步。
 ## 把三层放在同一张图里看，误会就会少很多
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[transcript\n保留事件轨迹] --> B[working memory\n组织当前可工作面]
     B --> C[当前任务推进]
     C --> D[long-term memory\n沉淀可复用认识]

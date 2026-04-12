@@ -13,7 +13,7 @@ tags:
 ## 导读
 
 - **所属卷**：卷四：上下文与状态怎么维持系统持续工作
-- **卷内位置**：11 / 11
+- **卷内位置**：11 / 13
 - **上一篇**：[卷四 10｜working memory / transcript / long-term memory 为什么不是一回事](./10-why-working-memory-transcript-and-long-term-memory-are-not-the-same.md)
 - **下一篇**：[卷四 12｜为什么自动记忆提取不是小功能，而是系统持续性的后台 runtime](./12-why-automatic-memory-extraction-is-a-background-runtime-for-system-continuity.md)
 

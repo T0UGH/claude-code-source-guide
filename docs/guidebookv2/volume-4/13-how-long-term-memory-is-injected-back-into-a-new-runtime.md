@@ -172,15 +172,14 @@ tags:
 
 ```mermaid
 flowchart TD
-    A[新 session / 新 runtime 建立] --> B[getUserContext]
-    B --> C[getMemoryFiles]
-    C --> D[getAutoMemEntrypoint -> MEMORY.md]
-    D --> E[getClaudeMds 注入入口索引]
-    E --> F[当前任务继续推进]
-    F --> G[startRelevantMemoryPrefetch]
-    G --> H[findRelevantMemories(query)]
-    H --> I[最多挑少量单条记忆正文]
-    I --> J[relevant_memories attachments 注入]
+    A[新 session / 新 runtime 建立] --> B[启动阶段]
+    B --> C[getUserContext -> MEMORY.md 入口索引]
+    C --> D[先把记忆入口带回当前 runtime]
+    D --> E[运行阶段]
+    E --> F[startRelevantMemoryPrefetch]
+    F --> G[findRelevantMemories(query)]
+    G --> H[最多挑少量单条记忆正文]
+    H --> I[relevant_memories attachments 注入]
 ```
 
 这张图最重要的地方，是把两种“回注”彻底拆开：

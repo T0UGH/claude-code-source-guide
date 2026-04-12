@@ -37,7 +37,7 @@ compact 不是被动截断，而是主动做三件事：
 
 这三步合起来，才叫“主动减负”。
 
-## 图：compact 更像重设下一阶段的起跑线
+## 图 1：compact 更像重设下一阶段的起跑线
 
 ```mermaid
 flowchart TD
@@ -48,6 +48,16 @@ flowchart TD
 ```
 
 这张图里最关键的不是 summary，而是 **新的活动工作段**。compact 的真正作用，是让系统能够带着更轻但仍可工作的条件继续跑。
+
+## 图 2：compact 前后工作面的对照图
+
+```mermaid
+flowchart TD
+    A[compact 前\n旧活动段越来越重] --> B[boundary 划线]
+    B --> C[retained context 保留关键约束]
+    C --> D[cleanup 清掉旧附着状态]
+    D --> E[compact 后\n新活动段重新开始]
+```
 
 ## boundary 为什么是 compact 的核心，而不是配角
 
