@@ -82,7 +82,7 @@ extra_javascript:
 
 nav:
   - 首页: index.md
-  - Guidebook v2 总览: guidebookv2/README.md
+  - 开始阅读｜Guidebook v2 总览: guidebookv2/README.md
   - 卷一｜Claude Code 系统全景导论:
       - 导读: guidebookv2/volume-1/index.md
       - 01 Claude Code 到底是什么系统: guidebookv2/volume-1/01-claude-code-what-system-is-this.md

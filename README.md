@@ -99,6 +99,13 @@
 - [卷六](./docs/guidebookv2/volume-6/index.md)
 - [卷七](./docs/guidebookv2/volume-7/index.md)
 
+### 如果你更关心平台、协作和产品层
+可以直接从后半段进入：
+
+- [卷五｜外部扩展与多代理能力](./docs/guidebookv2/volume-5/index.md)
+- [卷六｜多 agent 协作运行时](./docs/guidebookv2/volume-6/index.md)
+- [卷七｜命令、工作流与产品层整合](./docs/guidebookv2/volume-7/index.md)
+
 ## 仓库结构
 
 - `docs/guidebookv2/` — 当前正式阅读入口与重写结果
