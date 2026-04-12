@@ -126,6 +126,27 @@ flowchart TD
 
 ---
 
+## 补图：扩展能力分类图
+
+```mermaid
+flowchart TD
+    A[Claude Code 继续长能力时
+到底缺什么] --> B{缺口性质}
+    B -->|缺稳定做事方法| C[Skill]
+    B -->|缺任务承担者| D[Agent]
+    B -->|缺并行 / 隔离推进| E[Subagent]
+    B -->|缺系统外能力入口| F[MCP]
+    B -->|缺系统级挂点与整合面| G[Plugin]
+
+    C --> H[runtime]
+    D --> H
+    E --> H
+    F --> H
+    G --> H
+```
+
+这张补图不再只是把对象摆在一起，而是给读者一把更稳定的判断尺子：**这些对象都在帮 Claude Code 长能力，但它们长的不是同一层能力。**
+
 ## 先把最容易混的五个对象摆正位置
 
 这一篇最容易失控的地方，是把 skill、agent、subagent、MCP、plugin 都写成“某种扩展”。这样说不算错，但边界会糊。

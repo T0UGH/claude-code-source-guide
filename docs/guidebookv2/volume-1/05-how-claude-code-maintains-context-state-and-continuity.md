@@ -172,6 +172,23 @@ session 解决的是另一个问题：
 
 ---
 
+## 补图：message / context / system prompt / session 四分图
+
+```mermaid
+flowchart TD
+    A[message] --> A1[发生过什么]
+    B[context] --> B1[这一轮带什么继续跑]
+    C[system prompt] --> C1[系统按什么规则继续跑]
+    D[session] --> D1[为什么这还是同一条工作线]
+
+    A1 --> E[持续工作能力]
+    B1 --> E
+    C1 --> E
+    D1 --> E
+```
+
+这张补图最重要的作用，是把卷一第 05 篇最容易糊成一团的四个位置直接分开：**message 更像材料，context 更像工作视图，system prompt 更像规则底座，session 更像托住整条工作线的容器。**
+
 ## Claude Code 真正要解决的，不是“记住全部”，而是“减负但别断线”
 
 只要任务稍微长一点，历史消息和 tool result 就会迅速变多。问题不在于这些内容有没有价值，而在于它们不能永远都以原始体积继续带着跑。
