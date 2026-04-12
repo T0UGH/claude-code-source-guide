@@ -6,6 +6,21 @@ tags: [Claude Code, plugins, platform boundary, packaging, distribution]
 
 # 卷五 23｜为什么 plugins 最后会长成一层平台边界
 
+## 导读
+
+- **所属卷**：卷五：外部扩展与多代理能力
+- **卷内位置**：23 / 24
+- **上一篇**：[卷五 22｜plugin 到底是什么，它不是哪一种扩展点的壳](./22-what-layer-plugins-occupy-relative-to-other-extension-objects.md)
+- **下一篇**：[卷五 24｜为什么这些扩展对象最终会收成一层平台能力](./24-why-these-extension-objects-converge-into-a-platform-layer.md)
+
+第 22 篇已经把 plugin 立成统一运行时对象。
+
+第 23 篇现在要再往前推一步：
+
+> **为什么 plugin 不会停在“能力包”这一步，而是会继续长出 loader、schema、policy、install、marketplace，最后变成一层平台边界？**
+
+这篇不提前把整卷卷尾写完，只收 plugin 这一条线：它怎样从统一对象，长成扩展世界默认围绕的边界对象。
+
 ## 这篇要回答的问题
 
 第 22 篇已经回答了：为什么前面明明有 skills、MCP、hooks，系统还是需要 plugin。  
@@ -40,12 +55,18 @@ tags: [Claude Code, plugins, platform boundary, packaging, distribution]
 ## 主图：plugin 如何从统一对象长成平台边界
 
 ```mermaid
-flowchart LR
-    A[LoadedPlugin\n统一对象] --> B[pluginLoader\n多来源装配]
-    B --> C[schema / validate / policy\n治理边界]
-    C --> D[install / update / enable / list\n生命周期管理]
-    D --> E[marketplace\n分发入口]
-    E --> F[plugin 成为扩展世界的\n平台边界]
+flowchart TD
+    A[LoadedPlugin
+统一对象] --> B[pluginLoader
+多来源装配]
+    B --> C[schema / validate / policy
+治理边界]
+    C --> D[install / update / enable / list
+生命周期管理]
+    D --> E[marketplace
+分发入口]
+    E --> F[plugin 成为扩展世界的
+平台边界]
 ```
 
 ## 先给结论
@@ -324,7 +345,7 @@ plugin 在这里已经明显是前者了。
 
 - Claude Code 的全部扩展对象怎样一起组成平台层
 
-那是下一篇的工作。
+这里先收住 plugin 这一条线；整卷为什么会一起收成平台层，留给第 24 篇。
 
 ## 一句话收口
 

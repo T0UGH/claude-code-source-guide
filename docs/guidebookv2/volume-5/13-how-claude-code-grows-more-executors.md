@@ -46,7 +46,7 @@ source_files:
 先看总图：
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[主线程单执行者] --> B[AgentTool 成为任务委派入口]
     B --> C[系统开始有 agent definitions]
     C --> D[built-in / user / project / plugin agents 并存]

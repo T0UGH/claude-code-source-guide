@@ -103,7 +103,7 @@ flowchart TD
 ## 再画一张更具体的接入位置图
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[用户方法] --> S[skills]
     B[外部 server / resources] --> M[MCP]
     C[任务委派需求] --> AG[agents / subagents]

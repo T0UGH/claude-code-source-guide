@@ -10,6 +10,21 @@ source_files:
 
 # 卷五 16｜subagent 不是另起一个指挥部
 
+## 导读
+
+- **所属卷**：卷五：外部扩展与多代理能力
+- **卷内位置**：16 / 24
+- **上一篇**：[卷五 15｜为什么主 agent 还要继续把活拆出去](./15-why-the-main-agent-needs-to-spawn-subagents.md)
+- **下一篇**：[卷五 17｜拆出去的活，最后怎么回到主线](./17-boundaries-and-information-flow-between-main-agent-and-worker-agent.md)
+
+第 15 篇已经说明：复杂任务会把主线继续推进到分工问题。
+
+第 16 篇要解决的是更容易被误解的一刀：
+
+> **被拆出去的 subagent，到底为什么不是又起了一个平级总控？**
+
+所以这篇的任务，是把 `forkSubagent` 写成沿父执行线切出的受控 worker 分叉，而不是另起一个横向指挥部。
+
 ## 这篇要回答的问题
 
 第 15 篇已经说明：主 agent 为什么还得继续把活拆出去。现在还要再往前走一步：
@@ -33,10 +48,12 @@ source_files:
 ## 主图：forkSubagent 的继承与分叉
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[主 agent 当前执行线] --> B[保留父 assistant message 全量内容]
-    B --> C[buildForkedMessages 构造 fork prefix]
-    C --> D[FORK_AGENT 继承 model=inherit tools=* permission=bubble]
+    B --> C[buildForkedMessages
+构造 fork prefix]
+    C --> D[FORK_AGENT
+继承 model/tools/permission]
     D --> E[worker 只处理当前 directive]
     E --> F[结果回到父线]
 ```

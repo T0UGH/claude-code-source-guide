@@ -6,6 +6,21 @@ tags: [Claude Code, plugins, LoadedPlugin, hooks, skills, MCP]
 
 # 卷五 22｜plugin 到底是什么，它不是哪一种扩展点的壳
 
+## 导读
+
+- **所属卷**：卷五：外部扩展与多代理能力
+- **卷内位置**：22 / 24
+- **上一篇**：[卷五 21｜为什么前面这些扩展点加起来，还是不够](./21-why-plugins-are-still-needed-after-skills-mcp-and-hooks.md)
+- **下一篇**：[卷五 23｜为什么 plugins 最后会长成一层平台边界](./23-why-plugins-represent-a-more-complete-form-of-packaging-distribution-and-reuse.md)
+
+第 21 篇已经先证明：很多扩展入口并存，不等于插件层已经成立。
+
+第 22 篇要继续切开的，是 plugin 的对象身份：
+
+> **plugin 到底是什么？为什么它既不是 hooks 的壳，不是 marketplace 安装包，也不是某一种扩展点的同义词？**
+
+所以这篇只做一件事：把 plugin 写成统一运行时对象，而不是再来一种大号扩展点。
+
 ## 这篇要回答的问题
 
 第 21 篇已经先回答了“为什么前面已经有 skills / MCP / hooks，系统还需要 plugin”。

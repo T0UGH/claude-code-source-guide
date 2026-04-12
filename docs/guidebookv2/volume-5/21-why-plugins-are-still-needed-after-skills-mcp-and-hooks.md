@@ -6,6 +6,21 @@ tags: [Claude Code, plugins, skills, MCP, hooks, agents]
 
 # 卷五 21｜为什么前面这些扩展点加起来，还是不够
 
+## 导读
+
+- **所属卷**：卷五：外部扩展与多代理能力
+- **卷内位置**：21 / 24
+- **上一篇**：[卷五 20｜一轮会话怎么起、怎么进、怎么收，hooks 其实都能插手](./20-what-different-hooks-intercept-connect-and-modify-in-claude-code.md)
+- **下一篇**：[卷五 22｜plugin 到底是什么，它不是哪一种扩展点的壳](./22-what-layer-plugins-occupy-relative-to-other-extension-objects.md)
+
+卷五前面已经把 methods、capabilities、executors、runtime seams 几条线分别立住了。
+
+第 21 篇现在要先回答一个过渡问题：
+
+> **既然已经有这么多扩展对象并存，Claude Code 为什么还会继续长出 plugins？**
+
+这篇不主讲 plugin 的完整形态，只先证明一件事：前面这些对象分别解决了入口问题，但还没有把一整组扩展内容收成统一封装单位。
+
 ## 这篇要回答的问题
 
 卷五前面已经把几条扩展主线分别立住了：
@@ -43,20 +58,19 @@ tags: [Claude Code, plugins, skills, MCP, hooks, agents]
 ## 主图：分散扩展点并存，为什么还会逼出 plugin
 
 ```mermaid
-flowchart LR
-    A[skills\n方法组织入口] --> E[很多扩展点并存]
-    B[MCP\n外部能力源入口] --> E
-    C[hooks\nruntime 接缝入口] --> E
-    D[agent\n执行者结构入口] --> E
+flowchart TD
+    A[skills
+方法组织入口] --> E[很多扩展点并存]
+    B[MCP
+外部能力源入口] --> E
+    C[hooks
+runtime 接缝入口] --> E
+    D[agent
+执行者结构入口] --> E
 
     E --> F{有没有统一封装单位}
-
-    F -->|没有| G[来源分散]
-    F -->|没有| H[启停分散]
-    F -->|没有| I[治理分散]
-    F -->|没有| J[分发分散]
-
-    F -->|有 plugin| K[一组能力作为正式单元进入系统]
+    F -->|没有| G[来源 / 启停 / 治理 / 分发都分散]
+    F -->|有 plugin| H[一组能力作为正式单元进入系统]
 ```
 
 这张图的重点不是说 plugin 比前面“更强”，而是说：
