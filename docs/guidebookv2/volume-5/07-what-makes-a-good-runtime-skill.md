@@ -18,7 +18,7 @@ source_files:
 ## 导读
 
 - **所属卷**：卷五：外部扩展与多代理能力
-- **卷内位置**：07 / 25
+- **卷内位置**：07 / 24
 - **上一篇**：[卷五 06｜Skill 在源码里怎么跑起来：从 SKILL.md 到 inline / fork](./06-how-skilltool-and-skills-runtime-enter-the-execution-chain.md)
 - **下一篇**：[卷五 08｜什么时候该用 Skill，什么时候该用 tool / agent / MCP](./08-boundaries-between-skill-tool-and-agent.md)
 

@@ -21,7 +21,7 @@ source_files:
 ## 导读
 
 - **所属卷**：卷五：外部扩展与多代理能力
-- **卷内位置**：13 / 25
+- **卷内位置**：13 / 24
 - **上一篇**：[卷五 12｜Claude Code 里的 agent，跟 tool 不是一回事](./12-why-agent-is-not-just-another-tool.md)
 - **下一篇**：[卷五 14｜这组 agent 是怎么被拉进当前任务的](./14-why-runagent-feels-like-an-agent-runtime-assembly-line.md)
 

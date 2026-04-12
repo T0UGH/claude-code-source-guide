@@ -21,7 +21,7 @@ source_files:
 ## 导读
 
 - **所属卷**：卷五：外部扩展与多代理能力
-- **卷内位置**：08 / 25
+- **卷内位置**：08 / 24
 - **上一篇**：[卷五 07｜什么样的 Skill 才真的好用：从 runtime 约束反推设计原则](./07-what-makes-a-good-runtime-skill.md)
 - **下一篇**：[卷五 09｜为什么 MCP 不是“多了一批远程工具”](./09-why-mcp-is-not-just-more-remote-tools.md)
 

@@ -1,14 +1,14 @@
 ---
-title: 卷五 23｜plugin 到底是什么，它不是哪一种扩展点的壳
+title: 卷五 22｜plugin 到底是什么，它不是哪一种扩展点的壳
 date: 2026-04-08
 tags: [Claude Code, plugins, LoadedPlugin, hooks, skills, MCP]
 ---
 
-# 卷五 23｜plugin 到底是什么，它不是哪一种扩展点的壳
+# 卷五 22｜plugin 到底是什么，它不是哪一种扩展点的壳
 
 ## 这篇要回答的问题
 
-第 22 篇已经先回答了“为什么前面已经有 skills / MCP / hooks，系统还需要 plugin”。
+第 21 篇已经先回答了“为什么前面已经有 skills / MCP / hooks，系统还需要 plugin”。
 
 接下来要补的不是“plugin 很重要”，而是更容易被误解的下一刀：
 
@@ -226,7 +226,7 @@ flowchart TD
 
 > **plugin 可以被安装、被更新、被列举、被放进 marketplace，但这些都发生在“它已经是统一运行时对象”之后。**
 
-更完整的分发、治理、平台边界，留给第 24 篇讲就够了。
+更完整的分发、治理、平台边界，留给第 23 篇讲就够了。
 
 ## 第四部分：为什么说 plugin 也不是某一种扩展点的同义词
 
@@ -334,6 +334,6 @@ plugin 统一的是：
 
 > **plugin 先是统一运行时对象，后面才轮到安装、治理和分发。**
 
-这就是第 23 篇该做完的事。
+这就是第 22 篇该做完的事。
 
-第 24 篇再继续回答：为什么围绕这个统一对象，系统最后还会长出 loader、schema、policy、install、marketplace，直到 plugin 变成一层平台边界。
+第 23 篇再继续回答：为什么围绕这个统一对象，系统最后还会长出 loader、schema、policy、install、marketplace，直到 plugin 变成一层平台边界。

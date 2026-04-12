@@ -24,7 +24,7 @@ status: draft
 ## 导读
 
 - **所属卷**：卷五：扩展层与平台对象
-- **卷内位置**：03 / 25
+- **卷内位置**：03 / 24
 - **上一篇**：[卷五 02｜为什么 Claude Code 选择把扩展权交给用户](./02-why-claude-code-chooses-to-hand-extension-power-to-users.md)
 - **下一篇**：[卷五 04｜为什么 skills 不是“长 prompt”那么简单](./04-why-skills-are-more-than-long-prompts.md)
 
@@ -76,7 +76,7 @@ status: draft
 
 ### 结论三：卷五后半所有对象组，都应该挂回一张统一 runtime 关系图
 
-这一篇最重要的工作，不是定义术语，而是给后面 04-25 篇准备一张骨架图。
+这一篇最重要的工作，不是定义术语，而是给后面 04-24 篇准备一张骨架图。
 
 后面的 skills 组、MCP 组、Agent 主轴、hooks 组、plugins 组，都应该能挂回这张图上去理解。没有这张图，后文很容易越写越像散装介绍。
 

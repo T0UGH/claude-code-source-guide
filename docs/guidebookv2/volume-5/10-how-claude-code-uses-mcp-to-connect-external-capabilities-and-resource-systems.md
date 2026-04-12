@@ -22,7 +22,7 @@ status: draft
 ## 导读
 
 - **所属卷**：卷五：扩展层与平台对象
-- **卷内位置**：10 / 25
+- **卷内位置**：10 / 24
 - **上一篇**：[卷五 09｜为什么 MCP 不是“多了一批远程工具”](./09-why-mcp-is-not-just-more-remote-tools.md)
 - **下一篇**：[卷五 11｜MCP 和 skills / hooks / plugins 分别是什么关系](./11-how-mcp-relates-to-skills-hooks-and-plugins.md)
 

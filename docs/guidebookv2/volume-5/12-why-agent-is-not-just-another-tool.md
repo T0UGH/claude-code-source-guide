@@ -17,7 +17,7 @@ source_files:
 ## 导读
 
 - **所属卷**：卷五：外部扩展与多代理能力
-- **卷内位置**：12 / 25
+- **卷内位置**：12 / 24
 - **上一篇**：[卷五 11｜MCP 和 skills / hooks / plugins 分别是什么关系](./11-how-mcp-relates-to-skills-hooks-and-plugins.md)
 - **下一篇**：[卷五 13｜Claude Code 一开始就准备了一组 agent](./13-how-claude-code-grows-more-executors.md)
 

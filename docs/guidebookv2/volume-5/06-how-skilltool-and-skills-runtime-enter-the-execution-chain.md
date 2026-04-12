@@ -20,7 +20,7 @@ source_files:
 ## 导读
 
 - **所属卷**：卷五：外部扩展与多代理能力
-- **卷内位置**：06 / 25
+- **卷内位置**：06 / 24
 - **上一篇**：[卷五 05｜为什么 Skill 能让 Claude Code 从“会做”变成“稳定会做”](./05-how-skills-bring-user-experience-workflows-and-roles-into-claude-code.md)
 - **下一篇**：[卷五 07｜什么样的 Skill 才真的好用：从 runtime 约束反推设计原则](./07-what-makes-a-good-runtime-skill.md)
 

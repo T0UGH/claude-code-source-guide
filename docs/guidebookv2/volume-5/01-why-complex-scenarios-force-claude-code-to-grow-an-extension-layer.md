@@ -20,7 +20,7 @@ status: draft
 ## 导读
 
 - **所属卷**：卷五：扩展层与平台对象
-- **卷内位置**：01 / 25
+- **卷内位置**：01 / 24
 - **上一篇**：无
 - **下一篇**：[卷五 02｜为什么 Claude Code 选择把扩展权交给用户](./02-why-claude-code-chooses-to-hand-extension-power-to-users.md)
 

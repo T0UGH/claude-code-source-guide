@@ -18,7 +18,7 @@ status: draft
 ## 导读
 
 - **所属卷**：卷五：扩展层与平台对象
-- **卷内位置**：02 / 25
+- **卷内位置**：02 / 24
 - **上一篇**：[卷五 01｜为什么复杂场景会逼 Claude Code 长出扩展层](./01-why-complex-scenarios-force-claude-code-to-grow-an-extension-layer.md)
 - **下一篇**：[卷五 03｜skills / MCP / agents / subagents / hooks / plugins 是怎样接入 Claude Code 的](./03-how-skills-mcp-agents-subagents-hooks-and-plugins-enter-claude-code.md)
 

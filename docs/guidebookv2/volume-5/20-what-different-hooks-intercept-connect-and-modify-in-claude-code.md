@@ -1,5 +1,5 @@
 ---
-title: 卷五 21｜一轮会话怎么起、怎么进、怎么收，hooks 其实都能插手
+title: 卷五 20｜一轮会话怎么起、怎么进、怎么收，hooks 其实都能插手
 date: 2026-04-11
 tags: [Claude Code, hooks, session, lifecycle, runtime]
 source_files:
@@ -10,14 +10,14 @@ source_files:
   - /Users/haha/.openclaw/workspace/cc/src/utils/hooks.ts
 ---
 
-# 卷五 21｜一轮会话怎么起、怎么进、怎么收，hooks 其实都能插手
+# 卷五 20｜一轮会话怎么起、怎么进、怎么收，hooks 其实都能插手
 
 ## 导读
 
 - **所属卷**：卷五：外部扩展与多代理能力
-- **卷内位置**：21 / 25
-- **上一篇**：[卷五 20｜工具怎么跑，hooks 其实真的插得上手](./20-what-role-hooks-play-in-claude-code-runtime.md)
-- **下一篇**：[卷五 22｜为什么有了 skills / MCP / hooks 之后，系统还需要 plugins](./22-why-plugins-are-still-needed-after-skills-mcp-and-hooks.md)
+- **卷内位置**：20 / 24
+- **上一篇**：[卷五 19｜工具怎么跑，hooks 其实真的插得上手](./19-what-role-hooks-play-in-claude-code-runtime.md)
+- **下一篇**：[卷五 21｜为什么有了 skills / MCP / hooks 之后，系统还需要 plugins](./21-why-plugins-are-still-needed-after-skills-mcp-and-hooks.md)
 
 第 20 篇已经把 hooks 最硬的一条样本链讲清了：
 

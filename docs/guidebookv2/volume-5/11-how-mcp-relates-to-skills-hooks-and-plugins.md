@@ -24,7 +24,7 @@ status: draft
 ## 导读
 
 - **所属卷**：卷五：扩展层与平台对象
-- **卷内位置**：11 / 25
+- **卷内位置**：11 / 24
 - **上一篇**：[卷五 10｜Claude Code 是怎样通过 MCP 接入外部能力源和资源系统的](./10-how-claude-code-uses-mcp-to-connect-external-capabilities-and-resource-systems.md)
 - **下一篇**：待后续回合衔接 Agent 主轴
 

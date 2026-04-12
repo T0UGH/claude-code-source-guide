@@ -1,5 +1,5 @@
 ---
-title: 卷五 19｜Claude Code 的 hooks，为什么不是挂几个脚本这么简单
+title: 卷五 18｜Claude Code 的 hooks，为什么不是挂几个脚本这么简单
 date: 2026-04-11
 tags: [Claude Code, hooks, runtime, platform]
 source_files:
@@ -7,14 +7,14 @@ source_files:
   - /Users/haha/.openclaw/workspace/cc/src/utils/hooks.ts
 ---
 
-# 卷五 19｜Claude Code 的 hooks，为什么不是挂几个脚本这么简单
+# 卷五 18｜Claude Code 的 hooks，为什么不是挂几个脚本这么简单
 
 ## 导读
 
 - **所属卷**：卷五：外部扩展与多代理能力
-- **卷内位置**：19 / 25
+- **卷内位置**：18 / 24
 - **上一篇**：[卷五 17｜拆出去的活，最后怎么回到主线](./17-boundaries-and-information-flow-between-main-agent-and-worker-agent.md)
-- **下一篇**：[卷五 20｜工具怎么跑，hooks 其实真的插得上手](./20-what-role-hooks-play-in-claude-code-runtime.md)
+- **下一篇**：[卷五 19｜工具怎么跑，hooks 其实真的插得上手](./19-what-role-hooks-play-in-claude-code-runtime.md)
 
 Agent 主轴收完之后，卷五接下来要处理的不是又一个“对象”，而是一种新的东西：
 

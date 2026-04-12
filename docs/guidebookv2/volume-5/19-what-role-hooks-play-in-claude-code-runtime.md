@@ -1,5 +1,5 @@
 ---
-title: 卷五 20｜工具怎么跑，hooks 其实真的插得上手
+title: 卷五 19｜工具怎么跑，hooks 其实真的插得上手
 date: 2026-04-11
 tags: [Claude Code, hooks, tool, runtime]
 source_files:
@@ -8,14 +8,14 @@ source_files:
   - /Users/haha/.openclaw/workspace/cc/src/cli/structuredIO.ts
 ---
 
-# 卷五 20｜工具怎么跑，hooks 其实真的插得上手
+# 卷五 19｜工具怎么跑，hooks 其实真的插得上手
 
 ## 导读
 
 - **所属卷**：卷五：外部扩展与多代理能力
-- **卷内位置**：20 / 25
-- **上一篇**：[卷五 19｜Claude Code 的 hooks，为什么不是挂几个脚本这么简单](./19-why-hooks-are-more-than-just-some-scripts.md)
-- **下一篇**：[卷五 21｜一轮会话怎么起、怎么进、怎么收，hooks 其实都能插手](./21-what-different-hooks-intercept-connect-and-modify-in-claude-code.md)
+- **卷内位置**：19 / 24
+- **上一篇**：[卷五 18｜Claude Code 的 hooks，为什么不是挂几个脚本这么简单](./18-why-hooks-are-more-than-just-some-scripts.md)
+- **下一篇**：[卷五 20｜一轮会话怎么起、怎么进、怎么收，hooks 其实都能插手](./20-what-different-hooks-intercept-connect-and-modify-in-claude-code.md)
 
 第 19 篇已经先证明了一件事：hooks 在 Claude Code 里不是附属脚本系统，而是正式 runtime 机制。
 
