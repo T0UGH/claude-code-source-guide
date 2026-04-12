@@ -78,7 +78,7 @@ flowchart TD
 如果把这条主线再压得更短一点，其实可以只记下面这个闭环：
 
 ```mermaid
-flowchart LR
+flowchart TD
     IN[用户输入] --> Q[query / 当前判断]
     Q --> TU[tool_use / agent action]
     TU --> TR[tool_result / 执行结果]
@@ -95,7 +95,7 @@ flowchart LR
 
 ---
 
-## 补图：request 和 agent turn 的边界
+## 补图：request 与 agent turn 的边界图
 
 ```mermaid
 flowchart TD

@@ -30,7 +30,7 @@ tags:
 ## 先给最短对照图
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[transcript\n历史档案] --> B[当前工作视图\n这一轮真正带着走的面]
     C[projection / collapse] --> B
 ```
@@ -72,7 +72,7 @@ transcript 更靠近第一个目标，当前工作视图更靠近第二个目标
 
 一旦把这层分开，很多误读会自动消失。当前 query 不再原样带着某段旧内容，并不等于那段历史不存在了；它更可能只是在说：那段历史此刻不该再用原始密度压住当前工作面。
 
-## 补图：transcript vs workable view 边界图
+## 补图：transcript 与 workable view 边界图
 
 ```mermaid
 flowchart TD

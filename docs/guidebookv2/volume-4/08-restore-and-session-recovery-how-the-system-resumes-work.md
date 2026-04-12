@@ -64,7 +64,7 @@ flowchart TD
 ## 图：恢复不是单层动作，而是“读出工作包 -> 接回运行现场”
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[会话档案] --> B[恢复包]
     B --> C[restore 到当前 runtime]
     C --> D[继续 query / 继续工作]
@@ -72,7 +72,7 @@ flowchart LR
 
 这张图能把 recovery 和 restore 的分工压清：前者偏读取与整理，后者偏接回与落地。
 
-## 补图：restore 和 transcript replay 的区别
+## 补图：restore 与 transcript replay 的区别
 
 ```mermaid
 flowchart TD

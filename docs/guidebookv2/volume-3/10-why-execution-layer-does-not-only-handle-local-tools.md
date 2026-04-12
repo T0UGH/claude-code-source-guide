@@ -135,7 +135,7 @@ flowchart TD
 
 这张图的重点不是“本地 / 非本地”的分类，而是：**它们都已经属于同一张执行对象谱系图。**
 
-## 补图：直接动作对象 vs 高阶执行对象
+## 补图：直接动作对象与高阶执行对象
 
 ```mermaid
 flowchart TD
@@ -169,7 +169,7 @@ flowchart TD
 ## 图 2：SkillTool / AgentTool 在执行层中的位置图
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[assistant 形成更高阶 tool_use] --> B[orchestration 匹配 SkillTool / AgentTool]
     B --> C[转交给 skill 方法链或 agent 工作单元]
     C --> D[执行结果 / 阶段结果返回]
