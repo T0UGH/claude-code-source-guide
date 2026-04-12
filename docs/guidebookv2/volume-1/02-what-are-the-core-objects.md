@@ -80,6 +80,72 @@ flowchart TD
 
 > **这套系统到底是由哪些对象撑起来的。**
 
+但只看关系图还不够。读者接下来最容易卡住的，不是“对象有哪些”，而是：
+
+> **这些对象分别站在哪一层？**
+
+所以这篇最好再补一张分层图，把“谁和谁协作”推进到“谁在什么层级里协作”。
+
+---
+
+## 再把这些对象压成一张分层图
+
+如果把关系先收一收，只看它们各自站位，可以先记成下面这样：
+
+```mermaid
+flowchart TD
+    subgraph user["用户侧"]
+        U[用户]
+    end
+
+    subgraph entry["入口层"]
+        P[Prompt]
+        C[Command / Slash Command]
+    end
+
+    subgraph runtime["Runtime 中轴层"]
+        R[Runtime]
+        S[Session]
+        X[Context]
+    end
+
+    subgraph task["执行与任务层"]
+        T[Tool]
+        A[Agent]
+        SA[Subagent]
+    end
+
+    subgraph ext["扩展层"]
+        K[Skill]
+        M[MCP]
+        PL[Plugin]
+    end
+
+    U --> P
+    U --> C
+    P --> R
+    C --> R
+    R --> S
+    R --> X
+    R --> T
+    R --> A
+    A --> SA
+    R --> K
+    R --> M
+    R --> PL
+```
+
+这张图和前一张图的分工不一样：
+
+- **前一张图**告诉你：对象之间怎样协作
+- **这一张图**告诉你：对象各自站在哪一层
+
+两张图合起来，读者脑子里才会同时有：
+
+- 协作关系
+- 层级关系
+- 后面继续读每一卷时的基本坐标
+
 ---
 
 ## 先把这些对象分成四层看
@@ -126,7 +192,13 @@ runtime 负责组织协作，session / context 负责托住连续性。没有这
 - agent
 - subagent
 
-它们都和“能力落地”有关，但不是一种分工：tool 更接近动作执行，agent / subagent 更接近任务转交与继续推进。
+它们都和“能力落地”有关，但不是一种分工：
+
+- **tool** 更接近执行一个动作
+- **agent** 更接近接手一段工作
+- **subagent** 更接近把工作拆出去，在相对独立的会话里继续跑
+
+这样一压，后面再看 tool 系统和多 agent 结构，边界就不容易重新混掉。
 
 ### 第四层：扩展对象
 
