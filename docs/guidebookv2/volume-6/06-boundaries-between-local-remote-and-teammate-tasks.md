@@ -103,6 +103,22 @@ flowchart TD
 
 所以它们虽然共用 task 外形，但并不处在同一职责层。
 
+## 补图：三类承载体选择图
+
+```mermaid
+flowchart TD
+    A[当前到底缺什么执行承载] --> B{问题性质}
+    B -->|缺本地后台执行| C[LocalAgentTask]
+    B -->|缺远端 session / 远程执行| D[RemoteAgentTask]
+    B -->|缺 team 内协作成员运行体| E[InProcessTeammateTask]
+
+    C --> C1[不天然绑定 team 协议]
+    D --> D1[不天然绑定 team membership]
+    E --> E1[带 leader / mailbox / idle / shutdown]
+```
+
+这张补图最直接的作用，是把卷六这一篇从“任务类型对照表”推进成“承载体选择器”：三者虽然都挂在 task 世界里，但服务的是完全不同的结构问题。
+
 ## 先给结论
 
 ### 结论一：真正的分界线，不是它们都叫不叫 agent，而是它们各自承接哪一种运行责任

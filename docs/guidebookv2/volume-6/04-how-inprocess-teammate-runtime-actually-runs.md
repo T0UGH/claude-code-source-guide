@@ -78,6 +78,36 @@ flowchart TD
 
 这张图要说明的不是“teammate 也会调用 query”，而是它怎样从 team 中注册过的成员，经过装配线，被做成一个带上下文、带 leader 关系、带 mailbox、带 shutdown 行为的正式 task。
 
+## 补图：leader / teammate / query 三泳道图
+
+```mermaid
+flowchart TD
+    subgraph L[leader]
+        L1[决定委派 teammate]
+        L2[接收 mailbox / completed task 回流]
+    end
+
+    subgraph T[InProcessTeammateTask]
+        T1[startInProcessTeammateTask 装配]
+        T2[持有 teamId / leaderTask / mailbox]
+        T3[run()]
+    end
+
+    subgraph Q[query runtime]
+        Q1[query(...)]
+        Q2[推进当前判断 / 工具调用 / 状态更新]
+    end
+
+    L1 --> T1
+    T1 --> T2
+    T2 --> T3
+    T3 --> Q1
+    Q1 --> Q2
+    Q2 --> L2
+```
+
+这张补图比单纯装配图更值的地方，是它把 **leader、teammate、query runtime** 三个角色同时拉到一张图里，直接说明 teammate 不是脱离本体另起宇宙，而是在当前 runtime 身体里持续运行。
+
 ## 先给结论
 
 ### 结论一：teammate runtime 的起点不是 team 本身，而是 runAgent 装配线上的 teammate 分流

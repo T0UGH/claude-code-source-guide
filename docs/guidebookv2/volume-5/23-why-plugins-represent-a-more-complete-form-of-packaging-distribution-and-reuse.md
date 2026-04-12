@@ -69,6 +69,22 @@ flowchart TD
 平台边界]
 ```
 
+## 补图：plugin 从对象到平台边界的四阶段图
+
+```mermaid
+flowchart TD
+    A[LoadedPlugin
+统一对象] --> B[pluginLoader
+统一装配]
+    B --> C[validate / policy
+统一治理]
+    C --> D[install / marketplace
+统一分发]
+    D --> E[扩展世界默认围绕的边界对象]
+```
+
+这张补图把第 23 篇的升级逻辑压得更短：plugin 不是“包越来越大”，而是**越来越多系统动作围着同一个对象组织起来**，所以它才会从统一对象继续长成平台边界。
+
 ## 先给结论
 
 - **plugin 先是统一能力对象，但系统不会停在那里。只要你真的想让这类对象长期存在，就一定会继续长出装配、治理、安装和分发。**

@@ -127,6 +127,32 @@ commands / skills / plugin commands]
 
 > **Claude Code 的产品面，不是把 runtime 藏起来，而是把 runtime 里最关键的入口、接口、工作流和执行者，收成用户能直接操作的一张面。**
 
+## 补图：runtime 内层怎样映到产品表层
+
+```mermaid
+flowchart TD
+    A[runtime 内层] --> A1[processUserInput
+统一入口分流]
+    A --> A2[commands / skills / plugin commands
+可发现接口面]
+    A --> A3[query / orchestration / execution
+工作流面]
+    A --> A4[AgentTool / builtInAgents
+执行者面]
+
+    A1 --> B[输入框 / command 入口]
+    A2 --> C[skills / tools / agents 可见入口]
+    A3 --> D[通知 / 后台任务 / 当前工作回路]
+    A4 --> E[可调用、可后台化的执行者对象]
+
+    B --> F[Claude Code 产品表层]
+    C --> F
+    D --> F
+    E --> F
+```
+
+这张补图要压住的判断是：Claude Code 的产品面不是把 runtime 藏起来，而是把 runtime 里最关键的几层**重新整理成用户能直接操作的一张面**。
+
 ## 先给结论
 
 ### 结论一：Claude Code 的产品形态，不是“功能集合的 UI 壳”，而是 runtime 的四个面被同时暴露了出来

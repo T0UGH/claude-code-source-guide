@@ -120,6 +120,24 @@ flowchart TD
 
 > **command 管入口，tool 管动作，skill 管方法，agent 管执行责任。**
 
+## 补图：四对象判别决策树
+
+```mermaid
+flowchart TD
+    A[你现在真正缺的是什么] --> B{缺口性质}
+    B -->|缺正式用户入口| C[Command]
+    B -->|缺现实动作执行| D[Tool]
+    B -->|缺稳定方法组织| E[Skill]
+    B -->|缺整段工作承担者| F[Agent]
+
+    C --> G[runtime]
+    D --> G
+    E --> G
+    F --> G
+```
+
+这张补图把卷七这篇最该留下来的东西压成了一把裁决尺子：**command 管入口，tool 管动作，skill 管方法，agent 管执行责任。**
+
 ## 先给结论
 
 ### 结论一：卷五能把 tool / skill / agent 三者切开，但只有卷七能把 command 一起纳入同一张控制图

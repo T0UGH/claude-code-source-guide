@@ -84,6 +84,23 @@ status: draft
 
 也就是说，这篇不能再把“某个 prompt 目录”当主轴，而要把重心放回**命令怎样进入 query 装配链**。
 
+## 补图：命令入口的责任分层图
+
+```mermaid
+flowchart TD
+    A[用户输入 /command args] --> B[入口识别层
+processUserInput]
+    B --> C[命令展开层
+processSlashCommand / getMessagesForPromptSlashCommand]
+    C --> D[turn 并入层
+handlePromptSubmit / QueryEngine]
+    D --> E[query 装配层
+query.ts / queryContext]
+    E --> F[模型调用与后续运行]
+```
+
+这张补图不再重复“流程跑了一遍”，而是把职责切开：**谁负责识别入口，谁负责把命令翻成结构化运行材料，谁负责把这些材料真正并进当前 turn / query 主链。**
+
 ## 先给结论
 
 这篇最后要留下的，不是一个“命令处理流程图”，而是三个更硬的判断。

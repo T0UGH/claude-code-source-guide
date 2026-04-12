@@ -91,6 +91,27 @@ flowchart TD
 
 也就是说，Claude Code 在这里处理的不是并发，而是**协作闭环**。
 
+## 补图：协作协议时序图
+
+```mermaid
+flowchart TD
+    A[teammate A 完成一轮局部工作] --> B[写 mailbox 给 leader]
+    B --> C[leader 轮询 unread messages]
+    C --> D[leader 更新 teamContext / 决定后续动作]
+
+    D --> E[teammate A 暂时停下]
+    E --> F[Stop hook 回报 idle]
+    F --> C
+
+    C --> G{是否进入收尾阶段}
+    G -->|否| A
+    G -->|是| H[leader 发起 shutdown]
+    H --> I[成员回报 shutdown_approved]
+    I --> J[cleanupTeam / 移除成员]
+```
+
+这张补图把上一张结构图进一步压成了协议时序：**mailbox 管消息，idle 管状态回报，shutdown 管退场一致性。**
+
 ## 先给结论
 
 ### 结论一：mailbox 不是聊天附件，而是 team runtime 的显式消息总线
